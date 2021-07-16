@@ -1,6 +1,5 @@
 # Produced binaries
-payload-tracker-api
-payload-tracker-consumer
+payload-tracker*
 
 # Binaries for programs and plugins
 *.exe
