@@ -1,5 +1,5 @@
 # Produced binaries
-payload-tracker*
+pt*
 
 # Binaries for programs and plugins
 *.exe
