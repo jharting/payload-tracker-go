@@ -31,6 +31,10 @@ func main() {
 	mr.Handle("/metrics", promhttp.Handler())
 
 	sub.Get("/", lubdub)
+	sub.Get("/payloads", payloads)
+	sub.Get("/payloads/{request_id}", singlePayload)
+	sub.Get("/statuses", statuses)
+	sub.Get("/health", health)
 
 	srv := http.Server{
 		Addr:	":8080",
