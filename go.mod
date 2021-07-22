@@ -1,4 +1,4 @@
-module github.com/go-chi/chi
+module github.com/redhatinsights/payload-tracker-go
 
 go 1.14
 
