@@ -1,4 +1,4 @@
-package main
+package endpoints
 
 import (
 	"net/http"
@@ -16,7 +16,7 @@ type StatusRetrieve struct {
 	CreatedAt string `json:"created_at"`
 }
 
-func statuses(w http.ResponseWriter, r *http.Request) {
+func Statuses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Statuses"))

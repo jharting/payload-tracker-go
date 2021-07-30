@@ -1,4 +1,4 @@
-package main
+package endpoints
 
 import (
 	"net/http"
@@ -9,7 +9,7 @@ type StatsRetrieve struct {
 	Message string `json:"message"`
 }
 
-func stats(w http.ResponseWriter, r *http.Request) {
+func Stats(w http.ResponseWriter, r *http.Request) {
 
 	stat := r.URL.Query().Get("stat")
 	

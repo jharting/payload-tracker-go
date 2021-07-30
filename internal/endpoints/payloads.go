@@ -1,4 +1,4 @@
-package main
+package endpoints
 
 import (
 	"net/http"
@@ -113,8 +113,8 @@ func stringInSlice(a string, list []string) bool {
     return false
 }
 
-// payloads returns responses for the /payloads endpoint
-func payloads(w http.ResponseWriter, r *http.Request) {
+// Payloads returns responses for the /payloads endpoint
+func Payloads(w http.ResponseWriter, r *http.Request) {
 
 	// init query with defaults and passed params
 	q := initQuery(r)
@@ -132,8 +132,8 @@ func payloads(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Boop"))
 }
 
-// singlePayload returns a resposne for /payloads/{request_id}
-func singlePayload(w http.ResponseWriter, r *http.Request) {
+// SinglePayload returns a resposne for /payloads/{request_id}
+func SinglePayload(w http.ResponseWriter, r *http.Request) {
 
 	reqID := r.URL.Query().Get("request_id")
 	sortBy := r.URL.Query().Get("sort_by")

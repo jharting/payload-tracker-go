@@ -5,6 +5,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/redhatinsights/internal/endpoints"
 )
 
 
@@ -31,10 +33,10 @@ func main() {
 	mr.Handle("/metrics", promhttp.Handler())
 
 	sub.Get("/", lubdub)
-	sub.Get("/payloads", payloads)
-	sub.Get("/payloads/{request_id}", singlePayload)
-	sub.Get("/statuses", statuses)
-	sub.Get("/health", health)
+	sub.Get("/payloads", endpoints.Payloads)
+	sub.Get("/payloads/{request_id}", endpoints.SinglePayload)
+	sub.Get("/statuses", endpoints.Statuses)
+	sub.Get("/health", endpoints.Health)
 
 	srv := http.Server{
 		Addr:	":8080",
