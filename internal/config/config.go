@@ -11,26 +11,26 @@ import (
 var rdsCaPath *string
 
 type TrackerConfig struct {
-	PublicPort string
+	PublicPort  string
 	MetricsPort string
 	KafkaConfig KafkaCfg
 }
 
 type KafkaCfg struct {
-	KafkaTimeout int
-	KafkaGroupID string
-	KafkaAutoOffsetReset string
-	KafkaAutoCommitInterval int
-	KafkaRequestRequiredAcks int
+	KafkaTimeout               int
+	KafkaGroupID               string
+	KafkaAutoOffsetReset       string
+	KafkaAutoCommitInterval    int
+	KafkaRequestRequiredAcks   int
 	KafkaMessageSendMaxRetries int
-	KafkaRetryBackoffMs int
-	KafkaBrokers []string
-	KafkaTopic string
-	KafkaUsername string
-	KafkaPassword string
-	KafkaCA string
-	SASLMechanism string
-	Protocol string
+	KafkaRetryBackoffMs        int
+	KafkaBrokers               []string
+	KafkaTopic                 string
+	KafkaUsername              string
+	KafkaPassword              string
+	KafkaCA                    string
+	SASLMechanism              string
+	Protocol                   string
 }
 
 // Get sets each config option with its defaults
@@ -61,18 +61,18 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
-		PublicPort: options.GetString("publicPort"),
+		PublicPort:  options.GetString("publicPort"),
 		MetricsPort: options.GetString("metricsPort"),
 		KafkaConfig: KafkaCfg{
-			KafkaTimeout: options.GetInt("kafka.timeout"),
-			KafkaGroupID: options.GetString("kafka.group.id"),
-			KafkaAutoOffsetReset: options.GetString("kafka.auto.offset.reset"),
-			KafkaAutoCommitInterval: options.GetInt("kafka.auto.commit.interval.ms"),
-			KafkaRequestRequiredAcks: options.GetInt("kafka.request.required.acks"),
+			KafkaTimeout:               options.GetInt("kafka.timeout"),
+			KafkaGroupID:               options.GetString("kafka.group.id"),
+			KafkaAutoOffsetReset:       options.GetString("kafka.auto.offset.reset"),
+			KafkaAutoCommitInterval:    options.GetInt("kafka.auto.commit.interval.ms"),
+			KafkaRequestRequiredAcks:   options.GetInt("kafka.request.required.acks"),
 			KafkaMessageSendMaxRetries: options.GetInt("kafka.message.send.max.retries"),
-			KafkaRetryBackoffMs: options.GetInt("kafka.retry.backoff.ms"),
-			KafkaBrokers: options.GetStringSlice("kafka.brokers"),
-			KafkaTopic: options.GetString("topic.payload.status"),
+			KafkaRetryBackoffMs:        options.GetInt("kafka.retry.backoff.ms"),
+			KafkaBrokers:               options.GetStringSlice("kafka.brokers"),
+			KafkaTopic:                 options.GetString("topic.payload.status"),
 		},
 	}
 
