@@ -1,5 +1,6 @@
 # Produced binaries
 pt*
+main
 
 # Binaries for programs and plugins
 *.exe
