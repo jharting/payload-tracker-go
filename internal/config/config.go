@@ -14,6 +14,12 @@ var rdsCaPath *string
 func Get() *viper.Viper {
 	options := viper.New()
 
+	options.SetDefault("db.user", "crc")
+	options.SetDefault("db.password", "crc")
+	options.SetDefault("db.name", "crc")
+	options.SetDefault("db.host", "0.0.0.0")
+	options.SetDefault("db.port", "5432")
+
 	options.SetDefault("kafka.timeout", 10000)
 	options.SetDefault("kafka.group.id", "payload-tracker-go")
 	options.SetDefault("kafka.auto.offset.reset", "latest")
