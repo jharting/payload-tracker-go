@@ -7,12 +7,12 @@ import (
 // StatusRetrieve returns a response for /payloads/statuses
 type StatusRetrieve struct {
 	RequestID string `json:"request_id"`
-	Status string `json:"status"`
-	ID string `json:"id"`
-	Service string `json:"service"`
-	Source string `json:"source"`
+	Status    string `json:"status"`
+	ID        string `json:"id"`
+	Service   string `json:"service"`
+	Source    string `json:"source"`
 	StatusMsg string `json:"status_msg"`
-	Date string `json:"date"`
+	Date      string `json:"date"`
 	CreatedAt string `json:"created_at"`
 }
 
