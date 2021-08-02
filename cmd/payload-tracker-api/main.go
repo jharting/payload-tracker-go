@@ -6,9 +6,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/redhatinsights/internal/endpoints"
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 )
-
 
 func lubdub(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -16,9 +16,9 @@ func lubdub(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("lubdub"))
 }
 
-
 func main() {
 
+	cfg := config.Get()
 
 	r := chi.NewRouter()
 	mr := chi.NewRouter()
@@ -39,12 +39,12 @@ func main() {
 	sub.Get("/health", endpoints.Health)
 
 	srv := http.Server{
-		Addr:	":8080",
+		Addr:    ":"+cfg.PublicPort,
 		Handler: r,
 	}
 
 	msrv := http.Server{
-		Addr:	":8081",
+		Addr:    ":"+cfg.MetricsPort,
 		Handler: mr,
 	}
 
