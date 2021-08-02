@@ -12,6 +12,8 @@ import (
 type TrackerConfig struct {
 	PublicPort       string
 	MetricsPort      string
+	LogLevel string
+	Hostname string
 	KafkaConfig      KafkaCfg
 	CloudwatchConfig CloudwatchCfg
 	DatabaseConfig   DatabaseCfg
@@ -54,6 +56,16 @@ type CloudwatchCfg struct {
 func Get() *TrackerConfig {
 	options := viper.New()
 
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "unknown"
+	}
+
+	// global logging
+	options.SetDefault("logLevel", "INFO")
+	options.SetDefault("Hostname", hostname)
+
+	// kafka config
 	options.SetDefault("kafka.timeout", 10000)
 	options.SetDefault("kafka.group.id", "payload-tracker-go")
 	options.SetDefault("kafka.auto.offset.reset", "latest")
@@ -108,6 +120,7 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
+		LogLevel: options.GetString("logLevel"),
 		PublicPort:  options.GetString("publicPort"),
 		MetricsPort: options.GetString("metricsPort"),
 		KafkaConfig: KafkaCfg{
