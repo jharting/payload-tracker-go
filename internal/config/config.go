@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -8,12 +9,12 @@ import (
 	clowder "github.com/redhatinsights/app-common-go/pkg/api/v1"
 )
 
-var rdsCaPath *string
-
 type TrackerConfig struct {
-	PublicPort  string
-	MetricsPort string
-	KafkaConfig KafkaCfg
+	PublicPort       string
+	MetricsPort      string
+	KafkaConfig      KafkaCfg
+	CloudwatchConfig CloudwatchCfg
+	DatabaseConfig   DatabaseCfg
 }
 
 type KafkaCfg struct {
@@ -33,6 +34,22 @@ type KafkaCfg struct {
 	Protocol                   string
 }
 
+type DatabaseCfg struct {
+	DBUser     string
+	DBPassword string
+	DBName     string
+	DBHost     string
+	DBPort     string
+	RDSCa      string
+}
+
+type CloudwatchCfg struct {
+	CWLogGroup  string
+	CWRegion    string
+	CWAccessKey string
+	CWSecretKey string
+}
+
 // Get sets each config option with its defaults
 func Get() *TrackerConfig {
 	options := viper.New()
@@ -46,15 +63,45 @@ func Get() *TrackerConfig {
 	options.SetDefault("kafka.retry.backoff.ms", 100)
 
 	if clowder.IsClowderEnabled() {
+		cfg := clowder.LoadedConfig
+
+		// kafka
 		options.SetDefault("kafka.brokers", clowder.KafkaServers)
 		options.SetDefault("topic.payload.status", clowder.KafkaTopics["platform.payload-status"].Name)
-		options.SetDefault("publicPort", clowder.LoadedConfig.PublicPort)
-		options.SetDefault("metricsPort", clowder.LoadedConfig.MetricsPort)
+		// ports
+		options.SetDefault("publicPort", cfg.PublicPort)
+		options.SetDefault("metricsPort", cfg.MetricsPort)
+		// database
+		options.SetDefault("db.user", cfg.Database.Username)
+		options.SetDefault("db.password", cfg.Database.Password)
+		options.SetDefault("db.name", cfg.Database.Name)
+		options.SetDefault("db.host", cfg.Database.Hostname)
+		options.SetDefault("db.port", cfg.Database.Port)
+		options.SetDefault("rdsCa", cfg.Database.RdsCa)
+		// cloudwatch
+		options.SetDefault("logGroup", cfg.Logging.Cloudwatch.LogGroup)
+		options.SetDefault("cwRegion", cfg.Logging.Cloudwatch.Region)
+		options.SetDefault("cwAccessKey", cfg.Logging.Cloudwatch.AccessKeyId)
+		options.SetDefault("cwSecretKey", cfg.Logging.Cloudwatch.SecretAccessKey)
 	} else {
+
+		// kafka
 		options.SetDefault("kafka.brokers", []string{"localhost:29092"})
 		options.SetDefault("topic.payload.status", "platform.payload-status")
+		// ports
 		options.SetDefault("publicPort", "8080")
 		options.SetDefault("metricsPort", "8081")
+		// database
+		options.SetDefault("db.user", "crc")
+		options.SetDefault("db.password", "crc")
+		options.SetDefault("db.name", "crc")
+		options.SetDefault("db.host", "0.0.0.0")
+		options.SetDefault("db.port", "5432")
+		// cloudwatch
+		options.SetDefault("logGroup", "platform-dev")
+		options.SetDefault("cwRegion", "us-east-1")
+		options.SetDefault("cwAccessKey", os.Getenv("CW_AWS_ACCESS_KEY_ID"))
+		options.SetDefault("cwSecretKey", os.Getenv("CW_AWS_SECRET_ACCESS_KEY"))
 	}
 
 	options.AutomaticEnv()
@@ -74,6 +121,19 @@ func Get() *TrackerConfig {
 			KafkaBrokers:               options.GetStringSlice("kafka.brokers"),
 			KafkaTopic:                 options.GetString("topic.payload.status"),
 		},
+		DatabaseConfig: DatabaseCfg{
+			DBUser:     options.GetString("db.user"),
+			DBPassword: options.GetString("db.password"),
+			DBName:     options.GetString("db.name"),
+			DBHost:     options.GetString("db.host"),
+			DBPort:     options.GetString("db.port"),
+		},
+		CloudwatchConfig: CloudwatchCfg{
+			CWLogGroup:  options.GetString("logGroup"),
+			CWRegion:    options.GetString("cwRegion"),
+			CWAccessKey: options.GetString("cwAccessKey"),
+			CWSecretKey: options.GetString("cwSecretKey"),
+		},
 	}
 
 	if clowder.IsClowderEnabled() {
@@ -85,6 +145,8 @@ func Get() *TrackerConfig {
 			trackerCfg.KafkaConfig.KafkaPassword = *broker.Sasl.Password
 			trackerCfg.KafkaConfig.SASLMechanism = "SCRAM-SHA-512"
 			trackerCfg.KafkaConfig.Protocol = "sasl_ssl"
+
+			// write the Kafka CA path using the app-common-go package
 			caPath, err := cfg.KafkaCa(broker)
 
 			if err != nil {
@@ -94,6 +156,15 @@ func Get() *TrackerConfig {
 			trackerCfg.KafkaConfig.KafkaCA = caPath
 
 		}
+
+		// write the RDS CA using the app-common-go package
+		rdsCAPath, err := cfg.RdsCa()
+
+		if err != nil {
+			panic("RDS CA Failed to Write")
+		}
+
+		trackerCfg.DatabaseConfig.RDSCa = rdsCAPath
 	}
 
 	return trackerCfg
