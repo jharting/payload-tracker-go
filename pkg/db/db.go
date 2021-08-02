@@ -34,12 +34,13 @@ func DbConnect() {
 	}
 
 	db.AutoMigrate(
-		&models.PayloadStatuses{},
-		&models.Payloads{},
 		&models.Services{},
 		&models.Sources{},
 		&models.Statuses{},
+		&models.PayloadStatuses{},
+		&models.Payloads{},
 	)
+	// db.Model(&models.PayloadStatuses{}).AddForeignKey("source_id", "sources(id)", "RESTRICT", "RESTRICT")
 
 	DB = db
 

@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	// "github.com/redhatinsights/payload-tracker-go/internal/config"
 	// "github.com/redhatinsights/payload-tracker-go/models"
 	"github.com/redhatinsights/payload-tracker-go/pkg/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
