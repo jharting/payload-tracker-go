@@ -27,7 +27,7 @@ type KafkaCfg struct {
 	KafkaRequestRequiredAcks   int
 	KafkaMessageSendMaxRetries int
 	KafkaRetryBackoffMs        int
-	KafkaBrokers               []string
+	KafkaBootstrapServers      string
 	KafkaTopic                 string
 	KafkaUsername              string
 	KafkaPassword              string
@@ -78,7 +78,7 @@ func Get() *TrackerConfig {
 		cfg := clowder.LoadedConfig
 
 		// kafka
-		options.SetDefault("kafka.brokers", clowder.KafkaServers)
+		options.SetDefault("kafka.bootstrap.servers", strings.Join(clowder.KafkaServers, ","))
 		options.SetDefault("topic.payload.status", clowder.KafkaTopics["platform.payload-status"].Name)
 		// ports
 		options.SetDefault("publicPort", cfg.PublicPort)
@@ -96,9 +96,7 @@ func Get() *TrackerConfig {
 		options.SetDefault("cwAccessKey", cfg.Logging.Cloudwatch.AccessKeyId)
 		options.SetDefault("cwSecretKey", cfg.Logging.Cloudwatch.SecretAccessKey)
 	} else {
-
-		// kafka
-		options.SetDefault("kafka.brokers", []string{"localhost:29092"})
+		options.SetDefault("kafka.bootstrap.servers", "localhost:29092")
 		options.SetDefault("topic.payload.status", "platform.payload-status")
 		// ports
 		options.SetDefault("publicPort", "8080")
@@ -131,7 +129,7 @@ func Get() *TrackerConfig {
 			KafkaRequestRequiredAcks:   options.GetInt("kafka.request.required.acks"),
 			KafkaMessageSendMaxRetries: options.GetInt("kafka.message.send.max.retries"),
 			KafkaRetryBackoffMs:        options.GetInt("kafka.retry.backoff.ms"),
-			KafkaBrokers:               options.GetStringSlice("kafka.brokers"),
+			KafkaBootstrapServers:      options.GetString("kafka.bootstrap.servers"),
 			KafkaTopic:                 options.GetString("topic.payload.status"),
 		},
 		DatabaseConfig: DatabaseCfg{
