@@ -9,7 +9,6 @@ type PayloadStatuses struct {
 	PayloadId uint `gorm:"not null"`
 	ServiceId int32 `gorm:"not null"`
 	SourceId int32
-	Source Sources `gorm:"foreignKey:SourceId;AssociationForeignKey:Id"`
 	StatusId int32 `gorm:"not null"`
 	StatusMsg string `gorm:"type:varchar"`
 	Date time.Time `gorm:"primaryKey;not null`
