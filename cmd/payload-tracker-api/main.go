@@ -1,11 +1,14 @@
 package main
 
 import (
+	// "fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
+	// "github.com/redhatinsights/payload-tracker-go/models"
+	"github.com/redhatinsights/payload-tracker-go/pkg/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 )
@@ -19,6 +22,8 @@ func lubdub(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	cfg := config.Get()
+
+	db.DbConnect()
 
 	r := chi.NewRouter()
 	mr := chi.NewRouter()
@@ -58,4 +63,9 @@ func main() {
 	if err := srv.ListenAndServe(); err != nil {
 		panic(err)
 	}
+
+
+	// db test
+	// data := db.DB.Take(&models.Payloads)
+	// fmt.Printf("%v", data)
 }
