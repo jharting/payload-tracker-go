@@ -9,5 +9,7 @@ require (
 	github.com/redhatinsights/app-common-go v1.5.1
 	github.com/redhatinsights/platform-go-middlewares v0.9.0
 	github.com/sirupsen/logrus v1.8.1
+	gorm.io/driver/postgres v1.1.0
+	gorm.io/gorm v1.21.12
 	github.com/spf13/viper v1.8.1
 )
