@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/redhatinsights/internal/endpoints"
+	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 )
 
 
