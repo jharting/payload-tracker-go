@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 // TODO: Add imports here
