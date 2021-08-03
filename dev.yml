@@ -9,3 +9,26 @@ services:
             POSTGRES_DB: crc
         ports:
             - "5432:5432"
+    zookeeper:
+        image: confluentinc/cp-zookeeper
+        environment:
+            - ZOOKEEPER_CLIENT_PORT=32181
+            - ZOOKEEPER_SERVER_ID=1
+    kafka:
+        image: confluentinc/cp-kafka
+        ports:
+            - '29092:29092'
+        depends_on:
+            - zookeeper
+        environment:
+            - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:29092
+            - KAFKA_BROKER_ID=1
+            - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+            - KAFKA_ZOOKEEPER_CONNECT=zookeeper:32181
+            - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+    redis:
+        image: registry.redhat.io/rhel8/redis-5
+        ports:
+            - 6379:6379
+        depends_on:
+            - payload-tracker-db
