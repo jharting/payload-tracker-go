@@ -8,8 +8,8 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	// "github.com/redhatinsights/payload-tracker-go/models"
-	"github.com/redhatinsights/payload-tracker-go/pkg/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 )
 
@@ -44,12 +44,12 @@ func main() {
 	sub.Get("/health", endpoints.Health)
 
 	srv := http.Server{
-		Addr:    ":"+cfg.PublicPort,
+		Addr:    ":" + cfg.PublicPort,
 		Handler: r,
 	}
 
 	msrv := http.Server{
-		Addr:    ":"+cfg.MetricsPort,
+		Addr:    ":" + cfg.MetricsPort,
 		Handler: mr,
 	}
 
@@ -63,9 +63,4 @@ func main() {
 	if err := srv.ListenAndServe(); err != nil {
 		panic(err)
 	}
-
-
-	// db test
-	// data := db.DB.Take(&models.Payloads)
-	// fmt.Printf("%v", data)
 }
