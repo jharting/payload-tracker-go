@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/models"
@@ -14,11 +15,11 @@ var DB *gorm.DB
 var cfg *config.TrackerConfig = config.Get()
 
 var (
-	user = cfg.DatabaseConfig.DBUser
+	user     = cfg.DatabaseConfig.DBUser
 	password = cfg.DatabaseConfig.DBPassword
-	dbname = cfg.DatabaseConfig.DBName
-	host = cfg.DatabaseConfig.DBHost
-	port = cfg.DatabaseConfig.DBPort
+	dbname   = cfg.DatabaseConfig.DBName
+	host     = cfg.DatabaseConfig.DBHost
+	port     = cfg.DatabaseConfig.DBPort
 )
 
 func DbConnect() {
@@ -40,5 +41,5 @@ func DbConnect() {
 
 	DB = db
 
-	fmt.Println("DB initialization complete")
+	log.Println("DB initialization complete")
 }

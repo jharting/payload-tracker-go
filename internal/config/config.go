@@ -12,8 +12,8 @@ import (
 type TrackerConfig struct {
 	PublicPort       string
 	MetricsPort      string
-	LogLevel string
-	Hostname string
+	LogLevel         string
+	Hostname         string
 	KafkaConfig      KafkaCfg
 	CloudwatchConfig CloudwatchCfg
 	DatabaseConfig   DatabaseCfg
@@ -118,7 +118,7 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
-		LogLevel: options.GetString("logLevel"),
+		LogLevel:    options.GetString("logLevel"),
 		PublicPort:  options.GetString("publicPort"),
 		MetricsPort: options.GetString("metricsPort"),
 		KafkaConfig: KafkaCfg{

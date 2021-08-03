@@ -55,13 +55,13 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	data := map[string]interface{}{
-		"@timestamp": now.Format("2006-01-02T15:04:05.999Z"),
-		"@version": 1,
-		"message": entry.Message,
-		"levelname": entry.Level.String(),
+		"@timestamp":  now.Format("2006-01-02T15:04:05.999Z"),
+		"@version":    1,
+		"message":     entry.Message,
+		"levelname":   entry.Level.String(),
 		"source_host": f.Hostname,
-		"app": "payload-tracker",
-		"caller": entry.Caller.Func.Name(),
+		"app":         "payload-tracker",
+		"caller":      entry.Caller.Func.Name(),
 	}
 
 	for k, v := range entry.Data {
@@ -84,7 +84,7 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 	j = append(j, '\n')
 
 	b.Write(j)
-	
+
 	return b.Bytes(), nil
 }
 
@@ -115,10 +115,10 @@ func InitLogger() *logrus.Logger {
 	formatter := NewCloudwatchFormatter()
 
 	Log = &logrus.Logger{
-		Out: os.Stdout,
-		Level: logLevel,
-		Formatter: formatter,
-		Hooks: make(logrus.LevelHooks),
+		Out:          os.Stdout,
+		Level:        logLevel,
+		Formatter:    formatter,
+		Hooks:        make(logrus.LevelHooks),
 		ReportCaller: true,
 	}
 
