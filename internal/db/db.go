@@ -27,7 +27,7 @@ func DbConnect() {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	db.AutoMigrate(
@@ -37,7 +37,6 @@ func DbConnect() {
 		&models.PayloadStatuses{},
 		&models.Payloads{},
 	)
-	// db.Model(&models.PayloadStatuses{}).AddForeignKey("source_id", "sources(id)", "RESTRICT", "RESTRICT")
 
 	DB = db
 

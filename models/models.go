@@ -13,6 +13,10 @@ type PayloadStatuses struct {
 	StatusMsg string    `gorm:"type:varchar"`
 	Date      time.Time `gorm:"primaryKey;not null`
 	CreatedAt time.Time `gorm:"not null"`
+	Payload   Payloads
+	Service   Services
+	Source    Sources
+	Status    Statuses
 }
 
 type Payloads struct {
