@@ -2,12 +2,12 @@ package kafka
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 
 	config "github.com/redhatinsights/payload-tracker-go/internal/config"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 )
 
 // NewConsumer Creates brand new consumer instance based on topic
@@ -31,7 +31,7 @@ func NewConsumer(ctx context.Context, config *config.TrackerConfig, topic string
 		return nil, err
 	}
 
-	log.Println("Connected to Kafka")
+	l.Log.Info("Connected to Kafka")
 
 	return consumer, nil
 }
@@ -45,10 +45,10 @@ func NewConsumerEventLoop(
 		msg, err := consumer.ReadMessage(10 * time.Second) // TODO: configurable
 
 		if err != nil {
-			log.Printf("Consumer error: %v (%v)\n", err, msg)
+			l.Log.Fatal("Consumer error: %v (%v)\n", err, msg)
 			break
 		} else {
-			log.Printf("message %s = %s\n", string(msg.Key), string(msg.Value))
+			l.Log.Info("message %s = %s\n", string(msg.Key), string(msg.Value))
 		}
 		// TODO: Add Handler
 	}

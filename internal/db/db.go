@@ -2,9 +2,9 @@ package db
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/models"
 
 	"gorm.io/driver/postgres"
@@ -27,7 +27,7 @@ func DbConnect() {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal(err)
+		l.Log.Fatal(err)
 	}
 
 	db.AutoMigrate(
@@ -40,5 +40,5 @@ func DbConnect() {
 
 	DB = db
 
-	log.Println("DB initialization complete")
+	l.Log.Info("DB initialization complete")
 }
