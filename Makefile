@@ -14,3 +14,7 @@ build-all:
 lint:
 	gofmt -l .
 	gofmt -s -w .
+
+seed:
+	go build cmd/db-seeder/main.go
+	go run cmd/db-seeder/main.go

@@ -11,7 +11,7 @@ type PayloadStatuses struct {
 	SourceId  int32
 	StatusId  int32     `gorm:"not null"`
 	StatusMsg string    `gorm:"type:varchar"`
-	Date      time.Time `gorm:"primaryKey;not null`
+	Date      time.Time `gorm:"primaryKey;not null"`
 	CreatedAt time.Time `gorm:"not null"`
 	Payload   Payloads
 	Service   Services
@@ -21,10 +21,10 @@ type PayloadStatuses struct {
 
 type Payloads struct {
 	Id          uint      `gorm:"primaryKey;not null;autoIncrement"`
-	RequestId   string    `gorm:"not null;type:varchar"`
-	Account     string    `gorm:"type:varchar"`
-	InventoryId string    `gorm:"type:varchar"`
-	SystemId    string    `gorm:"type:varchar"`
+	RequestId   string    `json:"request_id" gorm:"not null;type:varchar"`
+	Account     string    `json:"account" gorm:"type:varchar"`
+	InventoryId string    `json:"inventory_id" gorm:"type:varchar"`
+	SystemId    string    `json:"system_id" gorm:"type:varchar"`
 	CreatedAt   time.Time `gorm:"not null"`
 }
 
