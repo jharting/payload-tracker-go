@@ -19,7 +19,6 @@ type PayloadStatusJson struct {
 	StatusId  int32  `json:"status_id"`
 	StatusMsg string `json:"status_msg"`
 	Date      string `json:"date"`
-	CreatedAt string `json:"created_at"`
 }
 
 type Fields struct {
