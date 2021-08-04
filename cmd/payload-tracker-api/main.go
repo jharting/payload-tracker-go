@@ -11,6 +11,7 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
+	"github.com/redhatinsights/payload-tracker-go/internal/logging"
 )
 
 func lubdub(w http.ResponseWriter, r *http.Request) {
@@ -20,6 +21,8 @@ func lubdub(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
+	logging.InitLogger()
 
 	cfg := config.Get()
 
