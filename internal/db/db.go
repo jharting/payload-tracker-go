@@ -5,7 +5,6 @@ import (
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
-	// "github.com/redhatinsights/payload-tracker-go/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
