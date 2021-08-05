@@ -15,6 +15,10 @@ lint:
 	gofmt -l .
 	gofmt -s -w .
 
-seed:
-	go build tools/db-seeder/main.go
-	go run tools/db-seeder/main.go
+run-seed:
+	go build -o pt-seeder tools/db-seeder/main.go
+	./pt-seeder
+
+run-migration:
+	go build -o pt-migration internal/migration/main.go
+	./pt-migration
