@@ -5,7 +5,7 @@ import (
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
-	"github.com/redhatinsights/payload-tracker-go/models"
+	// "github.com/redhatinsights/payload-tracker-go/internal/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -29,14 +29,6 @@ func DbConnect() {
 	if err != nil {
 		l.Log.Fatal(err)
 	}
-
-	db.AutoMigrate(
-		&models.Services{},
-		&models.Sources{},
-		&models.Statuses{},
-		&models.PayloadStatuses{},
-		&models.Payloads{},
-	)
 
 	DB = db
 

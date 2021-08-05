@@ -1,13 +1,11 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	// "github.com/redhatinsights/payload-tracker-go/models"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
