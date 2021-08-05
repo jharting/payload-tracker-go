@@ -16,5 +16,5 @@ lint:
 	gofmt -s -w .
 
 seed:
-	go build cmd/db-seeder/main.go
-	go run cmd/db-seeder/main.go
+	go build tools/db-seeder/main.go
+	go run tools/db-seeder/main.go

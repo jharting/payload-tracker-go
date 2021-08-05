@@ -34,7 +34,7 @@ func main() {
 
 	db.DbConnect()
 
-	jsonFile, err := os.Open("cmd/db-seeder/seed.json")
+	jsonFile, err := os.Open("tools/db-seeder/seed.json")
 	if err != nil {
 		l.Log.Fatal(err)
 	}
