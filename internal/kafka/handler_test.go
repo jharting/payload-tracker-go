@@ -1,7 +1,5 @@
-package handlers
+package kafka
 
-import (
 // TODO: Add imports here
-)
 
 // TODO: Add Tests here

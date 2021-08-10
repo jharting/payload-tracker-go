@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/kafka"
 	"github.com/redhatinsights/payload-tracker-go/internal/logging"
 )
@@ -14,6 +15,9 @@ func main() {
 	cfg := config.Get()
 	ctx := context.Background()
 
+	logging.Log.Info("Setting up DB")
+	db.DbConnect(cfg)
+
 	logging.Log.Info("Starting a new kafka consumer...")
 	logging.Log.Info("Config for Consumer: ", cfg)
 
@@ -23,7 +27,5 @@ func main() {
 		logging.Log.Fatal("ERROR! ", err)
 	}
 
-	// TODO: Add Handler in here
-
-	kafka.NewConsumerEventLoop(ctx, consumer) // TODO: add in handler
+	kafka.NewConsumerEventLoop(ctx, cfg, consumer, db.DB)
 }

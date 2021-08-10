@@ -10,7 +10,7 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
-	"github.com/redhatinsights/payload-tracker-go/internal/models"
+	models "github.com/redhatinsights/payload-tracker-go/internal/models/db"
 )
 
 type PayloadStatusJson struct {
