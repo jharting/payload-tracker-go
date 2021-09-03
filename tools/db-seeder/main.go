@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/models"
@@ -32,7 +33,9 @@ type Fields struct {
 func main() {
 	l.InitLogger()
 
-	db.DbConnect()
+	cfg := config.Get()
+
+	db.DbConnect(cfg)
 
 	jsonFile, err := os.Open("tools/db-seeder/seed.json")
 	if err != nil {

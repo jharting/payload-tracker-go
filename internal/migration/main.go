@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/models"
@@ -9,7 +10,9 @@ import (
 func main() {
 	logging.InitLogger()
 
-	db.DbConnect()
+	cfg := config.Get()
+
+	db.DbConnect(cfg)
 
 	db.DB.AutoMigrate(
 		&models.Services{},

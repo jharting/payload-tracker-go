@@ -11,17 +11,15 @@ import (
 )
 
 var DB *gorm.DB
-var cfg *config.TrackerConfig = config.Get()
 
-var (
-	user     = cfg.DatabaseConfig.DBUser
-	password = cfg.DatabaseConfig.DBPassword
-	dbname   = cfg.DatabaseConfig.DBName
-	host     = cfg.DatabaseConfig.DBHost
-	port     = cfg.DatabaseConfig.DBPort
-)
-
-func DbConnect() {
+func DbConnect(cfg *config.TrackerConfig) {
+	var (
+		user = cfg.DatabaseConfig.DBUser
+		password = cfg.DatabaseConfig.DBPassword
+		dbname = cfg.DatabaseConfig.DBName
+		host = cfg.DatabaseConfig.DBHost
+		port = cfg.DatabaseConfig.DBPort
+	)
 	dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", user, password, dbname, host, port)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})

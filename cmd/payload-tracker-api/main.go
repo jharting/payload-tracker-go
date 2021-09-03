@@ -24,7 +24,12 @@ func main() {
 
 	cfg := config.Get()
 
-	db.DbConnect()
+	db.DbConnect(cfg)
+
+	healthHandler := endpoints.HealthCheckHandler(
+		db.DB,
+		*cfg,
+	)
 
 	r := chi.NewRouter()
 	mr := chi.NewRouter()
@@ -42,7 +47,7 @@ func main() {
 	sub.Get("/payloads", endpoints.Payloads)
 	sub.Get("/payloads/{request_id}", endpoints.SinglePayload)
 	sub.Get("/statuses", endpoints.Statuses)
-	sub.Get("/health", endpoints.Health)
+	sub.Get("/health", healthHandler)
 
 	srv := http.Server{
 		Addr:    ":" + cfg.PublicPort,
