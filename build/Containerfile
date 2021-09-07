@@ -1,1 +1,26 @@
-FROM registry.redhat.io/ubi8/ubi-minimal:latest
+FROM registry.redhat.io/ubi8/go-toolset as builder
+
+WORKDIR /go/src/app
+COPY . .
+
+USER 0
+
+RUN go get -d ./... && \
+    go build -o pt-api cmd/payload-tracker-api/main.go && \
+    go build -o pt-consumer cmd/payload-tracker-consumer/main.go
+
+RUN cp /go/src/app/pt-api /usr/bin/ && \
+    cp /go/src/app/pt-consumer /usr/bin/
+
+FROM registry.redhat.io/ubi8/ubi-minimal
+
+WORKDIR /
+
+COPY --from=builder /go/src/app/pt-api ./pt-api
+COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
+
+USER 1001
+
+# There is no command here becuase this image can be used for
+# both the api and consumer. The command to run should be in the
+# deployment config.
