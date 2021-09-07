@@ -38,6 +38,7 @@ func main() {
 	// Mount the root of the api router on /api/v1
 	r.Mount("/api/v1/", sub)
 	r.Get("/", lubdub)
+	r.Get("/health", healthHandler)
 
 	// Mount the metrics handler on /metrics
 	mr.Get("/", lubdub)
@@ -47,7 +48,6 @@ func main() {
 	sub.Get("/payloads", endpoints.Payloads)
 	sub.Get("/payloads/{request_id}", endpoints.SinglePayload)
 	sub.Get("/statuses", endpoints.Statuses)
-	sub.Get("/health", healthHandler)
 
 	srv := http.Server{
 		Addr:    ":" + cfg.PublicPort,
