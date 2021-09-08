@@ -1,8 +1,16 @@
 package endpoints
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
+	"time"
+
+	"github.com/redhatinsights/payload-tracker-go/internal/db_methods"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
+	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 
 var (
@@ -11,22 +19,6 @@ var (
 	validIDSortBy  = []string{"service", "source", "status_msg", "date", "created_at"}
 	validSortDir   = []string{"asc", "desc"}
 )
-
-// Query is a struct for holding query params
-type Query struct {
-	Page         int
-	PageSize     int
-	RequestID    string
-	SortBy       string
-	SortDir      string
-	Account      string
-	InventoryID  string
-	SystemID     string
-	CreatedAtLT  string
-	CreatedAtLTE string
-	CreatedAtGT  string
-	CreatedAtGTE string
-}
 
 // ReturnData is the response for the endpoint
 type ReturnData struct {
@@ -68,9 +60,9 @@ type DurationsRetrieve struct {
 }
 
 // initQuery intializes the query with default values
-func initQuery(r *http.Request) Query {
+func initQuery(r *http.Request) (structs.Query, error) {
 
-	q := Query{
+	q := structs.Query{
 		Page:         0,
 		PageSize:     10,
 		SortBy:       "created_at",
@@ -84,6 +76,8 @@ func initQuery(r *http.Request) Query {
 		Account:      r.URL.Query().Get("account"),
 	}
 
+	var err error
+
 	if r.URL.Query().Get("sort_by") != "" || stringInSlice(r.URL.Query().Get("sort_by"), validSortBy) {
 		q.SortBy = r.URL.Query().Get("sort_by")
 	}
@@ -93,14 +87,25 @@ func initQuery(r *http.Request) Query {
 	}
 
 	if r.URL.Query().Get("page") != "" {
-		q.Page, _ = strconv.Atoi(r.URL.Query().Get("page"))
+		q.Page, err = strconv.Atoi(r.URL.Query().Get("page"))
 	}
 
 	if r.URL.Query().Get("page_size") != "" {
-		q.PageSize, _ = strconv.Atoi(r.URL.Query().Get("page_size"))
+		q.PageSize, err = strconv.Atoi(r.URL.Query().Get("page_size"))
 	}
 
-	return q
+	return q, err
+}
+
+func getErrorBody(message string, status int) string {
+	errBody := structs.ErrorResponse{
+		Title:   http.StatusText(status),
+		Message: message,
+		Status:  status,
+	}
+
+	errBodyJson, _ := json.Marshal(errBody)
+	return string(errBodyJson)
 }
 
 // Check for value in a slice
@@ -113,22 +118,78 @@ func stringInSlice(a string, list []string) bool {
 	return false
 }
 
+// Check timestamp format
+func validTimestamps(q structs.Query) bool {
+	timestampQueries := []string{q.CreatedAtLT, q.CreatedAtGT, q.CreatedAtLTE, q.CreatedAtGTE}
+
+	for _, ts := range timestampQueries {
+		if ts != "" {
+			_, err := time.Parse(time.RFC3339, ts)
+			if err != nil {
+				fmt.Println(err)
+				return false
+			}
+		}
+	}
+	return true
+}
+
 // Payloads returns responses for the /payloads endpoint
 func Payloads(w http.ResponseWriter, r *http.Request) {
 
 	// init query with defaults and passed params
-	q := initQuery(r)
-	sortBy := r.URL.Query().Get("sort_by")
+	start := time.Now()
 
-	if q.SortBy != sortBy && stringInSlice(sortBy, validAllSortBy) {
-		q.SortBy = sortBy
+	q, err := initQuery(r)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(getErrorBody(fmt.Sprintf("%v", err), http.StatusBadRequest)))
+		return
+	}
+
+	if !stringInSlice(q.SortBy, validAllSortBy) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		message := "sort_by must be one of " + strings.Join(validAllSortBy, ", ")
+		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		return
+	}
+	if !stringInSlice(q.SortDir, validSortDir) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		message := "sort_dir must be one of " + strings.Join(validSortDir, ", ")
+		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		return
+	}
+
+	if !validTimestamps(q) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		message := "invalid timestamp format provided"
+		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		return
 	}
 
 	// TODO: do some database stuff
+	count, payloads := db_methods.RetrievePayloads(q.Page, q.PageSize, q)
+	duration := time.Since(start).Seconds()
+
+	payloadsData := structs.PayloadsData{count, duration, payloads}
+
+	dataJson, err := json.Marshal(payloadsData)
+	if err != nil {
+		l.Log.Error(err)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(getErrorBody("Internal Server Issue", http.StatusInternalServerError)))
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("Boop"))
+	w.Write([]byte(string(dataJson)))
 }
 
 // SinglePayload returns a resposne for /payloads/{request_id}
@@ -137,7 +198,7 @@ func SinglePayload(w http.ResponseWriter, r *http.Request) {
 	reqID := r.URL.Query().Get("request_id")
 	sortBy := r.URL.Query().Get("sort_by")
 
-	q := initQuery(r)
+	q, _ := initQuery(r)
 
 	// there is a different default for sortby when searching for single payloads
 	// we first check that the sortby param is valid, then set to either that value or the default
