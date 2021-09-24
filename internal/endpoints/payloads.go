@@ -3,6 +3,7 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
 	"strings"
@@ -19,45 +20,6 @@ var (
 	validIDSortBy  = []string{"service", "source", "status_msg", "date", "created_at"}
 	validSortDir   = []string{"asc", "desc"}
 )
-
-// ReturnData is the response for the endpoint
-type ReturnData struct {
-	Count               int                   `json:"count"`
-	Elapsed             string                `json:"elapsed"`
-	PayloadRetrieve     []PayloadRetrieve     `json:"data"`
-	PayloadRetrievebyID []PayloadRetrievebyID `json:"data"`
-	StatusRetrieve      []StatusRetrieve      `json:"data"`
-}
-
-// PayloadRetrieve is the data for all payloads
-type PayloadRetrieve struct {
-	RequestID   string `json:"request_id"`
-	Account     string `json:"account"`
-	InventoryID string `json:"inventory_id,omitempty"`
-	SystemID    string `json:"system_id,omitempty"`
-	CreatedAt   string `json:"created_at,omitempty"`
-}
-
-// PayloadRetrievebyID is the data for a single payload
-type PayloadRetrievebyID struct {
-	ID          string `json:"id,omitempty"`
-	Service     string `json:"service,omitempty"`
-	Source      string `json:"source,omitempty"`
-	Account     string `json:"account"`
-	RequestID   string `json:"request_id"`
-	InventoryID string `json:"inventory_id,omitempty"`
-	SystemID    string `json:"system_id,omitempty"`
-	CreatedAt   string `json:"created_at,omitempty"`
-	Status      string `json:"status,omitempty"`
-	StatusMsg   string `json:"status_msg,omitempty"`
-	Date        string `json:"date,omitempty"`
-}
-
-// DurationsRetrieve hold the time spend in a given service
-type DurationsRetrieve struct {
-	Service   string `json:"service"`
-	TimeDelta string `json:"timedelta"`
-}
 
 // initQuery intializes the query with default values
 func initQuery(r *http.Request) (structs.Query, error) {
@@ -126,12 +88,18 @@ func validTimestamps(q structs.Query) bool {
 		if ts != "" {
 			_, err := time.Parse(time.RFC3339, ts)
 			if err != nil {
-				fmt.Println(err)
 				return false
 			}
 		}
 	}
 	return true
+}
+
+// Write HTTP Response
+func writeResponse(w http.ResponseWriter, status int, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write([]byte(message))
 }
 
 // Payloads returns responses for the /payloads endpoint
@@ -143,32 +111,24 @@ func Payloads(w http.ResponseWriter, r *http.Request) {
 	q, err := initQuery(r)
 
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(getErrorBody(fmt.Sprintf("%v", err), http.StatusBadRequest)))
+		writeResponse(w, http.StatusBadRequest, getErrorBody(fmt.Sprintf("%v", err), http.StatusBadRequest))
 		return
 	}
 
 	if !stringInSlice(q.SortBy, validAllSortBy) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
 		message := "sort_by must be one of " + strings.Join(validAllSortBy, ", ")
-		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		writeResponse(w, http.StatusBadRequest, getErrorBody(message, http.StatusBadRequest))
 		return
 	}
 	if !stringInSlice(q.SortDir, validSortDir) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
 		message := "sort_dir must be one of " + strings.Join(validSortDir, ", ")
-		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		writeResponse(w, http.StatusBadRequest, getErrorBody(message, http.StatusBadRequest))
 		return
 	}
 
 	if !validTimestamps(q) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
 		message := "invalid timestamp format provided"
-		w.Write([]byte(getErrorBody(message, http.StatusBadRequest)))
+		writeResponse(w, http.StatusBadRequest, getErrorBody(message, http.StatusBadRequest))
 		return
 	}
 
@@ -181,34 +141,53 @@ func Payloads(w http.ResponseWriter, r *http.Request) {
 	dataJson, err := json.Marshal(payloadsData)
 	if err != nil {
 		l.Log.Error(err)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(getErrorBody("Internal Server Issue", http.StatusInternalServerError)))
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Internal Server Issue", http.StatusInternalServerError))
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(string(dataJson)))
+	writeResponse(w, http.StatusOK, string(dataJson))
 }
 
 // SinglePayload returns a resposne for /payloads/{request_id}
-func SinglePayload(w http.ResponseWriter, r *http.Request) {
+func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
-	reqID := r.URL.Query().Get("request_id")
+	reqID := chi.URLParam(r, "request_id")
 	sortBy := r.URL.Query().Get("sort_by")
 
-	q, _ := initQuery(r)
+	q, err := initQuery(r)
+
+	if err != nil {
+		writeResponse(w, http.StatusBadRequest, getErrorBody(fmt.Sprintf("%v", err), http.StatusBadRequest))
+		return
+	}
+
+	if !stringInSlice(q.SortBy, validIDSortBy) {
+		message := "sort_by must be one of " + strings.Join(validIDSortBy, ", ")
+		writeResponse(w, http.StatusBadRequest, getErrorBody(message, http.StatusBadRequest))
+		return
+	}
+	if !stringInSlice(q.SortDir, validSortDir) {
+		message := "sort_dir must be one of " + strings.Join(validSortDir, ", ")
+		writeResponse(w, http.StatusBadRequest, getErrorBody(message, http.StatusBadRequest))
+		return
+	}
 
 	// there is a different default for sortby when searching for single payloads
-	// we first check that the sortby param is valid, then set to either that value or the default
-	if q.SortBy != sortBy && stringInSlice(sortBy, validIDSortBy) {
-		q.SortBy = sortBy
-	} else {
+	if sortBy == "" {
 		q.SortBy = "date"
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(reqID))
+	payloads := db_methods.RetrieveRequestIdPayloads(reqID, q.SortBy, q.SortDir)
+	durations := db_methods.CalculateDurations(payloads)
+
+	payloadsData := structs.PayloadRetrievebyID{Data: payloads, Durations: durations}
+
+	dataJson, err := json.Marshal(payloadsData)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Internal Server Issue", http.StatusInternalServerError))
+		return
+	}
+
+	writeResponse(w, http.StatusOK, string(dataJson))
 }
