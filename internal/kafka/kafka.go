@@ -45,10 +45,10 @@ func NewConsumerEventLoop(
 		msg, err := consumer.ReadMessage(10 * time.Second) // TODO: configurable
 
 		if err != nil {
-			l.Log.Fatal("Consumer error: %v (%v)\n", err, msg)
+			l.Log.Fatalf("Consumer error: %v (%v)\n", err, msg)
 			break
 		} else {
-			l.Log.Info("message %s = %s\n", string(msg.Key), string(msg.Value))
+			l.Log.Infof("message %s = %s\n", string(msg.Key), string(msg.Value))
 		}
 		// TODO: Add Handler
 	}
