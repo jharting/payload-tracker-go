@@ -3,11 +3,12 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/db_methods"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
@@ -110,8 +111,11 @@ func writeResponse(w http.ResponseWriter, status int, message string) {
 // Payloads returns responses for the /payloads endpoint
 func Payloads(w http.ResponseWriter, r *http.Request) {
 
+
 	// init query with defaults and passed params
 	start := time.Now()
+
+	incRequests()
 
 	q, err := initQuery(r)
 
@@ -137,9 +141,10 @@ func Payloads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: do some database stuff
+	// TODO: do some database stuff 
 	count, payloads := RetrievePayloads(q.Page, q.PageSize, q)
 	duration := time.Since(start).Seconds()
+	observeDBTime(time.Since(start))
 
 	payloadsData := structs.PayloadsData{count, duration, payloads}
 
