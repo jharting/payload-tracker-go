@@ -3,11 +3,12 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi/v5"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/db_methods"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
@@ -158,6 +159,7 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
 	sortBy := r.URL.Query().Get("sort_by")
+	verbosity := r.URL.Query().Get("verbosity")
 
 	q, err := initQuery(r)
 
@@ -182,7 +184,7 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 		q.SortBy = "date"
 	}
 
-	payloads := RetrieveRequestIdPayloads(reqID, q.SortBy, q.SortDir)
+	payloads := RetrieveRequestIdPayloads(reqID, q.SortBy, q.SortDir, verbosity)
 	durations := db_methods.CalculateDurations(payloads)
 
 	payloadsData := structs.PayloadRetrievebyID{Data: payloads, Durations: durations}
