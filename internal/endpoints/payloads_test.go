@@ -149,7 +149,7 @@ var _ = Describe("Payloads", func() {
 				Expect(respData.Data[0].RequestId).To(Equal(payloadData.RequestId))
 				Expect(respData.Data[0].InventoryId).To(Equal(payloadData.InventoryId))
 				Expect(respData.Data[0].SystemId).To(Equal(payloadData.SystemId))
-				Expect(respData.Data[0].CreatedAt).To(Equal(payloadData.CreatedAt))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(payloadData.CreatedAt.String()))
 			})
 		})
 
@@ -291,10 +291,10 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
 				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
 				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))
-				Expect(respData.Data[0].CreatedAt).To(Equal(reqIdPayloads[0].CreatedAt))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
 				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
-				Expect(respData.Data[0].Date).To(Equal(reqIdPayloads[0].Date))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
 			})
 
 			It("should correctly calculate durations", func() {
