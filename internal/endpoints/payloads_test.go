@@ -53,12 +53,6 @@ func dataPerVerbosity(requestId string, verbosity string, d1 time.Time) structs.
 			Date:        d1,
 			StatusMsg:   "generating reports",
 		}
-	case "0":
-		return structs.SinglePayloadData{
-			Service: "puptoo",
-			Status:  "recieved",
-			Date:    d1,
-		}
 	default:
 		return structs.SinglePayloadData{
 			Service: "puptoo",
@@ -359,12 +353,14 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
+				Expect(respData.Data[0].SystemID).To(BeEmpty())
+				Expect(respData.Data[0].RequestID).To(BeEmpty())
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
 				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
-				Expect(respData.Data[0].CreatedAt).To(Equal(reqIdPayloads[0].CreatedAt))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
 				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
-				Expect(respData.Data[0].Date).To(Equal(reqIdPayloads[0].Date))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
 			})
 		})
 
@@ -384,10 +380,13 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
+				Expect(respData.Data[0].SystemID).To(BeEmpty())
+				Expect(respData.Data[0].RequestID).To(BeEmpty())
+				Expect(respData.Data[0].StatusMsg).To(BeEmpty())
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
-				Expect(respData.Data[0].CreatedAt).To(Equal(reqIdPayloads[0].CreatedAt))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
-				Expect(respData.Data[0].Date).To(Equal(reqIdPayloads[0].Date))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
 			})
 		})
 	})

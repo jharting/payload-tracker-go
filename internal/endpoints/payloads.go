@@ -27,6 +27,10 @@ var (
 	RetrieveRequestIdPayloads = db_methods.RetrieveRequestIdPayloads
 )
 
+var (
+	verbosity string = "0"
+)
+
 // initQuery intializes the query with default values
 func initQuery(r *http.Request) (structs.Query, error) {
 
@@ -159,7 +163,7 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
 	sortBy := r.URL.Query().Get("sort_by")
-	verbosity := r.URL.Query().Get("verbosity")
+	verbosity = r.URL.Query().Get("verbosity")
 
 	q, err := initQuery(r)
 
