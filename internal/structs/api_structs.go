@@ -20,6 +20,15 @@ type Query struct {
 	CreatedAtLTE string
 	CreatedAtGT  string
 	CreatedAtGTE string
+
+	Service   string
+	Source    string
+	Status    string
+	StatusMsg string
+	DateLT    string
+	DateLTE   string
+	DateGT    string
+	DateGTE   string
 }
 
 // PayloadsData is the response for the /payloads endpoint
@@ -33,6 +42,12 @@ type PayloadsData struct {
 type PayloadRetrievebyID struct {
 	Data      []SinglePayloadData `json:"data"`
 	Durations map[string]string   `json:"duration"`
+}
+
+type StatusesData struct {
+	Count   int64            `json:"count"`
+	Elapsed float64          `json:"elapsed"`
+	Data    []StatusRetrieve `json:"data"`
 }
 
 // Error response struct for endpoints
@@ -55,4 +70,16 @@ type SinglePayloadData struct {
 	Status      string    `json:"status,omitempty"`
 	StatusMsg   string    `json:"status_msg,omitempty"`
 	Date        time.Time `json:"date,omitempty"`
+}
+
+// StatusRetrieve returns a response for /payloads/statuses
+type StatusRetrieve struct {
+	RequestID string `json:"request_id,omitempty"`
+	Status    string `json:"status,omitempty"`
+	ID        string `json:"id,omitempty"`
+	Service   string `json:"service,omitempty"`
+	Source    string `json:"source,omitempty"`
+	StatusMsg string `json:"status_msg,omitempty"`
+	Date      string `json:"date,omitempty"`
+	CreatedAt string `json:"created_at,omitempty"`
 }
