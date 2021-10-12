@@ -18,7 +18,6 @@ type TrackerConfig struct {
 	CloudwatchConfig CloudwatchCfg
 	DatabaseConfig   DatabaseCfg
 	RequestConfig    RequestCfg
-	RedisConfig      RedisCfg
 }
 
 type KafkaCfg struct {
@@ -59,12 +58,6 @@ type RequestCfg struct {
 	ValidateRequestIDLength int
 }
 
-type RedisCfg struct {
-	UseRedis  bool
-	RedisHost string
-	RedisPort int
-}
-
 // Get sets each config option with its defaults
 func Get() *TrackerConfig {
 	options := viper.New()
@@ -91,9 +84,6 @@ func Get() *TrackerConfig {
 	options.SetDefault("validate.request.id", "true")
 	options.SetDefault("validate.request.id.length", 32)
 
-	// redis config
-	options.SetDefault("use.redis", "false")
-
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
 
@@ -115,9 +105,6 @@ func Get() *TrackerConfig {
 		options.SetDefault("cwRegion", cfg.Logging.Cloudwatch.Region)
 		options.SetDefault("cwAccessKey", cfg.Logging.Cloudwatch.AccessKeyId)
 		options.SetDefault("cwSecretKey", cfg.Logging.Cloudwatch.SecretAccessKey)
-		// redis
-		options.SetDefault("redis.host", cfg.InMemoryDb.Hostname)
-		options.SetDefault("redis.port", cfg.InMemoryDb.Port)
 	} else {
 		options.SetDefault("kafka.bootstrap.servers", "localhost:29092")
 		options.SetDefault("topic.payload.status", "platform.payload-status")
@@ -135,9 +122,6 @@ func Get() *TrackerConfig {
 		options.SetDefault("cwRegion", "us-east-1")
 		options.SetDefault("cwAccessKey", os.Getenv("CW_AWS_ACCESS_KEY_ID"))
 		options.SetDefault("cwSecretKey", os.Getenv("CW_AWS_SECRET_ACCESS_KEY"))
-		// redis
-		options.SetDefault("redis.host", "localhost")
-		options.SetDefault("redis.port", 6379)
 	}
 
 	options.AutomaticEnv()
@@ -174,11 +158,6 @@ func Get() *TrackerConfig {
 		RequestConfig: RequestCfg{
 			ValidateRequestID:       options.GetBool("validate.request.id"),
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
-		},
-		RedisConfig: RedisCfg{
-			UseRedis:  options.GetBool("use.redis"),
-			RedisHost: options.GetString("redis.host"),
-			RedisPort: options.GetInt("redis.port"),
 		},
 	}
 
