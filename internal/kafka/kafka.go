@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"gorm.io/gorm"
 
 	config "github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
@@ -39,7 +40,9 @@ func NewConsumer(ctx context.Context, config *config.TrackerConfig, topic string
 // NewConsumerEventLoop creates a new consumer event loop based on the information passed with it
 func NewConsumerEventLoop(
 	ctx context.Context,
+	cfg *config.TrackerConfig,
 	consumer *kafka.Consumer,
+	db *gorm.DB,
 ) {
 	for {
 		msg, err := consumer.ReadMessage(10 * time.Second) // TODO: configurable
@@ -50,7 +53,12 @@ func NewConsumerEventLoop(
 		} else {
 			l.Log.Infof("message %s = %s\n", string(msg.Key), string(msg.Value))
 		}
-		// TODO: Add Handler
+
+		handler := &handler{
+			db: db,
+		}
+
+		handler.onMessage(ctx, msg, cfg)
 	}
 
 	consumer.Close()

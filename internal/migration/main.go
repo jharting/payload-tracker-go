@@ -4,7 +4,7 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/logging"
-	"github.com/redhatinsights/payload-tracker-go/internal/models"
+	models "github.com/redhatinsights/payload-tracker-go/internal/models/db"
 )
 
 func main() {

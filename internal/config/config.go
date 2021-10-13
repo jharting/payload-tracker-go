@@ -17,6 +17,7 @@ type TrackerConfig struct {
 	KafkaConfig      KafkaCfg
 	CloudwatchConfig CloudwatchCfg
 	DatabaseConfig   DatabaseCfg
+	RequestConfig    RequestCfg
 }
 
 type KafkaCfg struct {
@@ -52,6 +53,11 @@ type CloudwatchCfg struct {
 	CWSecretKey string
 }
 
+type RequestCfg struct {
+	ValidateRequestID       bool
+	ValidateRequestIDLength int
+}
+
 // Get sets each config option with its defaults
 func Get() *TrackerConfig {
 	options := viper.New()
@@ -73,6 +79,10 @@ func Get() *TrackerConfig {
 	options.SetDefault("kafka.request.required.acks", -1) // -1 == "all"
 	options.SetDefault("kafka.message.send.max.retries", 15)
 	options.SetDefault("kafka.retry.backoff.ms", 100)
+
+	// requestID config
+	options.SetDefault("validate.request.id", "true")
+	options.SetDefault("validate.request.id.length", 32)
 
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
@@ -144,6 +154,10 @@ func Get() *TrackerConfig {
 			CWRegion:    options.GetString("cwRegion"),
 			CWAccessKey: options.GetString("cwAccessKey"),
 			CWSecretKey: options.GetString("cwSecretKey"),
+		},
+		RequestConfig: RequestCfg{
+			ValidateRequestID:       options.GetBool("validate.request.id"),
+			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
 		},
 	}
 
