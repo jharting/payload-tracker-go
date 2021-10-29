@@ -17,8 +17,8 @@ objects:
   kind: Deployment
   metadata:
     labels:
-      app: payload-tracker
-    name: payload-tracker
+      app: payload-tracker-go
+    name: payload-tracker-go
   spec:
     minReadySeconds: 15
     progressDeadlineSeconds: ${{UPDATE_TIMEOUT}}
@@ -26,7 +26,7 @@ objects:
     revisionHistoryLimit: 9
     selector:
       matchLabels:
-        app: payload-tracker
+        app: payload-tracker-go
     strategy:
       rollingUpdate:
         maxSurge: 25%
@@ -41,7 +41,7 @@ objects:
           sidecar.istio.io/inject: ${SIDECAR_INJECT}
           traffic.sidecar.istio.io/excludeOutboundIPRanges: ${EXCLUDE_CIDR}
         labels:
-          app: payload-tracker
+          app: payload-tracker-go
       spec:
         affinity:
           podAntiAffinity:
@@ -437,77 +437,6 @@ objects:
       name: payload-tracker
       weight: 100
     wildcardPolicy: None
-- apiVersion: batch/v1beta1
-  kind: CronJob
-  metadata:
-    annotations: {}
-    labels:
-      app: payload-tracker
-    name: vacuum-payload-tracker-db
-  spec:
-    jobTemplate:
-      spec:
-        template:
-          spec:
-            containers:
-            - command:
-              - ./cron-job.sh
-              env:
-              - name: LOG_LEVEL
-                value: ${LOG_LEVEL}
-              - name: DEBUG
-                value: ${DEBUG}
-              - name: PORT
-                value: ${PORT}
-              - name: DB_POOL_SIZE
-                value: ${DB_POOL_SIZE}
-              - name: DB_MAX_OVERFLOW
-                value: ${DB_MAX_OVERFLOW}
-              - name: DB_NAME
-                valueFrom:
-                  secretKeyRef:
-                    key: db.name
-                    name: payload-tracker-db-creds
-              - name: DB_USER
-                valueFrom:
-                  secretKeyRef:
-                    key: db.user
-                    name: payload-tracker-db-creds
-              - name: DB_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    key: db.password
-                    name: payload-tracker-db-creds
-              - name: DB_HOST
-                valueFrom:
-                  secretKeyRef:
-                    key: db.host
-                    name: payload-tracker-db-creds
-              - name: DB_PORT
-                valueFrom:
-                  secretKeyRef:
-                    key: db.port
-                    name: payload-tracker-db-creds
-              - name: BOOTSTRAP_SERVERS
-                value: ${KAFKA_BOOTSTRAP_HOST}:${KAFKA_BOOTSTRAP_PORT}
-              - name: PAYLOAD_TRACKER_TOPIC
-                value: ${PAYLOAD_TRACKER_TOPIC}
-              - name: RETENTION_DAYS
-                value: ${RETENTION_DAYS}
-              image: quay.io/cloudservices/payload-tracker:${IMAGE_TAG}
-              name: payload-tracker
-              resources:
-                limits:
-                  cpu: 250m
-                  memory: 256Mi
-                requests:
-                  cpu: 75m
-                  memory: 128Mi
-            imagePullSecrets:
-            - name: quay-cloudservices-pull
-            - name: rh-registry-pull
-            restartPolicy: Never
-    schedule: 11 11 * * *
 parameters:
 - name: LOG_LEVEL
   value: INFO
