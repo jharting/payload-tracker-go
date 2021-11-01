@@ -7,6 +7,7 @@ APP_NAME="ingress"  # name of app-sre "application" folder this component lives 
 COMPONENT_NAME="ingress"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
 IMAGE="quay.io/cloudservices/payload-tracker-go"  
 
+# ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
 # IQE_PLUGINS="ingress"
 # IQE_MARKER_EXPRESSION="smoke"
 # IQE_FILTER_EXPRESSION=""

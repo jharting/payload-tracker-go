@@ -21,7 +21,6 @@ objects:
     name: payload-tracker-go
   spec:
     minReadySeconds: 15
-    progressDeadlineSeconds: ${{UPDATE_TIMEOUT}}
     replicas: ${{MIN_REPLICAS}}
     revisionHistoryLimit: 9
     selector:
@@ -32,16 +31,6 @@ objects:
         maxSurge: 25%
         maxUnavailable: 25%
       type: RollingUpdate
-    template:
-      metadata:
-        annotations:
-          prometheus.io/path: /
-          prometheus.io/port: '8000'
-          prometheus.io/scrape: 'true'
-          sidecar.istio.io/inject: ${SIDECAR_INJECT}
-          traffic.sidecar.istio.io/excludeOutboundIPRanges: ${EXCLUDE_CIDR}
-        labels:
-          app: payload-tracker-go
       spec:
         affinity:
           podAntiAffinity:
@@ -52,7 +41,7 @@ objects:
                   - key: app
                     operator: In
                     values:
-                    - payload-tracker
+                    - payload-tracker-go
                 topologyKey: failure-domain.beta.kubernetes.io/zone
               weight: 100
             - podAffinityTerm:
@@ -61,19 +50,18 @@ objects:
                   - key: app
                     operator: In
                     values:
-                    - payload-tracker
+                    - payload-tracker-go
                 topologyKey: kubernetes.io/hostname
               weight: 99
         containers:
         - args:
           - --https-address=:8443
           - --provider=openshift
-          - --openshift-service-account=payload-tracker
+          - --openshift-service-account=payload-tracker-go
           - --upstream=http://localhost:8080
           - --tls-cert=/etc/tls/private/tls.crt
           - --tls-key=/etc/tls/private/tls.key
           - --cookie-secret-file=/etc/proxy/secrets/session_secret
-          image: ${OAUTH_IMAGE}:${OAUTH_IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             initialDelaySeconds: 15
@@ -109,12 +97,8 @@ objects:
             value: ${LOG_LEVEL}
           - name: DEBUG
             value: ${DEBUG}
-          - name: PORT
-            value: ${PORT}
-          - name: DB_POOL_SIZE
-            value: ${DB_POOL_SIZE}
-          - name: DB_MAX_OVERFLOW
-            value: ${DB_MAX_OVERFLOW}
+          - name: PUBLICPORT
+            value: ${PUBLICPORT}
           - name: DB_NAME
             valueFrom:
               secretKeyRef:
@@ -144,24 +128,6 @@ objects:
             value: ${KAFKA_BOOTSTRAP_HOST}:${KAFKA_BOOTSTRAP_PORT}
           - name: PAYLOAD_TRACKER_TOPIC
             value: ${PAYLOAD_TRACKER_TOPIC}
-          - name: MAXIMUM_RUNNING_TASKS
-            value: ${MAXIMUM_RUNNING_TASKS}
-          - name: DISABLE_PROMETHEUS
-            value: ${DISABLE_PROMETHEUS}
-          - name: USE_REDIS
-            value: ${USE_REDIS}
-          - name: REDIS_HOST
-            valueFrom:
-              secretKeyRef:
-                key: db.endpoint
-                name: payload-tracker-cache-creds
-          - name: REDIS_PORT
-            valueFrom:
-              secretKeyRef:
-                key: db.port
-                name: payload-tracker-cache-creds
-          - name: SECONDS_TO_LIVE
-            value: ${SECONDS_TO_LIVE}
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
@@ -172,35 +138,19 @@ objects:
               secretKeyRef:
                 key: aws_secret_access_key
                 name: cloudwatch
-          - name: AWS_REGION_NAME
+          - name: CWREGION
             valueFrom:
               secretKeyRef:
                 key: aws_region
                 name: cloudwatch
-          - name: CW_LOG_GROUP
+          - name: LOGGROUP
             valueFrom:
               secretKeyRef:
                 key: log_group_name
                 name: cloudwatch
-          - name: CW_LOG_STREAM
-            value: ${CW_LOG_STREAM}
-          - name: KAFKA_SECURITY_PROTOCOL
-            value: ${KAFKA_SECURITY_PROTOCOL}
-          - name: KAFKA_SSL_CAFILE
-            value: /opt/certs/kafka-cacert
-          - name: KAFKA_SASL_MECHANISM
-            value: ${KAFKA_SASL_MECHANISM}
-          - name: KAFKA_SASL_USERNAME
-            valueFrom:
-              secretKeyRef:
-                key: username
-                name: kafka-credentials
-          - name: KAFKA_SASL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: password
-                name: kafka-credentials
-          image: quay.io/cloudservices/payload-tracker:${IMAGE_TAG}
+          - name: CW_LOG_GROUP
+            value: ${CW_LOG_GROUP}
+          image: quay.io/cloudservices/payload-tracker-go:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -211,7 +161,7 @@ objects:
             periodSeconds: 30
             successThreshold: 1
             timeoutSeconds: 60
-          name: payload-tracker
+          name: payload-tracker-go
           ports:
           - containerPort: 8080
             protocol: TCP
@@ -251,12 +201,8 @@ objects:
             value: ${LOG_LEVEL}
           - name: DEBUG
             value: ${DEBUG}
-          - name: PORT
-            value: ${PORT}
-          - name: DB_POOL_SIZE
-            value: ${DB_POOL_SIZE}
-          - name: DB_MAX_OVERFLOW
-            value: ${DB_MAX_OVERFLOW}
+          - name: PUBLICPORT
+            value: ${PUBLICPORT}
           - name: DB_NAME
             valueFrom:
               secretKeyRef:
@@ -286,24 +232,6 @@ objects:
             value: ${KAFKA_BOOTSTRAP_HOST}:${KAFKA_BOOTSTRAP_PORT}
           - name: PAYLOAD_TRACKER_TOPIC
             value: ${PAYLOAD_TRACKER_TOPIC}
-          - name: MAXIMUM_RUNNING_TASKS
-            value: ${MAXIMUM_RUNNING_TASKS}
-          - name: DISABLE_PROMETHEUS
-            value: ${DISABLE_PROMETHEUS}
-          - name: USE_REDIS
-            value: ${USE_REDIS}
-          - name: REDIS_HOST
-            valueFrom:
-              secretKeyRef:
-                key: db.endpoint
-                name: payload-tracker-cache-creds
-          - name: REDIS_PORT
-            valueFrom:
-              secretKeyRef:
-                key: db.port
-                name: payload-tracker-cache-creds
-          - name: SECONDS_TO_LIVE
-            value: ${SECONDS_TO_LIVE}
           - name: AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
@@ -314,12 +242,12 @@ objects:
               secretKeyRef:
                 key: aws_secret_access_key
                 name: cloudwatch
-          - name: AWS_REGION_NAME
+          - name: CWREGION
             valueFrom:
               secretKeyRef:
                 key: aws_region
                 name: cloudwatch
-          - name: CW_LOG_GROUP
+          - name: LOGGROUP
             valueFrom:
               secretKeyRef:
                 key: log_group_name
@@ -342,7 +270,7 @@ objects:
               secretKeyRef:
                 key: password
                 name: kafka-credentials
-          image: quay.io/cloudservices/payload-tracker:${IMAGE_TAG}
+          image: quay.io/cloudservices/payload-tracker-go:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           name: payload-tracker-init
           ports:
@@ -364,8 +292,8 @@ objects:
         restartPolicy: Always
         schedulerName: default-scheduler
         securityContext: {}
-        serviceAccount: payload-tracker
-        serviceAccountName: payload-tracker
+        serviceAccount: payload-tracker-go
+        serviceAccountName: payload-tracker-go
         terminationGracePeriodSeconds: 30
         volumes:
         - name: payload-tracker-cookie
@@ -386,8 +314,8 @@ objects:
       openshift.io/generated-by: OpenShiftWebConsole
       service.alpha.openshift.io/serving-cert-secret-name: payload-tracker-auth
     labels:
-      app: payload-tracker
-    name: payload-tracker
+      app: payload-tracker-go
+    name: payload-tracker-go
   spec:
     ports:
     - name: proxy-port
@@ -403,29 +331,29 @@ objects:
       protocol: TCP
       targetPort: 8000
     selector:
-      app: payload-tracker
+      app: payload-tracker-go
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: autoscaling/v1
   kind: HorizontalPodAutoscaler
   metadata:
     labels:
-      app: payload-tracker
-    name: payload-tracker
+      app: payload-tracker-go
+    name: payload-tracker-go
   spec:
     maxReplicas: ${{MAX_REPLICAS}}
     minReplicas: ${{MIN_REPLICAS}}
     scaleTargetRef:
       apiVersion: apps/v1
       kind: Deployment
-      name: payload-tracker
+      name: payload-tracker-go
     targetCPUUtilizationPercentage: 81
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     labels:
-      app: payload-tracker
-    name: payload-tracker
+      app: payload-tracker-go
+    name: payload-tracker-go
   spec:
     port:
       targetPort: proxy-port
@@ -434,7 +362,7 @@ objects:
       termination: reencrypt
     to:
       kind: Service
-      name: payload-tracker
+      name: payload-tracker-go
       weight: 100
     wildcardPolicy: None
 parameters:
@@ -442,7 +370,7 @@ parameters:
   value: INFO
 - name: DEBUG
   value: 'False'
-- name: PORT
+- name: PUBLICPORT
   value: '8080'
 - name: DB_POOL_SIZE
   value: '30'
@@ -466,28 +394,12 @@ parameters:
 - description: Minimum Replica count for deployment
   name: MIN_REPLICAS
   value: '8'
-- name: OAUTH_IMAGE
-  value: registry.reg-aws.openshift.com:443/openshift3/oauth-proxy
-- name: OAUTH_IMAGE_TAG
-  value: v3.11.43
-- description: Number of days to retain Payload status entries in the database when
-    cron job is enabled
-  name: RETENTION_DAYS
-  value: '7'
 - description: How long to let a deployment rollout go before failing.
   name: UPDATE_TIMEOUT
   value: '600'
-- name: DISABLE_PROMETHEUS
-  value: 'False'
-- name: SECONDS_TO_LIVE
-  value: '100'
 - description: AWS CloudWatch log stream
-  name: CW_LOG_STREAM
-  value: payload-tracker-dev
-- name: MAXIMUM_RUNNING_TASKS
-  value: '50'
-- name: USE_REDIS
-  value: 'false'
+  name: CW_LOG_GROUP
+  value: payload-tracker-go-dev
 - description: Istio Sidecar Exclude Outbound IP Ranges
   name: EXCLUDE_CIDR
 - description: Inject Istio Sidecar
