@@ -18,7 +18,7 @@ objects:
       podSpec:
         minReadySeconds: 15
         progressDeadlineSeconds: 600
-        image: quay.io/cloudservices/payload-tracker:${IMAGE_TAG}
+        image: ${IMAGE}:${IMAGE_TAG}
         command: 
           - ./pt-api
         livenessProbe:
@@ -51,22 +51,22 @@ objects:
             value: ${LOGLEVEL}
 
 parameters:
-- description: Initial amount of memory the receptor container will request.
+- description: Initial amount of memory the payload-tracker container will request.
   displayName: Memory Request
   name: MEMORY_REQUEST
   required: true
   value: 256Mi
-- description: Maximum amount of memory the receptor.
+- description: Maximum amount of memory for the payload-tracker.
   displayName: Memory Limit
   name: MEMORY_LIMIT
   required: true
   value: 512Mi
-- description: Initial amount of cpu the receptor container will request.
+- description: Initial amount of cpu the payload-tracker will request.
   displayName: CPU Request
   name: CPU_REQUEST
   required: true
   value: 200m
-- description: Maximum amount of cpu the receptor container can use.
+- description: Maximum amount of cpu the payload-tracker can use.
   displayName: CPU Limit
   name: CPU_LIMIT
   required: true
@@ -76,16 +76,13 @@ parameters:
   name: LOGLEVEL
   required: true
   value: DEBUG
-- description: The number of replicas to use for the receptor gateway
+- description: The number of replicas to use for the payload-tracker
   name: API_REPLICAS
   value: '1'
-- description: Hostname and port of the prometheus push gateway
-  name: PROMETHEUS_PUSH_GATEWAY
-  value: prometheus-push.insights-push-stage.svc.cluster.local:9091
 - description: Image
   name: IMAGE
   required: true
-  value: quay.io/cloudservices/receptor-gateway
+  value: quay.io/cloudservices/payload-tracker
 - description: Image tag
   name: IMAGE_TAG
   required: true
