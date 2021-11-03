@@ -54,20 +54,6 @@ objects:
                 topologyKey: kubernetes.io/hostname
               weight: 99
         containers:
-        - args:
-          - --https-address=:8443
-          - --provider=openshift
-          - --openshift-service-account=payload-tracker-go
-          - --upstream=http://localhost:8080
-          - --tls-cert=/etc/tls/private/tls.crt
-          - --tls-key=/etc/tls/private/tls.key
-          - --cookie-secret-file=/etc/proxy/secrets/session_secret
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            initialDelaySeconds: 15
-            tcpSocket:
-              port: 8443
-            timeoutSeconds: 1
         - env:
           - name: LOG_LEVEL
             value: ${LOG_LEVEL}
@@ -276,29 +262,6 @@ objects:
         - name: kafka-cacert
           secret:
             secretName: kafka-ca
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftWebConsole
-      service.alpha.openshift.io/serving-cert-secret-name: payload-tracker-auth
-    labels:
-      app: payload-tracker-go
-    name: payload-tracker-go
-  spec:
-    ports:
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-    - name: 8000-tcp
-      port: 8000
-      protocol: TCP
-      targetPort: 8000
-    selector:
-      app: payload-tracker-go
-    sessionAffinity: None
-    type: ClusterIP
 - apiVersion: autoscaling/v1
   kind: HorizontalPodAutoscaler
   metadata:
