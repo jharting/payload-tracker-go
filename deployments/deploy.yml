@@ -104,12 +104,12 @@ objects:
             value: ${KAFKA_BOOTSTRAP_HOST}:${KAFKA_BOOTSTRAP_PORT}
           - name: PAYLOAD_TRACKER_TOPIC
             value: ${PAYLOAD_TRACKER_TOPIC}
-          - name: AWS_ACCESS_KEY_ID
+          - name: CW_AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
                 key: aws_access_key_id
                 name: cloudwatch
-          - name: AWS_SECRET_ACCESS_KEY
+          - name: CW_AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 key: aws_secret_access_key
@@ -209,12 +209,12 @@ objects:
             value: ${KAFKA_BOOTSTRAP_HOST}:${KAFKA_BOOTSTRAP_PORT}
           - name: PAYLOAD_TRACKER_TOPIC
             value: ${PAYLOAD_TRACKER_TOPIC}
-          - name: AWS_ACCESS_KEY_ID
+          - name: CW_AWS_ACCESS_KEY_ID
             valueFrom:
               secretKeyRef:
                 key: aws_access_key_id
                 name: cloudwatch
-          - name: AWS_SECRET_ACCESS_KEY
+          - name: CW_AWS_SECRET_ACCESS_KEY
             valueFrom:
               secretKeyRef:
                 key: aws_secret_access_key
