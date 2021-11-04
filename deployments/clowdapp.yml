@@ -10,7 +10,8 @@ objects:
     name: payload-tracker-go
   spec:
     envName: ${ENV_NAME}
-    inMemoryDb: true
+    database:
+      name: payload-tracker
     deployments:
     - name: api
       web: true
