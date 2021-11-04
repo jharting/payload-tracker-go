@@ -82,7 +82,7 @@ parameters:
 - description: Image
   name: IMAGE
   required: true
-  value: quay.io/cloudservices/payload-tracker
+  value: quay.io/cloudservices/payload-tracker-go
 - description: Image tag
   name: IMAGE_TAG
   required: true
