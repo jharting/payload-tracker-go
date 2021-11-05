@@ -12,7 +12,7 @@ objects:
     envName: ${ENV_NAME}
     database:
       name: payload-tracker
-    kafakTopics:
+    kafkaTopics:
     - replicas: 3
       partitions: 8
       topicName: platform.payload-status
