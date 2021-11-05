@@ -182,13 +182,15 @@ func Get() *TrackerConfig {
 		}
 
 		// write the RDS CA using the app-common-go package
-		rdsCAPath, err := clowder.LoadedConfig.RdsCa()
+		if clowder.LoadedConfig.Database.RdsCa != nil {
+			rdsCAPath, err := clowder.LoadedConfig.RdsCa()
 
-		if err != nil {
-			panic("RDS CA Failed to Write")
+			if err != nil {
+				panic("RDS CA Failed to Write")
+			}
+
+			trackerCfg.DatabaseConfig.RDSCa = rdsCAPath
 		}
-
-		trackerCfg.DatabaseConfig.RDSCa = rdsCAPath
 	}
 
 	return trackerCfg
