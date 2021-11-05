@@ -29,7 +29,7 @@ objects:
         livenessProbe:
           failureThreshold: 3
           httpGet:
-            path: /metrics
+            path: /health
             port: public
             scheme: HTTP
           periodSeconds: 10
@@ -38,7 +38,7 @@ objects:
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /metrics
+            path: /health
             port: public
             scheme: HTTP
           periodSeconds: 10
