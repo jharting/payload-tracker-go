@@ -38,7 +38,7 @@ objects:
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /health
+            path: /metrics
             port: public
             scheme: HTTP
           periodSeconds: 10
