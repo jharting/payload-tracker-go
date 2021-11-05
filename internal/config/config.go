@@ -162,8 +162,7 @@ func Get() *TrackerConfig {
 	}
 
 	if clowder.IsClowderEnabled() {
-		cfg := clowder.LoadedConfig
-		broker := cfg.Kafka.Brokers[0]
+		broker := clowder.LoadedConfig.Kafka.Brokers[0]
 
 		if broker.Authtype != nil {
 			trackerCfg.KafkaConfig.KafkaUsername = *broker.Sasl.Username
@@ -172,7 +171,7 @@ func Get() *TrackerConfig {
 			trackerCfg.KafkaConfig.Protocol = "sasl_ssl"
 
 			// write the Kafka CA path using the app-common-go package
-			caPath, err := cfg.KafkaCa(broker)
+			caPath, err := clowder.LoadedConfig.KafkaCa(broker)
 
 			if err != nil {
 				panic("Kafka CA Failed to Write")
@@ -183,7 +182,7 @@ func Get() *TrackerConfig {
 		}
 
 		// write the RDS CA using the app-common-go package
-		rdsCAPath, err := cfg.RdsCa()
+		rdsCAPath, err := clowder.LoadedConfig.RdsCa()
 
 		if err != nil {
 			panic("RDS CA Failed to Write")
