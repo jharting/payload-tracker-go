@@ -11,7 +11,7 @@ objects:
   spec:
     envName: ${ENV_NAME}
     database:
-      sharedDbAppName: payloadtracker
+      name: payloadtracker
     kafkaTopics:
     - replicas: 3
       partitions: 8
