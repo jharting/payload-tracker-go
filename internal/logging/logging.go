@@ -12,7 +12,6 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	lc "github.com/redhatinsights/platform-go-middlewares/logging/cloudwatch"
 	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 // CustomCloudwatch adds hostname and app name
@@ -81,7 +80,7 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 	}
 
 	// Add newline to make stdout readable
-	j = append(j, '\n')
+	j = append(j, 0x0a)
 
 	b.Write(j)
 
@@ -92,13 +91,11 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 func InitLogger() *logrus.Logger {
 
 	cfg := config.Get()
-	logconfig := viper.New()
 	key := cfg.CloudwatchConfig.CWAccessKey
 	secret := cfg.CloudwatchConfig.CWSecretKey
 	region := cfg.CloudwatchConfig.CWRegion
 	group := cfg.CloudwatchConfig.CWLogGroup
 	stream := cfg.Hostname
-	logconfig.AutomaticEnv()
 
 	switch cfg.LogLevel {
 	case "DEBUG":
