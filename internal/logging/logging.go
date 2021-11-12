@@ -49,7 +49,7 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 	now := time.Now()
 
 	hostname, err := os.Hostname()
-	if err != nil {
+	if err == nil {
 		f.Hostname = hostname
 	}
 
