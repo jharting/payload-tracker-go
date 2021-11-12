@@ -92,5 +92,5 @@ parameters:
   name: IMAGE_TAG
   required: true
 - name: ENV_NAME
-  value: ${ENV_NAME}
+  value: payload-tracker-api
   required: true
