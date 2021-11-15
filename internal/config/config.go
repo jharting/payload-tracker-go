@@ -128,6 +128,7 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
+		Hostname:    options.GetString("Hostname"),
 		LogLevel:    options.GetString("logLevel"),
 		PublicPort:  options.GetString("publicPort"),
 		MetricsPort: options.GetString("metricsPort"),
