@@ -29,14 +29,13 @@ var Log *logrus.Logger
 var logLevel logrus.Level
 
 // NewCloudwatchFormatter creates a new logrus formatter for cloudwatch
-func NewCloudwatchFormatter() *CustomCloudwatch {
-	f := &CustomCloudwatch{}
+func NewCloudwatchFormatter(cfg *config.TrackerConfig) *CustomCloudwatch {
+	f := &CustomCloudwatch{
+		Hostname: cfg.Hostname,
+	}
 
-	var err error
 	if f.Hostname == "" {
-		if f.Hostname, err = os.Hostname(); err != nil {
-			f.Hostname = "unknown"
-		}
+		f.Hostname = "unknown"
 	}
 
 	return f
@@ -47,11 +46,6 @@ func (f *CustomCloudwatch) Format(entry *logrus.Entry) ([]byte, error) {
 	b := &bytes.Buffer{}
 
 	now := time.Now()
-
-	hostname, err := os.Hostname()
-	if err == nil {
-		f.Hostname = hostname
-	}
 
 	data := map[string]interface{}{
 		"@timestamp":  now.Format("2006-01-02T15:04:05.999Z"),
@@ -109,7 +103,7 @@ func InitLogger() *logrus.Logger {
 		logLevel = logrus.FatalLevel
 	}
 
-	formatter := NewCloudwatchFormatter()
+	formatter := NewCloudwatchFormatter(cfg)
 
 	Log = &logrus.Logger{
 		Out:          os.Stdout,
