@@ -25,12 +25,11 @@ func defineVerbosity(verbosity string) string {
 		queryFields := []string{otherFields[0], otherFields[2], extraPayloadFields[2], payloadStatusesFields[1], payloadStatusesFields[0]}
 		return strings.Join(queryFields, ",")
 	case "2":
-		queryFields := fmt.Sprintf("%s,%s,%s,%s", strings.Join(payloadFields, ","), strings.Join(extraPayloadFields, ","), strings.Join(payloadStatusesFields, ","), strings.Join(otherFields, ","))
-		return queryFields
-	default:
-		// default to verbosity 0
 		queryFields := []string{otherFields[0], otherFields[2], payloadStatusesFields[1]}
 		return strings.Join(queryFields, ",")
+	default:
+		queryFields := fmt.Sprintf("%s,%s,%s,%s", strings.Join(payloadFields, ","), strings.Join(extraPayloadFields, ","), strings.Join(payloadStatusesFields, ","), strings.Join(otherFields, ","))
+		return queryFields
 	}
 }
 

@@ -34,16 +34,9 @@ func dataPerVerbosity(requestId string, verbosity string, d1 time.Time) structs.
 	switch verbosity {
 	case "2":
 		return structs.SinglePayloadData{
-			ID:          1,
-			Service:     "puptoo",
-			Account:     "test",
-			RequestID:   requestId,
-			InventoryID: getUUID(),
-			SystemID:    getUUID(),
-			CreatedAt:   time.Now().Round(0),
-			Status:      "received",
-			StatusMsg:   "generating reports",
-			Date:        d1,
+			Service: "puptoo",
+			Status:  "recieved",
+			Date:    d1,
 		}
 	case "1":
 		return structs.SinglePayloadData{
@@ -55,9 +48,16 @@ func dataPerVerbosity(requestId string, verbosity string, d1 time.Time) structs.
 		}
 	default:
 		return structs.SinglePayloadData{
-			Service: "puptoo",
-			Status:  "recieved",
-			Date:    d1,
+			ID:          1,
+			Service:     "puptoo",
+			Account:     "test",
+			RequestID:   requestId,
+			InventoryID: getUUID(),
+			SystemID:    getUUID(),
+			CreatedAt:   time.Now().Round(0),
+			Status:      "received",
+			StatusMsg:   "generating reports",
+			Date:        d1,
 		}
 	}
 }
@@ -353,8 +353,6 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
-				Expect(respData.Data[0].SystemID).To(BeEmpty())
-				Expect(respData.Data[0].RequestID).To(BeEmpty())
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
 				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
 				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
@@ -380,12 +378,15 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
-				Expect(respData.Data[0].SystemID).To(BeEmpty())
-				Expect(respData.Data[0].RequestID).To(BeEmpty())
-				Expect(respData.Data[0].StatusMsg).To(BeEmpty())
+				Expect(respData.Data[0].ID).To(Equal(reqIdPayloads[0].ID))
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
+				Expect(respData.Data[0].Account).To(Equal(reqIdPayloads[0].Account))
+				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
+				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
+				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))
 				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
+				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
 				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
 			})
 		})
