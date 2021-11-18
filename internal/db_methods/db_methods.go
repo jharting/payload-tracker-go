@@ -109,7 +109,8 @@ var RetrievePayloads = func(page int, pageSize int, apiQuery structs.Query) (int
 
 	orderString := fmt.Sprintf("%s %s", apiQuery.SortBy, apiQuery.SortDir)
 
-	dbQuery.Order(orderString).Limit(pageSize).Offset(pageSize * page).Find(&payloads).Count(&count)
+	dbQuery.Find(&payloads).Count(&count)
+	dbQuery.Order(orderString).Limit(pageSize).Offset(pageSize * page).Find(&payloads)
 
 	return count, payloads
 }
@@ -161,7 +162,8 @@ var RetrieveStatuses = func(apiQuery structs.Query) (int64, []structs.StatusRetr
 	dbQuery = chainTimeConditions("created_at", apiQuery, dbQuery)
 
 	orderString := fmt.Sprintf("%s %s", apiQuery.SortBy, apiQuery.SortDir)
-	dbQuery.Order(orderString).Limit(pageSize).Offset(pageSize * page).Scan(&payloads).Count(&count)
+	dbQuery.Scan(&payloads).Count(&count)
+	dbQuery.Order(orderString).Limit(pageSize).Offset(pageSize * page).Scan(&payloads)
 
 	return count, payloads
 }
