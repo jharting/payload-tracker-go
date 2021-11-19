@@ -159,7 +159,7 @@ var RetrieveStatuses = func(apiQuery structs.Query) (int64, []structs.StatusRetr
 		dbQuery = dbQuery.Where("payload_statuses.status_msg = ?", apiQuery.StatusMsg)
 	}
 	dbQuery = chainTimeConditions("date", apiQuery, dbQuery)
-	dbQuery = chainTimeConditions("created_at", apiQuery, dbQuery)
+	dbQuery = chainTimeConditions("payload_statuses.created_at", apiQuery, dbQuery)
 
 	orderString := fmt.Sprintf("%s %s", apiQuery.SortBy, apiQuery.SortDir)
 	dbQuery.Scan(&payloads).Count(&count)
