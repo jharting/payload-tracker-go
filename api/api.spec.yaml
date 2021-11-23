@@ -87,7 +87,7 @@ paths:
                 type: integer
                 description: Total number of payloads with filters only
               elapsed:
-                type: string
+                type: number
                 description: Total elapsed time in seconds of API request
               data:
                 type: array
@@ -107,14 +107,14 @@ paths:
             type: object
             required:
               - data
-              - durations
+              - duration
             properties:
               data:
                 type: array
                 items:
                   $ref: '#/definitions/PayloadRetrieveByID'
                 description: List of payloads based on the filters, page size and offset
-              durations:
+              duration:
                 type: object
                 items:
                   $ref: '#/definitions/DurationsRetrieve'
@@ -142,6 +142,7 @@ paths:
         default: asc
         enum: [asc, desc]
       - name: verbosity
+        in: query
         type: integer
         default: 0
         enum: [0, 1, 2]
@@ -250,7 +251,7 @@ paths:
                 type: integer
                 description: Total number of statuses with filters only
               elapsed:
-                type: string
+                type: number
                 description: Total elapsed time in seconds of API request
               data:
                 type: array
@@ -263,10 +264,12 @@ paths:
       responses:
         '202':
           description: 'liveness checks successful'
-          $ref: '#/responses/TestPassed'
+          schema:
+            $ref: '#/responses/TestPassed'
         '404':
           description: 'liveness checks failed'
-          $ref: '#/responses/TestFailed'
+          schema:
+            $ref: '#/responses/TestFailed'
   /stats:
     get:
       description: ''
@@ -315,12 +318,13 @@ definitions:
       - message
   PayloadRetrieveByID:
     required:
-      - request_id
+      - service
+      - status
     type: object
     properties:
       id:
         title: Id
-        type: string
+        type: integer
       service:
         title: Service
         type: string
@@ -359,6 +363,9 @@ definitions:
   PayloadRetrieve:
     type: object
     properties:
+      id:
+        title: ID
+        type: integer
       request_id:
         title: Request ID
         type: string
