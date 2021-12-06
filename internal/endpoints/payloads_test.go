@@ -80,7 +80,17 @@ func getFourReqIdPayloads(requestId string, verbosity string) []structs.SinglePa
 	p4.Date, _ = time.Parse(time.RFC3339, "2021-08-04T07:45:38.975+00:00")
 	p4.Source = "inventory"
 
-	return []structs.SinglePayloadData{p1, p2, p3, p4}
+	p5 := p1
+	p5.Status = "received"
+	p5.Date, _ = time.Parse(time.RFC3339, "2021-08-04T07:45:39.374+00:00")
+	p5.Source = "engine"
+
+	p6 := p1
+	p6.Status = "success"
+	p6.Date, _ = time.Parse(time.RFC3339, "2021-08-04T07:45:39.975+00:00")
+	p6.Source = "engine"
+
+	return []structs.SinglePayloadData{p1, p2, p3, p4, p5, p6}
 }
 
 func makeTestRequest(uri string, queryParams map[string]interface{}) (*http.Request, error) {
@@ -316,6 +326,7 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
 				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
 				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
 			})
 
 			It("should correctly calculate durations", func() {
@@ -359,6 +370,8 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
 				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
 				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
+				Expect(respData.Data[1].Date.String()).To(Equal(reqIdPayloads[1].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
 			})
 		})
 
@@ -388,6 +401,8 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
 				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
 				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
+				Expect(respData.Data[1].Date.String()).To(Equal(reqIdPayloads[1].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
 			})
 		})
 	})
