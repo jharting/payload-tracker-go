@@ -95,6 +95,12 @@
             "account": "foobar",
             "inventory_id": "1f5da556f2ad45f09623b53b137d0c94",
             "system_id": "f150f50b1e1b4fa9a55a5596dd43632c"
+        },
+        {
+            "request_id": "33b727497c3940589fc5276e739235c6",
+            "account": "foobar",
+            "inventory_id": "f15da556f2ad45f09623b53b137d0c49",
+            "system_id": "1f50f50b1e1b4fa9a55a5596dd4363c2"
         }
     ],
     "payload_statuses":[
@@ -111,6 +117,14 @@
             "service_id": 5,
             "source_id": 2,
             "status_id": 1,
+            "status_msg": "performing db operations",
+            "date": "2021-08-04T11:45:26.371Z"
+        },
+        {
+            "payload_id": 5,
+            "service_id": 2,
+            "source_id": 1,
+            "status_id": 3,
             "status_msg": "performing db operations",
             "date": "2021-08-04T11:45:26.371Z"
         },
