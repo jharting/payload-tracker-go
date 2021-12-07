@@ -123,7 +123,7 @@ var RetrieveRequestIdPayloads = func(reqID string, sortBy string, sortDir string
 	fields := defineVerbosity(verbosity)
 
 	dbQuery = dbQuery.Table("payload_statuses").Select(fields).Joins("JOIN payloads on payload_statuses.payload_id = payloads.id")
-	dbQuery = dbQuery.Joins("JOIN services on payload_statuses.service_id = services.id").Joins("JOIN sources on payload_statuses.source_id = sources.id").Joins("JOIN statuses on payload_statuses.status_id = statuses.id")
+	dbQuery = dbQuery.Joins("JOIN services on payload_statuses.service_id = services.id").Joins("FULL OUTER JOIN sources on payload_statuses.source_id = sources.id").Joins("JOIN statuses on payload_statuses.status_id = statuses.id")
 
 	orderString := fmt.Sprintf("%s %s", sortBy, sortDir)
 
