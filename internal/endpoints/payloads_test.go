@@ -268,10 +268,13 @@ var _ = Describe("RequestIdPayloads", func() {
 	})
 
 	Describe("Get to /payloads/{request_id}", func() {
+		reqIdPayloads := getFourReqIdPayloads(requestId, "2")
 		Context("with a valid request", func() {
 			It("should return HTTP 200", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
+
+				reqIdPayloadData = reqIdPayloads
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -300,7 +303,7 @@ var _ = Describe("RequestIdPayloads", func() {
 			})
 		})
 
-		reqIdPayloads := getFourReqIdPayloads(requestId, "2")
+		reqIdPayloads = getFourReqIdPayloads(requestId, "2")
 		Context("With valid data from DB", func() {
 			It("should pass the data forward", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
