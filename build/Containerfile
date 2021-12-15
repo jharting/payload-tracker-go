@@ -22,6 +22,8 @@ COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
 COPY --from=builder /go/src/app/pt-migration ./pt-migration
 COPY --from=builder /go/src/app/app-common-bash ./app-common-bash
 
+RUN microdnf install postgresql
+
 USER 1001
 
 # There is no command here becuase this image can be used for
