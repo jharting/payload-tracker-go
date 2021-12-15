@@ -54,6 +54,16 @@ objects:
         env:
           - name: LOG_LEVEL
             value: ${LOGLEVEL}
+    jobs:
+    - name: vacuum
+      schedule: '@daily'
+      suspend: ${{CLEANER_SUSPEND}}
+      podSpec:
+        image: quay.io/cloudservices/payload-tracker-go:${IMAGE_TAG}
+        restartPolicy: Never
+        command:
+          - ./tools/cron-job.sh
+
 
 parameters:
 - description: Initial amount of memory the payload-tracker container will request.
