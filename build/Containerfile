@@ -5,12 +5,13 @@ COPY . .
 
 USER 0
 
+RUN git clone https://github.com/redhatinsights/app-common-bash && \
+    go build -o app-common-bash app-common-bash/main.go
+
 RUN go get -d ./... && \
     go build -o pt-api cmd/payload-tracker-api/main.go && \
-    go build -o pt-consumer cmd/payload-tracker-consumer/main.go
-
-RUN cp /go/src/app/pt-api /usr/bin/ && \
-    cp /go/src/app/pt-consumer /usr/bin/
+    go build -o pt-consumer cmd/payload-tracker-consumer/main.go && \
+    go build -o pt-migration internal/migration/main.go
 
 FROM registry.redhat.io/ubi8/ubi-minimal
 
@@ -18,9 +19,8 @@ WORKDIR /
 
 COPY --from=builder /go/src/app/pt-api ./pt-api
 COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
-
-RUN curl -OL https://github.com/RedHatInsights/app-common-bash/releases/download/v0.1/app-common-bash && \
-./app-common-bash > vars.sh
+COPY --from=builder /go/src/app/pt-migration ./pt-migration
+COPY --from=builder /go/src/app/app-common-bash ./app-common-bash
 
 USER 1001
 
