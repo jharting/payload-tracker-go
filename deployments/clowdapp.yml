@@ -63,6 +63,13 @@ objects:
         restartPolicy: Never
         command:
           - ./tools/cron-job.sh
+        resources:
+          limits:
+            cpu: ${CPU_LIMIT}
+            memory: ${MEMORY_LIMIT}
+          requests:
+            cpu: 200m
+            memory: 256Mi
 
 
 parameters:
@@ -104,3 +111,5 @@ parameters:
 - name: ENV_NAME
   value: payload-tracker-api
   required: true
+- name: CLEANER_SUSPEND
+  value: 'true'
