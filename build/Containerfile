@@ -13,7 +13,7 @@ RUN go get -d ./... && \
     go build -o pt-consumer cmd/payload-tracker-consumer/main.go && \
     go build -o pt-migration internal/migration/main.go
 
-FROM registry.redhat.io/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi8/ubi-minimal:latest
 
 USER 0
 
