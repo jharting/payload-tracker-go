@@ -21,6 +21,11 @@ objects:
       web: true
       minReplicas: ${{API_REPLICAS}}
       podSpec:
+        initContainers:
+          - command:
+            - ./pt-migration
+            image: ${IMAGE}:${IMAGE_TAG}
+            inheritEnv: true    
         minReadySeconds: 15
         progressDeadlineSeconds: 600
         image: ${IMAGE}:${IMAGE_TAG}
