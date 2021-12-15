@@ -22,7 +22,9 @@ COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
 COPY --from=builder /go/src/app/pt-migration ./pt-migration
 COPY --from=builder /go/src/app/app-common-bash ./app-common-bash
 
-RUN microdnf install postgresql
+RUN microdnf module enable postgresql:12 && \
+    microdnf install -y postgresql && \
+    microdnf clean all
 
 USER 1001
 
