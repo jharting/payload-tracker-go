@@ -5,8 +5,8 @@ COPY . .
 
 USER 0
 
-RUN git clone https://github.com/redhatinsights/app-common-bash && \
-    go build -o app-common-bash app-common-bash/main.go
+RUN git clone https://github.com/redhatinsights/app-common-bash app-common && \
+    go build -o app-common-bash app-common/main.go
 
 RUN go get -d ./... && \
     go build -o pt-api cmd/payload-tracker-api/main.go && \
