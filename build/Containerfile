@@ -19,6 +19,9 @@ WORKDIR /
 COPY --from=builder /go/src/app/pt-api ./pt-api
 COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
 
+RUN curl -OL https://github.com/RedHatInsights/app-common-bash/releases/download/v0.1/app-common-bash && \
+./app-common-bash > vars.sh
+
 USER 1001
 
 # There is no command here becuase this image can be used for
