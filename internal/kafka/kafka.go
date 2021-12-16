@@ -13,14 +13,32 @@ import (
 
 // NewConsumer Creates brand new consumer instance based on topic
 func NewConsumer(ctx context.Context, config *config.TrackerConfig, topic string) (*kafka.Consumer, error) {
-	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers":        config.KafkaConfig.KafkaBootstrapServers,
-		"group.id":                 config.KafkaConfig.KafkaGroupID,
-		"auto.offset.reset":        config.KafkaConfig.KafkaAutoOffsetReset,
-		"auto.commit.interval.ms":  config.KafkaConfig.KafkaAutoCommitInterval,
-		"go.logs.channel.enable":   true,
-		"allow.auto.create.topics": true,
-	})
+	var configMap kafka.ConfigMap
+
+	if config.KafkaConfig.SASLMechanism != "" {
+		configMap = kafka.ConfigMap{
+			"bootstrap.servers":        config.KafkaConfig.KafkaBootstrapServers,
+			"group.id":                 config.KafkaConfig.KafkaGroupID,
+			"security.protocol":        config.KafkaConfig.Protocol,
+			"sasl.mechanism":           config.KafkaConfig.SASLMechanism,
+			"ssl.ca.location":          config.KafkaConfig.KafkaCA,
+			"sasl.username":            config.KafkaConfig.KafkaUsername,
+			"sasl.password":            config.KafkaConfig.KafkaPassword,
+			"go.logs.channel.enable":   true,
+			"allow.auto.create.topics": true,
+		}
+	} else {
+		configMap = kafka.ConfigMap{
+			"bootstrap.servers":        config.KafkaConfig.KafkaBootstrapServers,
+			"group.id":                 config.KafkaConfig.KafkaGroupID,
+			"auto.offset.reset":        config.KafkaConfig.KafkaAutoOffsetReset,
+			"auto.commit.interval.ms":  config.KafkaConfig.KafkaAutoCommitInterval,
+			"go.logs.channel.enable":   true,
+			"allow.auto.create.topics": true,
+		}
+	}
+
+	consumer, err := kafka.NewConsumer(&configMap)
 
 	if err != nil {
 		return nil, err
