@@ -59,6 +59,24 @@ objects:
         env:
           - name: LOG_LEVEL
             value: ${LOGLEVEL}
+    - name: consumer
+      minReplicas: ${{CONSUMER_REPLICAS}}
+      podSpec:  
+        minReadySeconds: 15
+        progressDeadlineSeconds: 600
+        image: ${IMAGE}:${IMAGE_TAG}
+        command: 
+          - ./pt-consumer
+        resources:
+          limits:
+            cpu: ${CONSUMER_CPU_LIMIT}
+            memory: ${CONSUMER_MEMORY_LIMIT}
+          requests:
+            cpu: ${CONSUMER_CPU_REQUEST}
+            memory: ${CONSUMER_MEMORY_REQUEST}
+        env:
+          - name: LOG_LEVEL
+            value: ${LOGLEVEL}
     jobs:
     - name: vacuum
       schedule: '@daily'
@@ -98,6 +116,26 @@ parameters:
   name: CPU_LIMIT
   required: true
   value: 500m
+- description: Initial amount of memory the payload-tracker consumer container will request.
+  displayName: Memory Request
+  name: CONSUMER_MEMORY_REQUEST
+  required: true
+  value: 256Mi
+- description: Maximum amount of memory for the payload-tracker consumer.
+  displayName: Memory Limit
+  name: CONSUMER_MEMORY_LIMIT
+  required: true
+  value: 512Mi
+- description: Initial amount of cpu the payload-tracker consumer will request.
+  displayName: CPU Request
+  name: CONSUMER_CPU_REQUEST
+  required: true
+  value: 200m
+- description: Maximum amount of cpu the payload-tracker consumer can use.
+  displayName: CPU Limit
+  name: CONSUMER_CPU_LIMIT
+  required: true
+  value: 500m
 - description: The log level to use for logging
   displayName: The log level to use for logging
   name: LOGLEVEL
@@ -106,6 +144,9 @@ parameters:
 - description: The number of replicas to use for the payload-tracker
   name: API_REPLICAS
   value: '1'
+- description: The number of replicas to use for the payload-tracker consumer
+  name: CONSUMER_REPLICAS
+  value: '3'
 - description: Image
   name: IMAGE
   required: true
