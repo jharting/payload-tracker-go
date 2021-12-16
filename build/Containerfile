@@ -24,8 +24,17 @@ COPY --from=builder /go/src/app/pt-consumer ./pt-consumer
 COPY --from=builder /go/src/app/pt-migration ./pt-migration
 COPY --from=builder /go/src/app/app-common-bash ./app-common-bash
 
+# install postgresql from centos if not building on RHSM system
+RUN FULL_RHEL=$(microdnf repolist --enabled | grep rhel-8) ; \
+    if [ -z "$FULL_RHEL" ] ; then \
+        rpm -Uvh http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/centos-linux-repos-8-3.el8.noarch.rpm \
+                 http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/centos-gpg-keys-8-3.el8.noarch.rpm && \
+        sed -i 's/^\(enabled.*\)/\1\npriority=200/;' /etc/yum.repos.d/CentOS*.repo ; \
+    fi
+
 RUN microdnf module enable postgresql:12 && \
-    microdnf install -y postgresql && \
+    microdnf install --setopt=install_weak_deps=0 --setopt=tsflags=nodocs \
+        postgresql && \
     microdnf clean all
 
 USER 1001
