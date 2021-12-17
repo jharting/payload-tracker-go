@@ -2,7 +2,9 @@ package kafka
 
 import (
 	"context"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"gorm.io/gorm"
@@ -44,21 +46,40 @@ func NewConsumerEventLoop(
 	consumer *kafka.Consumer,
 	db *gorm.DB,
 ) {
-	for {
-		msg, err := consumer.ReadMessage(10 * time.Second) // TODO: configurable
 
-		if err != nil {
-			l.Log.Fatalf("Consumer error: %v (%v)\n", err, msg)
-			break
-		} else {
-			l.Log.Infof("message %s = %s\n", string(msg.Key), string(msg.Value))
+	sigchan := make(chan os.Signal, 1)
+	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
+
+	handler := &handler{
+		db: db,
+	}
+
+	run := true
+
+	for run {
+		select 	{
+		case sig := <-sigchan:
+			l.Log.Infof("Caught Signal %v: terminating\n", sig)
+			run = false
+		default:
+
+			event := consumer.Poll(100)
+			if event == nil {
+				continue
+			}
+
+			switch e := event.(type) {
+			case *kafka.Message:
+				l.Log.Infof("message %s = %s\n", string(e.Key), string(e.Value))
+				handler.onMessage(ctx, e, cfg)
+			case kafka.Error:
+				l.Log.Fatalf("Consumer error: %v (%v)\n", e.Code(), e)
+				break
+			default:
+				l.Log.Infof("Ignored %v\n", e)
+			}
+
 		}
-
-		handler := &handler{
-			db: db,
-		}
-
-		handler.onMessage(ctx, msg, cfg)
 	}
 
 	consumer.Close()

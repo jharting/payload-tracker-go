@@ -38,7 +38,7 @@ func (t *FormatedTime) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	date = strings.Join(strings.Fields(date), "T") + "Z"
+	date = strings.Join(strings.Fields(date), "T")
 
 	t.Time, err = time.Parse(dateFormat, date)
 	if err != nil {
