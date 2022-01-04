@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./app_common_bash > /tmp/vars.sh
+./app-common-bash > /tmp/vars.sh
 source /tmp/vars.sh
 
 RETENTION_DAYS=${RETENTION_DAYS:-7}
