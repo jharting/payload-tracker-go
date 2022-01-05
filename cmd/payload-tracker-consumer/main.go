@@ -19,7 +19,6 @@ func main() {
 	db.DbConnect(cfg)
 
 	logging.Log.Info("Starting a new kafka consumer...")
-	logging.Log.Info("Config for Consumer: ", cfg)
 
 	consumer, err := kafka.NewConsumer(ctx, cfg, cfg.KafkaConfig.KafkaTopic)
 
