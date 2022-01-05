@@ -18,7 +18,9 @@ objects:
       topicName: platform.payload-status
     deployments:
     - name: api
-      web: true
+      webServices:
+        public:
+          enabled: True
       minReplicas: ${{API_REPLICAS}}
       podSpec:
         initContainers:
