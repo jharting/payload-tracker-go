@@ -22,7 +22,7 @@ type PayloadStatusMessage struct {
 	SystemID    string       `json:"system_id,omitempty"`
 	Status      string       `json:"status"`
 	StatusMSG   string       `json:"status_msg,omitempty"`
-	PayloadID   uint         `json:"payload_id,omitempty"`
+	PayloadID   uint         
 	Date        FormatedTime `json:"date"`
 }
 
