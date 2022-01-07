@@ -73,7 +73,7 @@ func Get() *TrackerConfig {
 
 	// kafka config
 	options.SetDefault("kafka.timeout", 10000)
-	options.SetDefault("kafka.group.id", "payload-tracker-go")
+	options.SetDefault("kafka.group.id", "payload_tracker")
 	options.SetDefault("kafka.auto.offset.reset", "latest")
 	options.SetDefault("kafka.auto.commit.interval.ms", 5000)
 	options.SetDefault("kafka.request.required.acks", -1) // -1 == "all"
