@@ -41,7 +41,7 @@ The following statuses are required:
 ```
 docker
 docker-compose
-Golang >= 1.12
+Golang >= 1.15
 ```
 
 #### Launching the Service
