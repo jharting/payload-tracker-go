@@ -7,11 +7,11 @@ APP_NAME="payload-tracker"  # name of app-sre "application" folder this componen
 COMPONENT_NAME="payload-tracker-go"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
 IMAGE="quay.io/cloudservices/payload-tracker-go"  
 
-# ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
-# IQE_PLUGINS="ingress"
-# IQE_MARKER_EXPRESSION="smoke"
-# IQE_FILTER_EXPRESSION=""
-# IQE_CJI_TIMEOUT="30m"
+ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
+IQE_PLUGINS="ingress"
+IQE_MARKER_EXPRESSION="smoke"
+IQE_FILTER_EXPRESSION=""
+IQE_CJI_TIMEOUT="30m"
 
 
 # Install bonfire repo/initialize
@@ -21,7 +21,7 @@ curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 source $CICD_ROOT/build.sh
 # source $APP_ROOT/unit_test.sh
 source $CICD_ROOT/deploy_ephemeral_env.sh
-# source $CICD_ROOT/cji_smoke_test.sh
+source $CICD_ROOT/cji_smoke_test.sh
 
 mkdir -p $WORKSPACE/artifacts
 cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
