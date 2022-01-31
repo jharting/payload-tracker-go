@@ -7,7 +7,7 @@ APP_NAME="payload-tracker"  # name of app-sre "application" folder this componen
 COMPONENT_NAME="payload-tracker-go"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
 IMAGE="quay.io/cloudservices/payload-tracker-go"  
 
-ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
+# ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
 IQE_PLUGINS="payload-tracker"
 IQE_MARKER_EXPRESSION="smoke"
 IQE_FILTER_EXPRESSION=""
