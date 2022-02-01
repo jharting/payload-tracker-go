@@ -8,11 +8,11 @@ COMPONENT_NAME="payload-tracker-go"  # name of app-sre "resourceTemplate" in dep
 IMAGE="quay.io/cloudservices/payload-tracker-go"  
 
 # ADD BACK IN WHEN PAYLOAD-TRACKER-GO HAS SMOKE TESTS
-# IQE_PLUGINS="ingress"
-# IQE_MARKER_EXPRESSION="smoke"
-# IQE_FILTER_EXPRESSION=""
-# IQE_CJI_TIMEOUT="30m"
-
+IQE_PLUGINS="payload-tracker"
+IQE_MARKER_EXPRESSION="smoke"
+IQE_FILTER_EXPRESSION=""
+IQE_CJI_TIMEOUT="30m"
+EXTRA_DEPLOY_ARGS="--single-replicas"
 
 # Install bonfire repo/initialize
 CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
@@ -21,11 +21,6 @@ curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
 source $CICD_ROOT/build.sh
 # source $APP_ROOT/unit_test.sh
 source $CICD_ROOT/deploy_ephemeral_env.sh
-# source $CICD_ROOT/cji_smoke_test.sh
-
-mkdir -p $WORKSPACE/artifacts
-cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
-<testsuite tests="1">
-    <testcase classname="dummy" name="dummytest"/>
-</testsuite>
-EOF
+oc rsh -n $NAMESPACE $(oc get pods -n $NAMESPACE -o name | grep "payload-tracker-api") ./pt-seeder
+COMPONENT_NAME=payload-tracker
+source $CICD_ROOT/cji_smoke_test.sh
