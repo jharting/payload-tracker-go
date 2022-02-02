@@ -17,6 +17,7 @@ type PayloadStatusMessage struct {
 	Service     string       `json:"service"`
 	Source      string       `json:"source,omitempty"`
 	Account     string       `json:"account,omitempty"`
+	OrgID		string		 `json:"org_id,omitempty"`
 	RequestID   string       `json:"request_id"`
 	InventoryID string       `json:"inventory_id,omitempty"`
 	SystemID    string       `json:"system_id,omitempty"`

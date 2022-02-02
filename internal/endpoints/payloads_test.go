@@ -51,6 +51,7 @@ func dataPerVerbosity(requestId string, verbosity string, d1 time.Time) structs.
 			ID:          1,
 			Service:     "puptoo",
 			Account:     "test",
+			OrgID:       "123456",
 			RequestID:   requestId,
 			InventoryID: getUUID(),
 			SystemID:    getUUID(),
@@ -322,6 +323,7 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].ID).To(Equal(reqIdPayloads[0].ID))
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
 				Expect(respData.Data[0].Account).To(Equal(reqIdPayloads[0].Account))
+				Expect(respData.Data[0].OrgID).To(Equal(reqIdPayloads[0].OrgID))
 				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
 				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
 				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))
@@ -397,6 +399,7 @@ var _ = Describe("RequestIdPayloads", func() {
 				Expect(respData.Data[0].ID).To(Equal(reqIdPayloads[0].ID))
 				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
 				Expect(respData.Data[0].Account).To(Equal(reqIdPayloads[0].Account))
+				Expect(respData.Data[0].OrgID).To(Equal(reqIdPayloads[0].OrgID))
 				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
 				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
 				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))

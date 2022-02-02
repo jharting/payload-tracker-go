@@ -14,7 +14,7 @@ import (
 
 var (
 	payloadFields         = []string{"payloads.id", "payloads.request_id"}
-	extraPayloadFields    = []string{"payloads.account", "payloads.system_id", "payloads.inventory_id"}
+	extraPayloadFields    = []string{"payloads.account", "payloads.org_id", "payloads.system_id", "payloads.inventory_id"}
 	payloadStatusesFields = []string{"payload_statuses.status_msg", "payload_statuses.date", "payload_statuses.created_at"}
 	otherFields           = []string{"services.name as service", "sources.name as source", "statuses.name as status"}
 )
@@ -98,6 +98,9 @@ var RetrievePayloads = func(page int, pageSize int, apiQuery structs.Query) (int
 	// query chaining
 	if apiQuery.Account != "" {
 		dbQuery = dbQuery.Where("account = ?", apiQuery.Account)
+	}
+	if apiQuery.OrgID != "" {
+		dbQuery = dbQuery.Where("org_id = ?", apiQuery.OrgID)
 	}
 	if apiQuery.InventoryID != "" {
 		dbQuery = dbQuery.Where("inventory_id = ?", apiQuery.InventoryID)

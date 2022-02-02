@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	validSortBy         = []string{"created_at", "account", "system_id", "inventory_id", "service", "source", "status_msg", "date", "request_id", "status"}
-	validAllSortBy      = []string{"account", "inventory_id", "system_id", "created_at"}
+	validSortBy         = []string{"created_at", "account", "org_id", "system_id", "inventory_id", "service", "source", "status_msg", "date", "request_id", "status"}
+	validAllSortBy      = []string{"account", "org_id", "inventory_id", "system_id", "created_at"}
 	validIDSortBy       = []string{"service", "source", "status_msg", "date", "created_at"}
 	validStatusesSortBy = []string{"service", "source", "request_id", "status", "status_msg", "date", "created_at"}
 	validSortDir        = []string{"asc", "desc"}
@@ -32,6 +32,7 @@ func initQuery(r *http.Request) (structs.Query, error) {
 		CreatedAtLTE: r.URL.Query().Get("created_at_lte"),
 		CreatedAtGTE: r.URL.Query().Get("created_at_gte"),
 		Account:      r.URL.Query().Get("account"),
+		OrgID:        r.URL.Query().Get("org_id"),
 
 		Service:   r.URL.Query().Get("service"),
 		Source:    r.URL.Query().Get("source"),

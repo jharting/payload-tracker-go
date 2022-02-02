@@ -163,6 +163,7 @@ func createPayload(msg *message.PayloadStatusMessage) (table models.Payloads) {
 		Id:          msg.PayloadID,
 		RequestId:   msg.RequestID,
 		Account:     msg.Account,
+		OrgId:       msg.OrgID,
 		SystemId:    msg.SystemID,
 		CreatedAt:   msg.Date.Time,
 		InventoryId: msg.InventoryID,

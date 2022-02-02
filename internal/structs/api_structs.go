@@ -14,6 +14,7 @@ type Query struct {
 	SortBy       string
 	SortDir      string
 	Account      string
+	OrgID		 string
 	InventoryID  string
 	SystemID     string
 	CreatedAtLT  string
@@ -63,6 +64,7 @@ type SinglePayloadData struct {
 	Service     string    `json:"service,omitempty"`
 	Source      string    `json:"source,omitempty"`
 	Account     string    `json:"account,omitempty"`
+	OrgID       string    `json:"org_id,omitempty"`
 	RequestID   string    `json:"request_id,omitempty"`
 	InventoryID string    `json:"inventory_id,omitempty"`
 	SystemID    string    `json:"system_id,omitempty"`
