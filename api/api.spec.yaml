@@ -341,6 +341,7 @@ definitions:
         type: string
       org_id:
         title: Org ID
+        description: Identifies the organization that the given resource belongs to
         type: string
       request_id:
         title: Request ID
