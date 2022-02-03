@@ -22,7 +22,7 @@ var (
 func defineVerbosity(verbosity string) string {
 	switch verbosity {
 	case "1":
-		queryFields := []string{otherFields[0], otherFields[2], extraPayloadFields[2], payloadStatusesFields[1], payloadStatusesFields[0]}
+		queryFields := []string{otherFields[0], otherFields[2], extraPayloadFields[3], payloadStatusesFields[1], payloadStatusesFields[0]}
 		return strings.Join(queryFields, ",")
 	case "2":
 		queryFields := []string{otherFields[0], otherFields[2], payloadStatusesFields[1]}
