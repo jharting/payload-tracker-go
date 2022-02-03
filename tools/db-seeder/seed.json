@@ -88,7 +88,8 @@
             "request_id": "150bed4601c24ea9be73db9b20acb635",
             "account": "foobar",
             "inventory_id": "cb91e19b7eb04750b48bc52ec482f669",
-            "system_id": "b51d65b352ba498fafe3bcf02751f549"
+            "system_id": "b51d65b352ba498fafe3bcf02751f549",
+            "org_id": "12345"
         },
         {
             "request_id": "33b727497c3940589fc5276e739235c6",
