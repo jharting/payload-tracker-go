@@ -35,6 +35,7 @@ func main() {
 	mr := chi.NewRouter()
 	sub := chi.NewRouter()
 
+
 	// Mount the root of the api router on /api/v1
 	r.Mount("/api/v1/", sub)
 	r.Get("/", lubdub)
@@ -44,10 +45,10 @@ func main() {
 	mr.Get("/", lubdub)
 	mr.Handle("/metrics", promhttp.Handler())
 
-	sub.Get("/", lubdub)
-	sub.Get("/payloads", endpoints.Payloads)
-	sub.Get("/payloads/{request_id}", endpoints.RequestIdPayloads)
-	sub.Get("/statuses", endpoints.Statuses)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/", lubdub)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads", endpoints.Payloads)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}", endpoints.RequestIdPayloads)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/statuses", endpoints.Statuses)
 
 	srv := http.Server{
 		Addr:    ":" + cfg.PublicPort,
