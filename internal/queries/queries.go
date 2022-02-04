@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	StatusColumns = "payload_id, status_id, service_id, source_id, date, inventory_id, system_id, account"
+	StatusColumns = "payload_id, status_id, service_id, source_id, date, inventory_id, system_id, account, org_id"
 	PayloadJoins  = "left join Payloads on Payloads.id = PayloadStatuses.payload_id"
 )
 

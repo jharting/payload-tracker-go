@@ -22,6 +22,7 @@ Simply send a message on the ‘platform.payload-status’ for your given Kafka 
     'service': 'The services name processing the payload',
     'source': 'This is indicative of a third party rule hit analysis. (not Insights Client)',
     'account': 'The RH associated account',
+    'org_ig': 'The RH associated org id',
     'request_id': 'The ID of the payload',
     'inventory_id': 'The ID of the entity in terms of the inventory',
     'system_id': 'The ID of the entity in terms of the actual system',

@@ -31,7 +31,7 @@ paths:
           required: false
           type: string
           default: created_at
-          enum: [account, inventory_id, system_id, created_at]
+          enum: [account, org_id, inventory_id, system_id, created_at]
         - name: sort_dir
           in: query
           description: Direction to sort
@@ -43,6 +43,11 @@ paths:
           in: query
           required: false
           description: filter for account
+          type: string
+        - name: org_id
+          in: query
+          required: false
+          description: filter for org_id
           type: string
         - name: inventory_id
           in: query
@@ -334,6 +339,10 @@ definitions:
       account:
         title: Account
         type: string
+      org_id:
+        title: Org ID
+        description: Identifies the organization that the given resource belongs to
+        type: string
       request_id:
         title: Request ID
         type: string
@@ -372,6 +381,9 @@ definitions:
         minLength: 1
       account:
         title: Account
+        type: string
+      org_id:
+        title: Org ID
         type: string
       inventory_id:
         title: Inventory ID

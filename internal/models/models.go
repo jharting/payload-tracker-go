@@ -26,6 +26,7 @@ type Payloads struct {
 	InventoryId string    `json:"inventory_id" gorm:"type:varchar"`
 	SystemId    string    `json:"system_id" gorm:"type:varchar"`
 	CreatedAt   time.Time `json:"created_at" gorm:"not null"`
+	OrgId       string    `json:"org_id" gorm:"varchar"`
 }
 
 type Services struct {
