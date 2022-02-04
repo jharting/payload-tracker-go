@@ -11,6 +11,7 @@ import (
 
 	config "github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
+	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 )
 
 // NewConsumer Creates brand new consumer instance based on topic
@@ -88,9 +89,11 @@ func NewConsumerEventLoop(
 
 			switch e := event.(type) {
 			case *kafka.Message:
+				endpoints.IncConsumedMessages()
 				l.Log.Infof("message %s = %s\n", string(e.Key), string(e.Value))
 				handler.onMessage(ctx, e, cfg)
 			case kafka.Error:
+				endpoints.IncConsumeErrors()
 				l.Log.Fatalf("Consumer error: %v (%v)\n", e.Code(), e)
 				break
 			default:
