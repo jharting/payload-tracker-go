@@ -1589,4 +1589,4 @@ metadata:
   labels:
     grafana_dashboard: "true"
   annotations:
-    grafana-folder: /grafana-dashboard-definition/Insights
+    grafana-folder: /grafana-dashboard-definitions/Insights
