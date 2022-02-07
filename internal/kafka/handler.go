@@ -4,11 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"strings"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"gorm.io/gorm"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	models "github.com/redhatinsights/payload-tracker-go/internal/models/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/models/message"
@@ -25,6 +27,8 @@ type handler struct {
 
 // OnMessage takes in each payload status message and processes it
 func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *config.TrackerConfig) {
+	// Track the time from beginning of handling the message to the insert
+	start := time.Now()
 	l.Log.Debug("Processing Payload Message ", msg.Value)
 
 	payloadStatus := &message.PayloadStatusMessage{}
@@ -131,8 +135,10 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	sanitizedPayloadStatus.Date = payloadStatus.Date.Time
 
 	// Insert payload into DB
+	endpoints.ObserveMessageProcessTime(time.Since(start))
 	result := queries.InsertPayloadStatus(this.db, sanitizedPayloadStatus)
 	if result.Error != nil {
+		endpoints.IncMessageProcessErrors()
 		l.Log.Debug("Failed to insert sanitized PayloadStatus with ERROR: ", result.Error)
 		result = queries.InsertPayloadStatus(this.db, sanitizedPayloadStatus)
 		if result.Error != nil {
