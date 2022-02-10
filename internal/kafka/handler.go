@@ -52,8 +52,6 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	sanitizePayload(payloadStatus)
 
 	// Check if request_id not in Payloads Table and update columns
-	l.Log.Info("Sanitized Payload for DB ", payloadStatus)
-
 	payloadDump, err := getPayload(this.db, payloadStatus.RequestID)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		l.Log.Error("ERROR: Sanitizing payload failed")
