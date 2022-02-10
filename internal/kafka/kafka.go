@@ -90,7 +90,6 @@ func NewConsumerEventLoop(
 			switch e := event.(type) {
 			case *kafka.Message:
 				endpoints.IncConsumedMessages()
-				l.Log.Infof("message %s = %s\n", string(e.Key), string(e.Value))
 				handler.onMessage(ctx, e, cfg)
 			case kafka.Error:
 				endpoints.IncConsumeErrors()
