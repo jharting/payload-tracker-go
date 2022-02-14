@@ -25,7 +25,7 @@ data:
       "fiscalYearStartMonth": 0,
       "gnetId": null,
       "graphTooltip": 0,
-      "iteration": 1644002213045,
+      "iteration": 1644500552542,
       "links": [
         {
           "icon": "external link",
@@ -953,7 +953,7 @@ data:
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
-            "h": 12,
+            "h": 16,
             "w": 10,
             "x": 0,
             "y": 33
@@ -1078,7 +1078,7 @@ data:
             ]
           },
           "gridPos": {
-            "h": 12,
+            "h": 16,
             "w": 6,
             "x": 10,
             "y": 33
@@ -1140,7 +1140,7 @@ data:
           },
           "gridPos": {
             "h": 4,
-            "w": 5,
+            "w": 4,
             "x": 16,
             "y": 33
           },
@@ -1170,7 +1170,66 @@ data:
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Pod Up (98%)",
+          "title": "API Up (98%)",
+          "type": "gauge"
+        },
+        {
+          "datasource": "$datasource",
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 98
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 20,
+            "y": 33
+          },
+          "id": 41,
+          "options": {
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showThresholdLabels": false,
+            "showThresholdMarkers": true,
+            "text": {}
+          },
+          "pluginVersion": "8.2.7",
+          "targets": [
+            {
+              "exemplar": true,
+              "expr": "avg(avg_over_time(up{service=\"payload-tracker-consumer\"}[24h]))",
+              "interval": "",
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Consumer Up (98%)",
           "type": "gauge"
         },
         {
@@ -1197,9 +1256,9 @@ data:
           },
           "gridPos": {
             "h": 4,
-            "w": 3,
-            "x": 21,
-            "y": 33
+            "w": 4,
+            "x": 16,
+            "y": 37
           },
           "id": 36,
           "options": {
@@ -1231,7 +1290,68 @@ data:
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Pod Restarts",
+          "title": "API Restarts",
+          "type": "stat"
+        },
+        {
+          "datasource": "$datasource",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 4,
+            "x": 20,
+            "y": 37
+          },
+          "id": 43,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "mean"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "8.2.7",
+          "targets": [
+            {
+              "exemplar": true,
+              "expr": "sum(increase(kube_pod_container_status_restarts_total{container=\"payload-tracker-consumer\"}[$__range]))",
+              "format": "time_series",
+              "instant": false,
+              "interval": "",
+              "legendFormat": "{{container}}",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Consumer Restarts",
           "type": "stat"
         },
         {
@@ -1250,7 +1370,7 @@ data:
                   },
                   {
                     "color": "green",
-                    "value": 95
+                    "value": 5
                   }
                 ]
               },
@@ -1262,7 +1382,7 @@ data:
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 37
+            "y": 41
           },
           "id": 20,
           "options": {
@@ -1281,7 +1401,8 @@ data:
           "pluginVersion": "8.2.7",
           "targets": [
             {
-              "expr": "sum(increase(payload_tracker_msg_count_total{status=\"success\"}[$__range])) / sum(increase(payload_tracker_msg_count_total{status=\"consumed\"}[$__range])) * 100",
+              "exemplar": true,
+              "expr": "sum(increase(payload_tracker_consumed_messages[$__range])) / sum(increase(payload_tracker_consume_errors[$__range])) * 100",
               "format": "time_series",
               "instant": false,
               "interval": "",
@@ -1291,7 +1412,7 @@ data:
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Successfully Processed Messages (95%)",
+          "title": "Consumption Errors (5%)",
           "type": "gauge"
         },
         {
@@ -1322,7 +1443,7 @@ data:
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 41
+            "y": 45
           },
           "id": 24,
           "options": {
@@ -1372,7 +1493,7 @@ data:
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 45
+            "y": 49
           },
           "heatmap": {},
           "hideZeroBuckets": true,
@@ -1419,105 +1540,69 @@ data:
           "yBucketSize": null
         },
         {
-          "aliasColors": {},
-          "bars": true,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "$datasource",
-          "fieldConfig": {
-            "defaults": {
-              "unit": "short"
-            },
-            "overrides": []
+          "cards": {
+            "cardPadding": null,
+            "cardRound": null
           },
-          "fill": 6,
-          "fillGradient": 0,
+          "color": {
+            "cardColor": "#b4ff00",
+            "colorScale": "sqrt",
+            "colorScheme": "interpolateGreens",
+            "exponent": 0.5,
+            "mode": "opacity"
+          },
+          "dataFormat": "tsbuckets",
+          "datasource": "${datasource}",
+          "description": "",
           "gridPos": {
-            "h": 8,
+            "h": 9,
             "w": 24,
             "x": 0,
-            "y": 54
+            "y": 58
           },
-          "hiddenSeries": false,
-          "id": 30,
+          "heatmap": {},
+          "hideZeroBuckets": true,
+          "highlightCards": true,
+          "id": 42,
           "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": false,
-            "hideEmpty": false,
-            "hideZero": false,
-            "max": true,
-            "min": false,
-            "rightSide": true,
-            "show": true,
-            "total": false,
-            "values": true
+            "show": false
           },
-          "lines": false,
-          "linewidth": 1,
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": false
-          },
-          "percentage": false,
-          "pluginVersion": "8.2.7",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": true,
-          "steppedLine": false,
+          "reverseYBuckets": false,
           "targets": [
             {
-              "expr": "rate(payload_tracker_tasks_running_sum[1m]) / rate(payload_tracker_tasks_running_count[1m])",
+              "exemplar": true,
+              "expr": "sum(payload_tracker_message_process_seconds_bucket) by (le)",
+              "format": "heatmap",
+              "instant": false,
               "interval": "",
-              "legendFormat": "{{pod}}",
+              "legendFormat": "{{le}}",
               "refId": "A"
             }
           ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Running Tasks",
+          "title": "Message Processing Times",
           "tooltip": {
-            "shared": true,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
             "show": true,
-            "values": []
+            "showHistogram": true
           },
-          "yaxes": [
-            {
-              "$$hashKey": "object:181",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "$$hashKey": "object:182",
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
+          "type": "heatmap",
+          "xAxis": {
+            "show": true
+          },
+          "xBucketNumber": null,
+          "xBucketSize": null,
+          "yAxis": {
+            "decimals": 0,
+            "format": "dtdurations",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true,
+            "splitFactor": null,
+            "width": null
+          },
+          "yBucketBound": "auto",
+          "yBucketNumber": null,
+          "yBucketSize": null
         }
       ],
       "refresh": "1m",
@@ -1528,7 +1613,7 @@ data:
         "list": [
           {
             "current": {
-              "selected": true,
+              "selected": false,
               "text": "crcs02ue1-prometheus",
               "value": "crcs02ue1-prometheus"
             },
