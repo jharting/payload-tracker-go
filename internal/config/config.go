@@ -81,7 +81,7 @@ func Get() *TrackerConfig {
 	options.SetDefault("kafka.retry.backoff.ms", 100)
 
 	// requestID config
-	options.SetDefault("validate.request.id", "true")
+	options.SetDefault("validate.request.id", true)
 	options.SetDefault("validate.request.id.length", 32)
 
 	if clowder.IsClowderEnabled() {
