@@ -41,7 +41,7 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	}
 
 	// Validate RequestID
-	if cfg.RequestConfig.ValidateRequestID {
+	if cfg.RequestConfig.ValidateRequestIDLength != 0 {
 		if len(payloadStatus.RequestID) > cfg.RequestConfig.ValidateRequestIDLength {
 			return
 		}

@@ -54,7 +54,6 @@ type CloudwatchCfg struct {
 }
 
 type RequestCfg struct {
-	ValidateRequestID       bool
 	ValidateRequestIDLength int
 }
 
@@ -81,7 +80,6 @@ func Get() *TrackerConfig {
 	options.SetDefault("kafka.retry.backoff.ms", 100)
 
 	// requestID config
-	options.SetDefault("validate.request.id", true)
 	options.SetDefault("validate.request.id.length", 32)
 
 	if clowder.IsClowderEnabled() {
@@ -157,7 +155,6 @@ func Get() *TrackerConfig {
 			CWSecretKey: options.GetString("cwSecretKey"),
 		},
 		RequestConfig: RequestCfg{
-			ValidateRequestID:       options.GetBool("validate.request.id"),
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
 		},
 	}
