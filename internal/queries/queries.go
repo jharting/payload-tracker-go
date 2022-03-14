@@ -3,6 +3,7 @@ package queries
 import (
 	models "github.com/redhatinsights/payload-tracker-go/internal/models/db"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 const (
@@ -41,6 +42,16 @@ func GetPayloadByRequestId(db *gorm.DB, request_id string) (result models.Payloa
 	}
 
 	return payload, nil
+}
+
+func UpsertPayloadByRequestId(db *gorm.DB, request_id string, payload models.Payloads) (tx *gorm.DB) {
+	result := tx.Model(models.Payloads{}).
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "request_id"}},
+			DoUpdates: clause.AssignmentColumns([]string{"account", "inventory_id", "system_id", "org_id"}),
+		}).
+		Create(&payload)
+	return result
 }
 
 func UpdatePayloadsTable(db *gorm.DB, updates models.Payloads, payloads models.Payloads) (tx *gorm.DB) {
