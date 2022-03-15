@@ -53,12 +53,12 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	// Upsert into Payloads Table
 	payload := createPayload(payloadStatus)
 
-	upsertResult := queries.UpsertPayloadByRequestId(this.db, payloadStatus.RequestID, payload)
+	upsertResult, payloadId := queries.UpsertPayloadByRequestId(this.db, payloadStatus.RequestID, payload)
 	if upsertResult.Error != nil {
 		l.Log.Error("ERROR Payload table upsert failed: ", upsertResult.Error)
 		return
 	}
-	sanitizedPayloadStatus.PayloadId = payload.Id
+	sanitizedPayloadStatus.PayloadId = payloadId
 
 	// Check if service/source/status are in table
 	// this section checks the subsiquent DB tables to see if the service_id, source_id, and status_id exist for the given message

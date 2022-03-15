@@ -44,14 +44,14 @@ func GetPayloadByRequestId(db *gorm.DB, request_id string) (result models.Payloa
 	return payload, nil
 }
 
-func UpsertPayloadByRequestId(db *gorm.DB, request_id string, payload models.Payloads) (tx *gorm.DB) {
-	result := tx.Model(models.Payloads{}).
+func UpsertPayloadByRequestId(db *gorm.DB, request_id string, payload models.Payloads) (tx *gorm.DB, payloadId uint) {
+	result := db.Model(&payload).
 		Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "request_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{"account", "inventory_id", "system_id", "org_id"}),
 		}).
 		Create(&payload)
-	return result
+	return result, payload.Id
 }
 
 func UpdatePayloadsTable(db *gorm.DB, updates models.Payloads, payloads models.Payloads) (tx *gorm.DB) {
