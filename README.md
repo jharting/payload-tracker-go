@@ -28,7 +28,7 @@ Simply send a message on the ‘platform.payload-status’ for your given Kafka 
     'system_id': 'The ID of the entity in terms of the actual system',
     'status': 'received|processing|success|error|etc',
     'status_msg': 'Information relating to the above status, should more verbiage be needed (in the event of an error)',
-    'date': 'Timestamp for the message relating to the status above'
+    'date': 'Timestamp for the message relating to the status above, (NOTE: this should be in RFC3339)'
 }
 ```
 The following statuses are required:
