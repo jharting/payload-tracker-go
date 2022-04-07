@@ -77,7 +77,7 @@ func Payloads(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
 
-// SinglePayload returns a resposne for /payloads/{request_id}
+// RequestIdPayloads returns a response for /payloads/{request_id}
 func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
@@ -102,6 +102,12 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 	}
 
 	payloads := RetrieveRequestIdPayloads(reqID, q.SortBy, q.SortDir, verbosity)
+
+	if payloads == nil || len(payloads) == 0 {
+		writeResponse(w, http.StatusNotFound, getErrorBody("payload with id: "+reqID+" not found", http.StatusNotFound))
+		return
+	}
+
 	durations := db_methods.CalculateDurations(payloads)
 
 	payloadsData := structs.PayloadRetrievebyID{Data: payloads, Durations: durations}
