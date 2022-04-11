@@ -282,6 +282,44 @@ var _ = Describe("RequestIdPayloads", func() {
 			})
 		})
 
+		Context("with an invalid request id, and db returns empty set", func() {
+			It("should return HTTP 404", func() {
+				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
+				Expect(err).To(BeNil())
+
+				reqIdPayloadData = make([]structs.SinglePayloadData, 0)
+				handler.ServeHTTP(rr, req)
+				Expect(rr.Code).To(Equal(404))
+				Expect(rr.Body).ToNot(BeNil())
+
+				var respData structs.ErrorResponse
+
+				readBody, _ := ioutil.ReadAll(rr.Body)
+				json.Unmarshal(readBody, &respData)
+
+				Expect(respData.Status).To(Equal(http.StatusNotFound))
+			})
+		})
+
+		Context("with an invalid request id, and db returns nil", func() {
+			It("should return HTTP 404", func() {
+				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
+				Expect(err).To(BeNil())
+
+				reqIdPayloadData = nil
+				handler.ServeHTTP(rr, req)
+				Expect(rr.Code).To(Equal(404))
+				Expect(rr.Body).ToNot(BeNil())
+
+				var respData structs.ErrorResponse
+
+				readBody, _ := ioutil.ReadAll(rr.Body)
+				json.Unmarshal(readBody, &respData)
+
+				Expect(respData.Status).To(Equal(http.StatusNotFound))
+			})
+		})
+
 		Context("With invalid sort_dir parameter", func() {
 			It("should return HTTP 400", func() {
 				query["sort_dir"] = "des"
