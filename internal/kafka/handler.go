@@ -50,32 +50,15 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	// Sanitize the payload
 	sanitizePayload(payloadStatus)
 
-	// Check if request_id not in Payloads Table and update columns
-	payloadDump, err := getPayload(this.db, payloadStatus.RequestID)
-	if err != nil && err != gorm.ErrRecordNotFound {
-		l.Log.Error("ERROR: Sanitizing payload failed")
+	// Upsert into Payloads Table
+	payload := createPayload(payloadStatus)
+
+	upsertResult, payloadId := queries.UpsertPayloadByRequestId(this.db, payloadStatus.RequestID, payload)
+	if upsertResult.Error != nil {
+		l.Log.Error("ERROR Payload table upsert failed: ", upsertResult.Error)
 		return
 	}
-
-	if (models.Payloads{}) == payloadDump {
-		payload := createPayload(payloadStatus)
-
-		result, newPayload := queries.CreatePayloadTableEntry(this.db, payload)
-		if result.Error != nil {
-			l.Log.Error("ERROR Payload table entry creation Failed: ", result.Error)
-			return
-		}
-		sanitizedPayloadStatus.PayloadId = newPayload.Id
-	} else {
-		payloadsUpdate := createPayload(payloadStatus)
-
-		result := queries.UpdatePayloadsTable(this.db, payloadsUpdate, payloadDump)
-		if result.Error != nil {
-			l.Log.Error("ERROR Payload table update failed: ", result.Error)
-			return
-		}
-		sanitizedPayloadStatus.PayloadId = payloadDump.Id
-	}
+	sanitizedPayloadStatus.PayloadId = payloadId
 
 	// Check if service/source/status are in table
 	// this section checks the subsiquent DB tables to see if the service_id, source_id, and status_id exist for the given message
@@ -155,10 +138,6 @@ func sanitizePayload(msg *message.PayloadStatusMessage) {
 	if msg.Source != "" {
 		msg.Source = strings.ToLower((msg.Source))
 	}
-}
-
-func getPayload(db *gorm.DB, request_id string) (results models.Payloads, err error) {
-	return queries.GetPayloadByRequestId(db, request_id)
 }
 
 func createPayload(msg *message.PayloadStatusMessage) (table models.Payloads) {
