@@ -153,6 +153,34 @@ paths:
         enum: [0, 1, 2]
         description: Parameter to control verbosity of returned data object
         required: false
+  /payloads/{request_id}/download:
+    get:
+      description: Get the download URL for a payload's archive
+      parameters:
+        - name: request_id
+          in: path
+          description: A unique value identifying this payload.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - url
+                properties:
+                  url:
+                    type: string
+                    description: URL to download the payload
+                    format: url
+        '404':
+          $ref: '#/responses/NotFound'
 
   /statuses:
     get:
