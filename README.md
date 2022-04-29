@@ -15,7 +15,13 @@ Please see the Swagger Spec for API Endpoints. The API Swagger Spec is located i
 
 
 ## Message Formats
-Simply send a message on the ‘platform.payload-status’ for your given Kafka MQ Broker in the appropriate environment. Currently, the only required fields are ‘service,’ ‘request_id,‘ ‘status,’ and ‘date‘ however this may change.The format is as follows:
+Simply send a message on the ‘platform.payload-status’ for your given Kafka MQ Broker in the appropriate environment. Currently, the following fields are required:
+
+    org_id
+    service
+    request_id
+    status
+    data
 
 ```
 { 	
