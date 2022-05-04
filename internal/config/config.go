@@ -10,6 +10,7 @@ import (
 )
 
 type TrackerConfig struct {
+	Environment      string
 	PublicPort       string
 	MetricsPort      string
 	LogLevel         string
@@ -65,6 +66,9 @@ func Get() *TrackerConfig {
 	if err != nil {
 		hostname = "unknown"
 	}
+
+	// Environment
+	options.SetDefault("Environment", "PROD")
 
 	// global logging
 	options.SetDefault("logLevel", "INFO")
@@ -126,6 +130,7 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
+		Environment: options.GetString("Environment"),
 		Hostname:    options.GetString("Hostname"),
 		LogLevel:    options.GetString("logLevel"),
 		PublicPort:  options.GetString("publicPort"),
