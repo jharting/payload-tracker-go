@@ -1,3 +1,12 @@
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [REST API Endpoints](#rest-api-endpoints)
+- [Message Formats](#message-formats)
+- [Development](#development)
+    - [Prerequisites](#prerequisites)
+    - [Launching the Service](#launching-the-service)
+    - [Local Development with Payload Tracker UI](#local-development-with-payload-tracker-ui)
+    - [Running Tests](#running-tests)
 # Payload Tracker
 
 ## Overview
@@ -15,7 +24,13 @@ Please see the Swagger Spec for API Endpoints. The API Swagger Spec is located i
 
 
 ## Message Formats
-Simply send a message on the ‘platform.payload-status’ for your given Kafka MQ Broker in the appropriate environment. Currently, the only required fields are ‘service,’ ‘request_id,‘ ‘status,’ and ‘date‘ however this may change.The format is as follows:
+Simply send a message on the ‘platform.payload-status’ for your given Kafka MQ Broker in the appropriate environment. Currently, the following fields are required:
+
+    org_id
+    service
+    request_id
+    status
+    data
 
 ```
 { 	
@@ -69,6 +84,24 @@ $> ./pt-consumer
 The API should now be available on TCP port 8080
 ```
 $> curl http://localhost:8080/api/v1/
+$> lubdub
+```
+
+#### Local Development with Payload Tracker UI
+Follow steps to run Payload Tracker UI (Dev Setup)
+https://github.com/RedHatInsights/payload-tracker-frontend#dev-setup
+Compile the source code for the API and Consumer into go binary:
+```
+$> make build-all
+```
+Launch the application in DEV mode
+```
+$> ENVIRONMENT=DEV ./pt-api
+$> ./pt-consumer
+```
+The API should now be available on port 8080
+```
+$> curl http://localhost:8080/app/payload-tracker/api/v1/
 $> lubdub
 ```
 

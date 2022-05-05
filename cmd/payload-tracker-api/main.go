@@ -35,9 +35,12 @@ func main() {
 	mr := chi.NewRouter()
 	sub := chi.NewRouter()
 
-
-	// Mount the root of the api router on /api/v1
-	r.Mount("/api/v1/", sub)
+	// Mount the root of the api router on /api/v1 unless ENVIRONMENT is DEV
+	if cfg.Environment == "DEV" {
+		r.Mount("/app/payload-tracker/api/v1/", sub)
+	} else {
+		r.Mount("/api/v1/", sub)
+	}
 	r.Get("/", lubdub)
 	r.Get("/health", healthHandler)
 
