@@ -121,3 +121,24 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
+
+// PayloadGetArchiveLink returns a response for /payloads/{request_id}/archiveLink
+func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
+	// TODO: Check user LDAP in Identity Header
+
+	// TODO: Send a request to storage broker's /archive/url for the download link
+
+	archiveLink := structs.PayloadArchiveLink{
+		Url:           "https://www.example.com",
+		AllowedAccess: true,
+	}
+
+	dataJson, err := json.Marshal(archiveLink)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Internal Server Issue", http.StatusInternalServerError))
+		return
+	}
+
+	writeResponse(w, http.StatusOK, string(dataJson))
+}

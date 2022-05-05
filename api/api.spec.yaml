@@ -153,7 +153,7 @@ paths:
         enum: [0, 1, 2]
         description: Parameter to control verbosity of returned data object
         required: false
-  /payloads/{request_id}/download:
+  /payloads/{request_id}/archiveLink:
     get:
       description: Get the download URL for a payload's archive
       parameters:
@@ -173,12 +173,17 @@ paths:
               data:
                 type: object
                 required:
-                  - url
+                  - allowed_access
                 properties:
                   url:
                     type: string
                     description: URL to download the payload
                     format: url
+                  allowed_access:
+                    type: boolean
+                    description: Whether the requests identity header contains the required LDAP group
+        '403':
+          $ref: '#/responses/Forbidden'
         '404':
           $ref: '#/responses/NotFound'
 
