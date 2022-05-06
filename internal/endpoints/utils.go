@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -103,6 +104,36 @@ func validTimestamps(q structs.Query, all bool) bool {
 		}
 	}
 	return true
+}
+
+// Check for a specified role in the user's identity header
+func CheckUserRole(r *http.Request, role string) bool {
+	identityHeader := r.Header.Get("x-rh-identity")
+	if identityHeader == "" {
+		return false
+	}
+
+	type IdentityHeader struct {
+		Identity struct {
+			Associate struct {
+				Roles []string `json:"Role"`
+			} `json:"associate"`
+		} `json:"identity"`
+	}
+
+	var identityHeaderData IdentityHeader
+	// base64 decode the header
+	decoded, err := base64.StdEncoding.DecodeString(identityHeader)
+	if err != nil {
+		return false
+	}
+
+	err = json.Unmarshal(decoded, &identityHeaderData)
+	if err != nil {
+		return false
+	}
+
+	return stringInSlice(role, identityHeaderData.Identity.Associate.Roles)
 }
 
 // Write HTTP Response

@@ -124,13 +124,16 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 
 // PayloadGetArchiveLink returns a response for /payloads/{request_id}/archiveLink
 func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
-	// TODO: Check user LDAP in Identity Header
+
+	if !CheckUserRole(r, "platform-archive-download") {
+		writeResponse(w, http.StatusUnauthorized, getErrorBody("Unauthorized", http.StatusUnauthorized))
+		return
+	}
 
 	// TODO: Send a request to storage broker's /archive/url for the download link
 
 	archiveLink := structs.PayloadArchiveLink{
-		Url:           "https://www.example.com",
-		AllowedAccess: true,
+		Url: "https://www.example.com",
 	}
 
 	dataJson, err := json.Marshal(archiveLink)

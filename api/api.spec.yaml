@@ -173,17 +173,14 @@ paths:
               data:
                 type: object
                 required:
-                  - allowed_access
+                  - url
                 properties:
                   url:
                     type: string
                     description: URL to download the payload
                     format: url
-                  allowed_access:
-                    type: boolean
-                    description: Whether the requests identity header contains the required LDAP group
-        '403':
-          $ref: '#/responses/Forbidden'
+        '401':
+          $ref: '#/responses/Unauthorized'
         '404':
           $ref: '#/responses/NotFound'
 

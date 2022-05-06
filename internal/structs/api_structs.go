@@ -46,8 +46,7 @@ type PayloadRetrievebyID struct {
 }
 
 type PayloadArchiveLink struct {
-	Url           string `json:"url"`
-	AllowedAccess bool   `json:"allowed_access"`
+	Url string `json:"url"`
 }
 
 type StatusesData struct {
