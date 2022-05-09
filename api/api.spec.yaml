@@ -184,6 +184,23 @@ paths:
         '404':
           $ref: '#/responses/NotFound'
 
+  /roles/archiveLink:
+    get:
+      description: Check if the user has the required LDAP role in their Identity Header to request archive download links
+      responses:
+        '200':
+          description: 'User has the required LDAP role for the downloading archives'
+          schema:
+            type: object
+            required:
+              - allowed
+            properties:
+              allowed:
+                type: boolean
+                description: True if the user has the required LDAP role
+        '401': 
+          $ref: '#/responses/Unauthorized'
+
   /statuses:
     get:
       description: 'Get individual payload statuses for payloads.'
@@ -326,6 +343,10 @@ paths:
 responses:
   NotFound:
     description: The specified resource was not found
+    schema:
+      $ref: '#/definitions/Error'
+  Unauthorized:
+    description: The user is not authorized to access this resource
     schema:
       $ref: '#/definitions/Error'
   TestFailed:

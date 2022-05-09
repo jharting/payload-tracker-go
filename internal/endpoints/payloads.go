@@ -122,26 +122,29 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
 
-// PayloadGetArchiveLink returns a response for /payloads/{request_id}/archiveLink
+// PayloadArchiveLink returns a response for /payloads/{request_id}/archiveLink
 func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
-	if !CheckUserRole(r, "platform-archive-download") {
+	reqID := chi.URLParam(r, "request_id")
+
+	if !identityHasRole(w, r, "platform-archive-download") {
 		writeResponse(w, http.StatusUnauthorized, getErrorBody("Unauthorized", http.StatusUnauthorized))
 		return
 	}
 
 	// TODO: Send a request to storage broker's /archive/url for the download link
-
-	archiveLink := structs.PayloadArchiveLink{
-		Url: "https://www.example.com",
-	}
-
-	dataJson, err := json.Marshal(archiveLink)
+	dataJson, err := json.Marshal(
+		structs.PayloadArchiveLink{
+			Url: "https://www.example.com",
+		},
+	)
 	if err != nil {
 		l.Log.Error(err)
 		writeResponse(w, http.StatusInternalServerError, getErrorBody("Internal Server Issue", http.StatusInternalServerError))
 		return
 	}
+
+	l.Log.Infof("Link generated for payload %s from identity %s: ", reqID, r.Header.Get("x-rh-identity"))
 
 	writeResponse(w, http.StatusOK, string(dataJson))
 }

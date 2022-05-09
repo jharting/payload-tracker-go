@@ -49,6 +49,10 @@ type PayloadArchiveLink struct {
 	Url string `json:"url"`
 }
 
+type ArchiveLinkRole struct {
+	Allowed bool `json:"allowed"`
+}
+
 type StatusesData struct {
 	Count   int64            `json:"count"`
 	Elapsed float64          `json:"elapsed"`

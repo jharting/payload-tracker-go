@@ -107,7 +107,7 @@ func validTimestamps(q structs.Query, all bool) bool {
 }
 
 // Check for a specified role in the user's identity header
-func CheckUserRole(r *http.Request, role string) bool {
+func identityHasRole(w http.ResponseWriter, r *http.Request, role string) bool {
 	identityHeader := r.Header.Get("x-rh-identity")
 	if identityHeader == "" {
 		return false
