@@ -30,7 +30,7 @@ Simply send a message on the ‘platform.payload-status’ for your given Kafka 
     service
     request_id
     status
-    data
+    date
 
 ```
 { 	
