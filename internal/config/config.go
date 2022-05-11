@@ -15,6 +15,7 @@ type TrackerConfig struct {
 	MetricsPort      string
 	LogLevel         string
 	Hostname         string
+	StorageBrokerURL string
 	KafkaConfig      KafkaCfg
 	CloudwatchConfig CloudwatchCfg
 	DatabaseConfig   DatabaseCfg
@@ -86,6 +87,9 @@ func Get() *TrackerConfig {
 	// requestID config
 	options.SetDefault("validate.request.id.length", 32)
 
+	// storage broker config
+	options.SetDefault("storageBrokerURL", "http://storage-broker/archive/url")
+
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
 
@@ -130,11 +134,12 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
-		Environment: options.GetString("Environment"),
-		Hostname:    options.GetString("Hostname"),
-		LogLevel:    options.GetString("logLevel"),
-		PublicPort:  options.GetString("publicPort"),
-		MetricsPort: options.GetString("metricsPort"),
+		Environment:      options.GetString("Environment"),
+		Hostname:         options.GetString("Hostname"),
+		LogLevel:         options.GetString("logLevel"),
+		PublicPort:       options.GetString("publicPort"),
+		MetricsPort:      options.GetString("metricsPort"),
+		StorageBrokerURL: options.GetString("storageBrokerURL"),
 		KafkaConfig: KafkaCfg{
 			KafkaTimeout:               options.GetInt("kafka.timeout"),
 			KafkaGroupID:               options.GetString("kafka.group.id"),

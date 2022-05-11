@@ -3,12 +3,14 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db_methods"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
@@ -132,15 +134,34 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Send a request to storage broker's /archive/url for the download link
-	dataJson, err := json.Marshal(
-		structs.PayloadArchiveLink{
-			Url: "https://www.example.com",
-		},
-	)
+	// Send a request to storage broker for the archive link
+	response, err := http.Get(config.Get().StorageBrokerURL + "?request_id=" + reqID)
 	if err != nil {
 		l.Log.Error(err)
-		writeResponse(w, http.StatusInternalServerError, getErrorBody("Internal Server Issue", http.StatusInternalServerError))
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error fetching payload URL from storage-broker", http.StatusInternalServerError))
+		return
+	}
+	l.Log.Debugf("Storage broker response: %v", response)
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error reading response", http.StatusInternalServerError))
+		return
+	}
+
+	var payloadArchiveLink structs.PayloadArchiveLink
+	if err = json.Unmarshal(body, &payloadArchiveLink); err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error unmarshaling the response", http.StatusInternalServerError))
+		return
+	}
+
+	// Convert the struct back to json
+	dataJson, err := json.Marshal(payloadArchiveLink)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error converting parsed response to json", http.StatusInternalServerError))
 		return
 	}
 
