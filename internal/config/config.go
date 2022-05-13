@@ -88,7 +88,7 @@ func Get() *TrackerConfig {
 	options.SetDefault("validate.request.id.length", 32)
 
 	// storage broker config
-	options.SetDefault("storageBrokerURL", "http://storage-broker-processor/archive/url")
+	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
 
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
