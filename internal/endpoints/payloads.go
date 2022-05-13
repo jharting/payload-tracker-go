@@ -149,7 +149,6 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error fetching payload URL from storage-broker", http.StatusInternalServerError))
 		return
 	}
-	l.Log.Debugf("Storage broker response: %v", response)
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -173,6 +172,6 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	l.Log.Infof("Link generated for payload %s from identity %s: ", reqID, r.Header.Get("x-rh-identity"))
+	l.Log.Infof("Link generated for payload %s from identity %s: %s", reqID, r.Header.Get("x-rh-identity"), string(body))
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
