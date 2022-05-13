@@ -135,7 +135,15 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Send a request to storage broker for the archive link
-	response, err := http.Get(config.Get().StorageBrokerURL + "?request_id=" + reqID)
+	req, err := http.NewRequest("GET", config.Get().StorageBrokerURL+"?request_id="+reqID, nil)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error with Request ID", http.StatusInternalServerError))
+		return
+	}
+
+	req.Header.Add("x-rh-identity", r.Header.Get("x-rh-identity"))
+	response, err := http.DefaultClient.Do(req)
 	if err != nil {
 		l.Log.Error(err)
 		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error fetching payload URL from storage-broker", http.StatusInternalServerError))
@@ -166,6 +174,5 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	l.Log.Infof("Link generated for payload %s from identity %s: ", reqID, r.Header.Get("x-rh-identity"))
-
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
