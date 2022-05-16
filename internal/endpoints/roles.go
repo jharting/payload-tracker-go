@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 
@@ -11,8 +12,8 @@ import (
 func RolesArchiveLink(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	if !identityHasRole(w, r, "platform-archive-download") {
-		writeResponse(w, http.StatusUnauthorized, getErrorBody("Unauthorized", http.StatusUnauthorized))
+	if !identityHasRole(w, r, config.Get().StorageBrokerURLRole) {
+		writeResponse(w, http.StatusForbidden, getErrorBody("You do not have the required LDAP group to access this resource", http.StatusForbidden))
 		return
 	}
 
