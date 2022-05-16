@@ -4,10 +4,12 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
@@ -150,4 +152,31 @@ func writeResponse(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write([]byte(message))
+}
+
+// Send a request for an ArchiveLink to storage-broker
+func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveLink, error) {
+	req, err := http.NewRequest("GET", config.Get().StorageBrokerURL+"?request_id="+reqID, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("x-rh-identity", r.Header.Get("x-rh-identity"))
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var archiveLink structs.PayloadArchiveLink
+	err = json.Unmarshal(body, &archiveLink)
+	if err != nil {
+		return nil, err
+	}
+
+	return &archiveLink, nil
 }

@@ -488,6 +488,4 @@ var _ = Describe("PayloadArchiveLink", func() {
 		})
 	})
 
-	// Todo: Mock out 200 response
-
 })

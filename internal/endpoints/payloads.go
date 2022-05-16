@@ -3,7 +3,6 @@ package endpoints
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -135,33 +134,10 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Send a request to storage broker for the archive link
-	req, err := http.NewRequest("GET", config.Get().StorageBrokerURL+"?request_id="+reqID, nil)
+	payloadArchiveLink, err := requestArchiveLink(r, reqID)
 	if err != nil {
-		l.Log.Error(err)
-		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error with Request ID", http.StatusInternalServerError))
-		return
-	}
-
-	req.Header.Add("x-rh-identity", r.Header.Get("x-rh-identity"))
-	response, err := http.DefaultClient.Do(req)
-	if err != nil {
-		l.Log.Error(err)
-		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error fetching payload URL from storage-broker", http.StatusInternalServerError))
-		return
-	}
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		l.Log.Error(err)
-		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error reading response", http.StatusInternalServerError))
-		return
-	}
-
-	var payloadArchiveLink structs.PayloadArchiveLink
-	if err = json.Unmarshal(body, &payloadArchiveLink); err != nil {
-		l.Log.Error(err)
-		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error unmarshaling the response", http.StatusInternalServerError))
+		l.Log.Errorf("Error getting archive link from storage-broker for request id: %s, error: %v", reqID, err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody(fmt.Sprintf("%v", err), http.StatusInternalServerError))
 		return
 	}
 
@@ -177,6 +153,6 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	l.Log.Infof("Link generated for payload %s from identity %s: %s", reqID, r.Header.Get("x-rh-identity"), string(body))
+	l.Log.Infof("Link generated for payload %s from identity %s: %s", reqID, r.Header.Get("x-rh-identity"), string(dataJson))
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
