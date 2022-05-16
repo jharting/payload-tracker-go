@@ -451,3 +451,43 @@ var _ = Describe("RequestIdPayloads", func() {
 		})
 	})
 })
+
+var _ = Describe("PayloadArchiveLink", func() {
+	var (
+		handler http.Handler
+		rr      *httptest.ResponseRecorder
+
+		query map[string]interface{}
+	)
+
+	BeforeEach(func() {
+		rr = httptest.NewRecorder()
+		handler = http.HandlerFunc(endpoints.PayloadArchiveLink)
+
+		query = make(map[string]interface{})
+	})
+
+	Context("With a missing Identity header", func() {
+		It("Should return 401", func() {
+			req, err := makeTestRequest("/api/v1/payloads/e3d852a1-85ce-4e21-9430-11be71b55a7d/archiveLink", query)
+			Expect(err).To(BeNil())
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusUnauthorized))
+		})
+	})
+
+	Context("Without the required role", func() {
+		It("Should return 403", func() {
+			req, err := makeTestRequest("/api/v1/payloads/e3d852a1-85ce-4e21-9430-11be71b55a7d/archiveLink", query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", invalidIdentityHeader)
+			handler = http.HandlerFunc(endpoints.PayloadArchiveLink)
+			rr = httptest.NewRecorder()
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusForbidden))
+		})
+	})
+
+	// Todo: Mock out 200 response
+
+})

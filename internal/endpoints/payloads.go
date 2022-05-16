@@ -129,8 +129,9 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
 
-	if !identityHasRole(w, r, config.Get().StorageBrokerURLRole) {
-		writeResponse(w, http.StatusForbidden, getErrorBody("You do not have the required LDAP group to access this resource", http.StatusForbidden))
+	statusCode, err := checkForRole(r, config.Get().StorageBrokerURLRole)
+	if err != nil {
+		writeResponse(w, statusCode, getErrorBody(fmt.Sprintf("%v", err), statusCode))
 		return
 	}
 

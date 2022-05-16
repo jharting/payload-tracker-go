@@ -3,10 +3,12 @@ package endpoints
 import (
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
 
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 
@@ -106,11 +108,11 @@ func validTimestamps(q structs.Query, all bool) bool {
 	return true
 }
 
-// Check for a specified role in the user's identity header
-func identityHasRole(w http.ResponseWriter, r *http.Request, role string) bool {
+// Check for a specified role in the user's identity header, returns (200, nil) if the role is found
+func checkForRole(r *http.Request, role string) (int, error) {
 	identityHeader := r.Header.Get("x-rh-identity")
 	if identityHeader == "" {
-		return false
+		return http.StatusUnauthorized, errors.New("Missing Identity Header")
 	}
 
 	type IdentityHeader struct {
@@ -125,15 +127,22 @@ func identityHasRole(w http.ResponseWriter, r *http.Request, role string) bool {
 	// base64 decode the header
 	decoded, err := base64.StdEncoding.DecodeString(identityHeader)
 	if err != nil {
-		return false
+		l.Log.Error("Error decoding identity header", "error", err)
+		return http.StatusUnauthorized, err
 	}
 
 	err = json.Unmarshal(decoded, &identityHeaderData)
 	if err != nil {
-		return false
+		l.Log.Error("Error unmarshalling identity header", "error", err)
+		return http.StatusUnauthorized, err
+
 	}
 
-	return stringInSlice(role, identityHeaderData.Identity.Associate.Roles)
+	if !stringInSlice(role, identityHeaderData.Identity.Associate.Roles) {
+		return http.StatusForbidden, errors.New("You do not have the required permissions to access this resource")
+	}
+
+	return http.StatusOK, nil
 }
 
 // Write HTTP Response
