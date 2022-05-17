@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
@@ -185,4 +186,9 @@ func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveL
 	}
 
 	return &archiveLink, nil
+}
+
+func isValidUUID(id string) bool {
+	_, err := uuid.Parse(id)
+	return err == nil
 }

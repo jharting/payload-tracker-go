@@ -179,6 +179,8 @@ paths:
                     type: string
                     description: URL to download the payload
                     format: url
+        '400':
+          $ref: '#/responses/BadRequest'
         '401':
           $ref: '#/responses/Unauthorized'
         '403':
@@ -345,6 +347,10 @@ paths:
         '404':
           $ref: '#/responses/NotFound'
 responses:
+  BadRequest:
+    description: Bad request
+    schema:
+      $ref: '#/definitions/Error'
   NotFound:
     description: The specified resource was not found
     schema:

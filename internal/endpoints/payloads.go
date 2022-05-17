@@ -126,6 +126,10 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
+	if !isValidUUID(reqID) {
+		writeResponse(w, http.StatusBadRequest, getErrorBody("request_id is not a valid UUID", http.StatusBadRequest))
+		return
+	}
 
 	statusCode, err := checkForRole(r, config.Get().StorageBrokerURLRole)
 	if err != nil {
