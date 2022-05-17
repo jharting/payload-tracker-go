@@ -8,10 +8,10 @@ import (
 	"net/http/httptest"
 	"time"
 
-	"gorm.io/gorm"
 	"github.com/google/uuid"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"gorm.io/gorm"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 	"github.com/redhatinsights/payload-tracker-go/internal/models"
@@ -458,19 +458,31 @@ var _ = Describe("PayloadArchiveLink", func() {
 		handler http.Handler
 		rr      *httptest.ResponseRecorder
 
-		query map[string]interface{}
+		requestId string
+		query     map[string]interface{}
 	)
 
 	BeforeEach(func() {
 		rr = httptest.NewRecorder()
 		handler = http.HandlerFunc(endpoints.PayloadArchiveLink)
 
+		requestId = getUUID()
 		query = make(map[string]interface{})
+	})
+
+	Context("When the request_id is not a valid UUID", func() {
+		It("Should return 400", func() {
+			req, err := makeTestRequest("/api/v1/payloads/1234/archiveLink", query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", validIdentityHeader)
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusBadRequest))
+		})
 	})
 
 	Context("With a missing Identity header", func() {
 		It("Should return 401", func() {
-			req, err := makeTestRequest("/api/v1/payloads/e3d852a1-85ce-4e21-9430-11be71b55a7d/archiveLink", query)
+			req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s/archiveLink", requestId), query)
 			Expect(err).To(BeNil())
 			handler.ServeHTTP(rr, req)
 			Expect(rr.Code).To(Equal(http.StatusUnauthorized))
@@ -479,11 +491,9 @@ var _ = Describe("PayloadArchiveLink", func() {
 
 	Context("Without the required role", func() {
 		It("Should return 403", func() {
-			req, err := makeTestRequest("/api/v1/payloads/e3d852a1-85ce-4e21-9430-11be71b55a7d/archiveLink", query)
+			req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s/archiveLink", requestId), query)
 			Expect(err).To(BeNil())
 			req.Header.Set("x-rh-identity", invalidIdentityHeader)
-			handler = http.HandlerFunc(endpoints.PayloadArchiveLink)
-			rr = httptest.NewRecorder()
 			handler.ServeHTTP(rr, req)
 			Expect(rr.Code).To(Equal(http.StatusForbidden))
 		})
