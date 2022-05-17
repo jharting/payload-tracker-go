@@ -11,6 +11,8 @@ import (
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
+	"gorm.io/gorm"
+	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 
@@ -68,6 +70,10 @@ func initQuery(r *http.Request) (structs.Query, error) {
 	}
 
 	return q, err
+}
+
+func getDb() *gorm.DB {
+	return db.DB
 }
 
 func getErrorBody(message string, status int) string {

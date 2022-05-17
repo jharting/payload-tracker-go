@@ -30,7 +30,7 @@ Simply send a message on the ‘platform.payload-status’ for your given Kafka 
     service
     request_id
     status
-    data
+    date
 
 ```
 { 	
@@ -110,3 +110,5 @@ Use `go tests` to test the application
 ```
 $> go test ./...
 ```
+
+The tests also use a PostgreSQL database to run some tests. When testing locally, a PostgreSQL server needs to be up and running. On github, this is handled by a github actions workflow: [here](https://github.com/RedHatInsights/payload-tracker-go/blob/master/.github/workflows/pr.yml).
