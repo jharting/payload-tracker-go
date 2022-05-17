@@ -156,12 +156,7 @@ paths:
   /payloads/{request_id}/archiveLink:
     get:
       description: Get the download URL for a payload's archive
-      parameters:
-        - name: request_id
-          in: path
-          description: A unique value identifying this payload.
-          required: true
-          type: string
+      parameters: []
       responses:
         '200':
           description: ''
