@@ -179,6 +179,8 @@ paths:
                     type: string
                     description: URL to download the payload
                     format: url
+        '401':
+          $ref: '#/responses/Unauthorized'
         '403':
           $ref: '#/responses/Forbidden'
         '404':
@@ -198,6 +200,8 @@ paths:
               allowed:
                 type: boolean
                 description: True if the user has the required LDAP role
+        '401':
+          $ref: '#/responses/Unauthorized'
         '403': 
           $ref: '#/responses/Forbidden'
 
@@ -343,6 +347,10 @@ paths:
 responses:
   NotFound:
     description: The specified resource was not found
+    schema:
+      $ref: '#/definitions/Error'
+  Unauthorized:
+    description: The user is not authorized to access this resource
     schema:
       $ref: '#/definitions/Error'
   Forbidden:
