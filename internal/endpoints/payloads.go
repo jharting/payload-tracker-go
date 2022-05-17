@@ -9,8 +9,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
-	"github.com/redhatinsights/payload-tracker-go/internal/queries"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
+	"github.com/redhatinsights/payload-tracker-go/internal/queries"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 

@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
-	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
-	"gorm.io/gorm"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
+	"gorm.io/gorm"
 )
 
 var (
