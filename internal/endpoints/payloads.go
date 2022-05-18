@@ -17,6 +17,7 @@ import (
 var (
 	RetrievePayloads          = queries.RetrievePayloads
 	RetrieveRequestIdPayloads = queries.RetrieveRequestIdPayloads
+	RequestArchiveLink        = requestArchiveLink
 )
 
 var (
@@ -138,7 +139,7 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	payloadArchiveLink, err := requestArchiveLink(r, reqID)
+	payloadArchiveLink, err := RequestArchiveLink(r, reqID)
 	if err != nil {
 		l.Log.Errorf("Error getting archive link from storage-broker for request id: %s, error: %v", reqID, err)
 		writeResponse(w, http.StatusInternalServerError, getErrorBody(fmt.Sprintf("%v", err), http.StatusInternalServerError))

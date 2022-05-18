@@ -1,6 +1,7 @@
 package endpoints_test
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -8,6 +9,7 @@ import (
 	"net/http/httptest"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -125,6 +127,12 @@ func mockedRetrievePayloads(_ *gorm.DB, _ int, _ int, _ structs.Query) (int64, [
 
 func mockedRequestIdPayloads(_ *gorm.DB, _ string, _ string, _ string, _ string) []structs.SinglePayloadData {
 	return reqIdPayloadData
+}
+
+func mockedRequestArchiveLink(_ *http.Request, reqID string) (*structs.PayloadArchiveLink, error) {
+	return &structs.PayloadArchiveLink{
+		Url: "www.example.com",
+	}, nil
 }
 
 var _ = Describe("Payloads", func() {
@@ -466,6 +474,8 @@ var _ = Describe("PayloadArchiveLink", func() {
 		rr = httptest.NewRecorder()
 		handler = http.HandlerFunc(endpoints.PayloadArchiveLink)
 
+		endpoints.RequestArchiveLink = mockedRequestArchiveLink
+
 		requestId = getUUID()
 		query = make(map[string]interface{})
 	})
@@ -496,6 +506,29 @@ var _ = Describe("PayloadArchiveLink", func() {
 			req.Header.Set("x-rh-identity", invalidIdentityHeader)
 			handler.ServeHTTP(rr, req)
 			Expect(rr.Code).To(Equal(http.StatusForbidden))
+		})
+	})
+
+	Context("With a valid request_id and the required roles in the Identity header", func() {
+		It("Should return the payload archive's URL", func() {
+			req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s/archiveLink", requestId), query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", validIdentityHeader)
+
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("request_id", requestId)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusOK))
+			Expect(rr.Body).ToNot(BeNil())
+
+			var respData structs.PayloadArchiveLink
+
+			readBody, _ := ioutil.ReadAll(rr.Body)
+			json.Unmarshal(readBody, &respData)
+
+			Expect(respData.Url).To(Equal("www.example.com"))
 		})
 	})
 
