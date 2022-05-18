@@ -9,6 +9,9 @@ objects:
   metadata:
     name: payload-tracker
   spec:
+    optionalDependencies:
+    - storage-broker
+    - ingress
     testing:
       iqePlugin: payload-tracker
     envName: ${ENV_NAME}

@@ -14,7 +14,7 @@ type Query struct {
 	SortBy       string
 	SortDir      string
 	Account      string
-	OrgID		 string
+	OrgID        string
 	InventoryID  string
 	SystemID     string
 	CreatedAtLT  string
@@ -43,6 +43,14 @@ type PayloadsData struct {
 type PayloadRetrievebyID struct {
 	Data      []SinglePayloadData `json:"data"`
 	Durations map[string]string   `json:"duration"`
+}
+
+type PayloadArchiveLink struct {
+	Url string `json:"url"`
+}
+
+type ArchiveLinkRole struct {
+	Allowed bool `json:"allowed"`
 }
 
 type StatusesData struct {

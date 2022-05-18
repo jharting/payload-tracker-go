@@ -8,15 +8,16 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
-
-	"github.com/redhatinsights/payload-tracker-go/internal/queries"
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
+	"github.com/redhatinsights/payload-tracker-go/internal/queries"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
 )
 
 var (
 	RetrievePayloads          = queries.RetrievePayloads
 	RetrieveRequestIdPayloads = queries.RetrieveRequestIdPayloads
+	RequestArchiveLink        = requestArchiveLink
 )
 
 var (
@@ -119,5 +120,44 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	writeResponse(w, http.StatusOK, string(dataJson))
+}
+
+// PayloadArchiveLink returns a response for /payloads/{request_id}/archiveLink
+func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
+
+	reqID := chi.URLParam(r, "request_id")
+
+	statusCode, err := checkForRole(r, config.Get().StorageBrokerURLRole)
+	if err != nil {
+		writeResponse(w, statusCode, getErrorBody(fmt.Sprintf("%v", err), statusCode))
+		return
+	}
+
+	if !isValidUUID(reqID) {
+		writeResponse(w, http.StatusBadRequest, getErrorBody(fmt.Sprintf("%s is not a valid UUID", reqID), http.StatusBadRequest))
+		return
+	}
+
+	payloadArchiveLink, err := RequestArchiveLink(r, reqID)
+	if err != nil {
+		l.Log.Errorf("Error getting archive link from storage-broker for request id: %s, error: %v", reqID, err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody(fmt.Sprintf("%v", err), http.StatusInternalServerError))
+		return
+	}
+
+	if payloadArchiveLink.Url == "" {
+		writeResponse(w, http.StatusNotFound, getErrorBody("Payload not found", http.StatusNotFound))
+		return
+	}
+
+	dataJson, err := json.Marshal(payloadArchiveLink)
+	if err != nil {
+		l.Log.Error(err)
+		writeResponse(w, http.StatusInternalServerError, getErrorBody("Error converting parsed response to json", http.StatusInternalServerError))
+		return
+	}
+
+	l.Log.Infof("Link generated for payload %s from identity %s: %s", reqID, r.Header.Get("x-rh-identity"), string(dataJson))
 	writeResponse(w, http.StatusOK, string(dataJson))
 }

@@ -51,6 +51,8 @@ func main() {
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/", lubdub)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads", endpoints.Payloads)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}", endpoints.RequestIdPayloads)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/archiveLink", endpoints.PayloadArchiveLink)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/roles/archiveLink", endpoints.RolesArchiveLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/statuses", endpoints.Statuses)
 
 	srv := http.Server{

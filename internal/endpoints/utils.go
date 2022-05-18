@@ -1,15 +1,20 @@
 package endpoints
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"errors"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
 
-	"gorm.io/gorm"
-
+	"github.com/google/uuid"
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
+	"gorm.io/gorm"
 )
 
 var (
@@ -112,9 +117,72 @@ func validTimestamps(q structs.Query, all bool) bool {
 	return true
 }
 
+// Check for a specified role in the user's identity header, returns (200, nil) if the role is found
+func checkForRole(r *http.Request, role string) (int, error) {
+	identityHeader := r.Header.Get("x-rh-identity")
+	if identityHeader == "" {
+		return http.StatusUnauthorized, errors.New("Missing Identity Header")
+	}
+
+	type IdentityHeader struct {
+		Identity struct {
+			Associate struct {
+				Roles []string `json:"Role"`
+			} `json:"associate"`
+		} `json:"identity"`
+	}
+
+	var identityHeaderData IdentityHeader
+	// base64 decode the header
+	decoded, err := base64.StdEncoding.DecodeString(identityHeader)
+	if err != nil {
+		l.Log.Error("Error decoding identity header", "error", err)
+		return http.StatusUnauthorized, err
+	}
+
+	err = json.Unmarshal(decoded, &identityHeaderData)
+	if err != nil {
+		l.Log.Error("Error unmarshalling identity header", "error", err)
+		return http.StatusUnauthorized, err
+
+	}
+
+	if !stringInSlice(role, identityHeaderData.Identity.Associate.Roles) {
+		return http.StatusForbidden, errors.New("You do not have the required permissions to access this resource")
+	}
+
+	return http.StatusOK, nil
+}
+
 // Write HTTP Response
 func writeResponse(w http.ResponseWriter, status int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write([]byte(message))
+}
+
+// Send a request for an ArchiveLink to storage-broker
+func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveLink, error) {
+	response, err := http.Get(config.Get().StorageBrokerURL + "?request_id=" + reqID)
+	if err != nil {
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var archiveLink structs.PayloadArchiveLink
+	err = json.Unmarshal(body, &archiveLink)
+	if err != nil {
+		return nil, err
+	}
+
+	return &archiveLink, nil
+}
+
+func isValidUUID(id string) bool {
+	_, err := uuid.Parse(id)
+	return err == nil
 }
