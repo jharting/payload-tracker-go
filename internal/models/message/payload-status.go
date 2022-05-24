@@ -40,16 +40,16 @@ func (t *FormatedTime) UnmarshalJSON(b []byte) error {
 	}
 
 	date = strings.Join(strings.Fields(date), "T")
-	
-	// Add a Z to the end of the timestamp if it doesn't exist
-	if !strings.HasSuffix(date, "Z") {
-		date = date + "Z"
-	}
 
 	t.Time, err = time.Parse(dateFormat, date)
 	if err != nil {
-		l.Log.Error("ERROR: Parsing date into new format: ", err)
-		return err
+		// Probably not timezone aware timestamp, add Z to the end
+		date = date + "Z"
+		t.Time, err = time.Parse(dateFormat, date)
+		if err != nil {
+			l.Log.Error("ERROR: Parsing date into new format: ", err)
+			return err
+		}
 	}
 
 	return nil
