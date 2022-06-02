@@ -66,7 +66,7 @@ func dataPerVerbosity(requestId string, verbosity string, d1 time.Time) structs.
 	}
 }
 
-func getFourReqIdPayloads(requestId string, verbosity string) []structs.SinglePayloadData {
+func getFourReqIdStatuses(requestId string, verbosity string) []structs.SinglePayloadData {
 	d1, _ := time.Parse(time.RFC3339, "2021-08-04T07:45:26.371Z")
 	p1 := dataPerVerbosity(requestId, verbosity, d1)
 
@@ -278,13 +278,13 @@ var _ = Describe("RequestIdPayloads", func() {
 	})
 
 	Describe("Get to /payloads/{request_id}", func() {
-		reqIdPayloads := getFourReqIdPayloads(requestId, "2")
+		reqIdStatuses := getFourReqIdStatuses(requestId, "2")
 		Context("with a valid request", func() {
 			It("should return HTTP 200", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
 
-				reqIdPayloadData = reqIdPayloads
+				reqIdPayloadData = reqIdStatuses
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -351,13 +351,13 @@ var _ = Describe("RequestIdPayloads", func() {
 			})
 		})
 
-		reqIdPayloads = getFourReqIdPayloads(requestId, "2")
+		reqIdStatuses = getFourReqIdStatuses(requestId, "2")
 		Context("With valid data from DB", func() {
 			It("should pass the data forward", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
 
-				reqIdPayloadData = reqIdPayloads
+				reqIdPayloadData = reqIdStatuses
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -367,25 +367,25 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
-				Expect(respData.Data[0].ID).To(Equal(reqIdPayloads[0].ID))
-				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
-				Expect(respData.Data[0].Account).To(Equal(reqIdPayloads[0].Account))
-				Expect(respData.Data[0].OrgID).To(Equal(reqIdPayloads[0].OrgID))
-				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
-				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
-				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))
-				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
-				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
-				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
-				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
-				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
+				Expect(respData.Data[0].ID).To(Equal(reqIdStatuses[0].ID))
+				Expect(respData.Data[0].Service).To(Equal(reqIdStatuses[0].Service))
+				Expect(respData.Data[0].Account).To(Equal(reqIdStatuses[0].Account))
+				Expect(respData.Data[0].OrgID).To(Equal(reqIdStatuses[0].OrgID))
+				Expect(respData.Data[0].RequestID).To(Equal(reqIdStatuses[0].RequestID))
+				Expect(respData.Data[0].InventoryID).To(Equal(reqIdStatuses[0].InventoryID))
+				Expect(respData.Data[0].SystemID).To(Equal(reqIdStatuses[0].SystemID))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdStatuses[0].CreatedAt.String()))
+				Expect(respData.Data[0].Status).To(Equal(reqIdStatuses[0].Status))
+				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdStatuses[0].StatusMsg))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdStatuses[0].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdStatuses[1].Source))
 			})
 
 			It("should correctly calculate durations", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
 
-				reqIdPayloadData = reqIdPayloads
+				reqIdPayloadData = reqIdStatuses
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -400,13 +400,13 @@ var _ = Describe("RequestIdPayloads", func() {
 			})
 		})
 
-		reqIdPayloads = getFourReqIdPayloads(requestId, "1")
+		reqIdStatuses = getFourReqIdStatuses(requestId, "1")
 		Context("Get to /payloads/{request_id} Verbosity 1", func() {
 			It("should pass the data forward", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
 
-				reqIdPayloadData = reqIdPayloads
+				reqIdPayloadData = reqIdStatuses
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -416,24 +416,24 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
-				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
-				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
-				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
-				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
-				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
-				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
-				Expect(respData.Data[1].Date.String()).To(Equal(reqIdPayloads[1].Date.String()))
-				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
+				Expect(respData.Data[0].Service).To(Equal(reqIdStatuses[0].Service))
+				Expect(respData.Data[0].InventoryID).To(Equal(reqIdStatuses[0].InventoryID))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdStatuses[0].CreatedAt.String()))
+				Expect(respData.Data[0].Status).To(Equal(reqIdStatuses[0].Status))
+				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdStatuses[0].StatusMsg))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdStatuses[0].Date.String()))
+				Expect(respData.Data[1].Date.String()).To(Equal(reqIdStatuses[1].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdStatuses[1].Source))
 			})
 		})
 
-		reqIdPayloads = getFourReqIdPayloads(requestId, "0")
+		reqIdStatuses = getFourReqIdStatuses(requestId, "0")
 		Context("Get to /payloads/{request_id} Verbosity 0", func() {
 			It("should pass the data forward", func() {
 				req, err := makeTestRequest(fmt.Sprintf("/api/v1/payloads/%s", requestId), query)
 				Expect(err).To(BeNil())
 
-				reqIdPayloadData = reqIdPayloads
+				reqIdPayloadData = reqIdStatuses
 				handler.ServeHTTP(rr, req)
 				Expect(rr.Code).To(Equal(200))
 				Expect(rr.Body).ToNot(BeNil())
@@ -443,19 +443,19 @@ var _ = Describe("RequestIdPayloads", func() {
 				readBody, _ := ioutil.ReadAll(rr.Body)
 				json.Unmarshal(readBody, &respData)
 
-				Expect(respData.Data[0].ID).To(Equal(reqIdPayloads[0].ID))
-				Expect(respData.Data[0].Service).To(Equal(reqIdPayloads[0].Service))
-				Expect(respData.Data[0].Account).To(Equal(reqIdPayloads[0].Account))
-				Expect(respData.Data[0].OrgID).To(Equal(reqIdPayloads[0].OrgID))
-				Expect(respData.Data[0].RequestID).To(Equal(reqIdPayloads[0].RequestID))
-				Expect(respData.Data[0].InventoryID).To(Equal(reqIdPayloads[0].InventoryID))
-				Expect(respData.Data[0].SystemID).To(Equal(reqIdPayloads[0].SystemID))
-				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdPayloads[0].CreatedAt.String()))
-				Expect(respData.Data[0].Status).To(Equal(reqIdPayloads[0].Status))
-				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdPayloads[0].StatusMsg))
-				Expect(respData.Data[0].Date.String()).To(Equal(reqIdPayloads[0].Date.String()))
-				Expect(respData.Data[1].Date.String()).To(Equal(reqIdPayloads[1].Date.String()))
-				Expect(respData.Data[1].Source).To(Equal(reqIdPayloads[1].Source))
+				Expect(respData.Data[0].ID).To(Equal(reqIdStatuses[0].ID))
+				Expect(respData.Data[0].Service).To(Equal(reqIdStatuses[0].Service))
+				Expect(respData.Data[0].Account).To(Equal(reqIdStatuses[0].Account))
+				Expect(respData.Data[0].OrgID).To(Equal(reqIdStatuses[0].OrgID))
+				Expect(respData.Data[0].RequestID).To(Equal(reqIdStatuses[0].RequestID))
+				Expect(respData.Data[0].InventoryID).To(Equal(reqIdStatuses[0].InventoryID))
+				Expect(respData.Data[0].SystemID).To(Equal(reqIdStatuses[0].SystemID))
+				Expect(respData.Data[0].CreatedAt.String()).To(Equal(reqIdStatuses[0].CreatedAt.String()))
+				Expect(respData.Data[0].Status).To(Equal(reqIdStatuses[0].Status))
+				Expect(respData.Data[0].StatusMsg).To(Equal(reqIdStatuses[0].StatusMsg))
+				Expect(respData.Data[0].Date.String()).To(Equal(reqIdStatuses[0].Date.String()))
+				Expect(respData.Data[1].Date.String()).To(Equal(reqIdStatuses[1].Date.String()))
+				Expect(respData.Data[1].Source).To(Equal(reqIdStatuses[1].Source))
 			})
 		})
 	})
