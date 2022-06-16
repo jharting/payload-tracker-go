@@ -165,7 +165,7 @@ func writeResponse(w http.ResponseWriter, status int, message string) {
 func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveLink, error) {
 	cfg := config.Get()
 	client := http.Client{
-		Timeout: time.Duration(cfg.StorageBrokerRequestTimeout),
+		Timeout: time.Duration(cfg.StorageBrokerRequestTimeout) * time.Millisecond,
 	}
 
 	response, err := client.Get(config.Get().StorageBrokerURL + "?request_id=" + reqID)
