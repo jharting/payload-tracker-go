@@ -10,17 +10,18 @@ import (
 )
 
 type TrackerConfig struct {
-	Environment          string
-	PublicPort           string
-	MetricsPort          string
-	LogLevel             string
-	Hostname             string
-	StorageBrokerURL     string
-	StorageBrokerURLRole string
-	KafkaConfig          KafkaCfg
-	CloudwatchConfig     CloudwatchCfg
-	DatabaseConfig       DatabaseCfg
-	RequestConfig        RequestCfg
+	Environment                 string
+	PublicPort                  string
+	MetricsPort                 string
+	LogLevel                    string
+	Hostname                    string
+	StorageBrokerURL            string
+	StorageBrokerURLRole        string
+	StorageBrokerRequestTimeout int
+	KafkaConfig                 KafkaCfg
+	CloudwatchConfig            CloudwatchCfg
+	DatabaseConfig              DatabaseCfg
+	RequestConfig               RequestCfg
 }
 
 type KafkaCfg struct {
@@ -91,6 +92,7 @@ func Get() *TrackerConfig {
 	// storage broker config
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
 	options.SetDefault("storageBrokerURLRole", "platform-archive-download")
+	options.SetDefault("storageBrokerRequestTimeout", 10000)
 
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
@@ -136,13 +138,14 @@ func Get() *TrackerConfig {
 	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	trackerCfg := &TrackerConfig{
-		Environment:          options.GetString("Environment"),
-		Hostname:             options.GetString("Hostname"),
-		LogLevel:             options.GetString("logLevel"),
-		PublicPort:           options.GetString("publicPort"),
-		MetricsPort:          options.GetString("metricsPort"),
-		StorageBrokerURL:     options.GetString("storageBrokerURL"),
-		StorageBrokerURLRole: options.GetString("storageBrokerURLRole"),
+		Environment:                 options.GetString("Environment"),
+		Hostname:                    options.GetString("Hostname"),
+		LogLevel:                    options.GetString("logLevel"),
+		PublicPort:                  options.GetString("publicPort"),
+		MetricsPort:                 options.GetString("metricsPort"),
+		StorageBrokerURL:            options.GetString("storageBrokerURL"),
+		StorageBrokerURLRole:        options.GetString("storageBrokerURLRole"),
+		StorageBrokerRequestTimeout: options.GetInt("storageBrokerRequestTimeout"),
 		KafkaConfig: KafkaCfg{
 			KafkaTimeout:               options.GetInt("kafka.timeout"),
 			KafkaGroupID:               options.GetString("kafka.group.id"),
