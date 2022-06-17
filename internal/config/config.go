@@ -92,7 +92,7 @@ func Get() *TrackerConfig {
 	// storage broker config
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
 	options.SetDefault("storageBrokerURLRole", "platform-archive-download")
-	options.SetDefault("storageBrokerRequestTimeout", 10000)
+	options.SetDefault("storageBrokerRequestTimeout", 35000)
 
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
