@@ -181,8 +181,8 @@ func Get() *TrackerConfig {
 		if broker.Authtype != nil {
 			trackerCfg.KafkaConfig.KafkaUsername = *broker.Sasl.Username
 			trackerCfg.KafkaConfig.KafkaPassword = *broker.Sasl.Password
-			trackerCfg.KafkaConfig.SASLMechanism = "SCRAM-SHA-512"
-			trackerCfg.KafkaConfig.Protocol = "sasl_ssl"
+			trackerCfg.KafkaConfig.SASLMechanism = *broker.Sasl.SASLMechanism
+			trackerCfg.KafkaConfig.Protocol = *broker.Sasl.SecurityProtocol
 
 			// write the Kafka CA path using the app-common-go package
 			caPath, err := clowder.LoadedConfig.KafkaCa(broker)
