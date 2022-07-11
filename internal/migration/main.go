@@ -22,5 +22,7 @@ func main() {
 		&models.Payloads{},
 	)
 
+	db.DB.Exec("ALTER TABLE payloads ALTER COLUMN id type bigint")
+
 	logging.Log.Info("DB Migration Complete")
 }
