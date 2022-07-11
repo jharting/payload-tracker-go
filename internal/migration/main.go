@@ -22,7 +22,7 @@ func main() {
 		&models.Payloads{},
 	)
 
-	db.DB.Exec("ALTER TABLE payloads ALTER COLUMN id type bigint")
+	db.DB.Exec("ALTER SEQUENCE payloads_id_seq AS bigint")
 
 	logging.Log.Info("DB Migration Complete")
 }
