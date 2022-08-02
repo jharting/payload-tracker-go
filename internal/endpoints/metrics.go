@@ -15,13 +15,18 @@ var (
 		Help: "Number of requests to the payload tracker.",
 	}, []string{})
 
+	invalidRequests = pa.NewCounterVec(p.CounterOpts{
+		Name: "payload_tracker_invalid_requests",
+		Help: "Number of invalid requests to the payload tracker.",
+	}, []string{})
+
 	dbElapsed = pa.NewHistogramVec(p.HistogramOpts{
 		Name: "payload_tracker_db_seconds",
 		Help: "Number of seconds spent waiting on a db response",
 	}, []string{})
 
 	messageProcessElapsed = pa.NewHistogramVec(p.HistogramOpts{
-        Name: "payload_tracker_message_process_seconds",
+		Name: "payload_tracker_message_process_seconds",
 		Help: "Number of seconds spent processing messages",
 	}, []string{})
 
@@ -41,7 +46,7 @@ var (
 	}, []string{})
 
 	consumeError = pa.NewCounterVec(p.CounterOpts{
-        Name: "payload_tracker_consume_errors",
+		Name: "payload_tracker_consume_errors",
 		Help: "Number of consumer errors encountered",
 	}, []string{})
 )
@@ -68,6 +73,10 @@ func IncConsumeErrors() {
 // IncMessageProcessErrors increments the error count by 1
 func IncMessageProcessErrors() {
 	messageProcessError.With(p.Labels{}).Inc()
+}
+
+func IncInvalidRequests() {
+	invalidRequests.With(p.Labels{}).Inc()
 }
 
 func observeDBTime(elapsed time.Duration) {

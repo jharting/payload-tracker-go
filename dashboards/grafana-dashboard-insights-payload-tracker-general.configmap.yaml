@@ -6,7 +6,10 @@ data:
         "list": [
           {
             "builtIn": 1,
-            "datasource": "-- Grafana --",
+            "datasource": {
+              "type": "datasource",
+              "uid": "grafana"
+            },
             "enable": true,
             "hide": true,
             "iconColor": "rgba(0, 211, 255, 1)",
@@ -23,9 +26,9 @@ data:
       },
       "editable": true,
       "fiscalYearStartMonth": 0,
-      "gnetId": null,
       "graphTooltip": 0,
-      "iteration": 1644500552542,
+      "id": 20895,
+      "iteration": 1659468203507,
       "links": [
         {
           "icon": "external link",
@@ -83,7 +86,10 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -120,7 +126,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -130,15 +136,16 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(increase(payload_tracker_service_status_counter_total[1m])) by (service_name, status, source_name)",
               "legendFormat": "{{service_name}} (source: {{source_name}}) - {{status}}",
               "refId": "A"
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Service Status Count",
           "tooltip": {
             "shared": true,
@@ -147,9 +154,7 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
@@ -157,25 +162,18 @@ data:
             {
               "$$hashKey": "object:343",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "$$hashKey": "object:344",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -183,7 +181,9 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -196,7 +196,7 @@ data:
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 0
+            "y": 10
           },
           "hiddenSeries": false,
           "id": 14,
@@ -220,7 +220,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -230,15 +230,16 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(increase(payload_tracker_service_status_counter_total[1m])) by (service_name, status, source_name)",
               "legendFormat": "{{service_name}} (source: {{source_name}}) - {{status}}",
               "refId": "A"
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Service Status Count",
           "tooltip": {
             "shared": true,
@@ -247,33 +248,24 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -281,7 +273,9 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -294,7 +288,7 @@ data:
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 10
+            "y": 20
           },
           "hiddenSeries": false,
           "id": 10,
@@ -317,7 +311,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -327,20 +321,24 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(payload_tracker_upload_time_elapsed_sum[1m]) / rate(payload_tracker_upload_time_elapsed_count[1m]))",
               "legendFormat": "Total",
               "refId": "A"
             },
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(payload_tracker_upload_time_by_service_elapsed_sum[1m]) / rate(payload_tracker_upload_time_by_service_elapsed_count[1m])) by (service_name, source_name)",
               "legendFormat": "{{service_name}} (source: {{source_name}})",
               "refId": "B"
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Platform Upload Times",
           "tooltip": {
             "shared": true,
@@ -349,9 +347,7 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
@@ -359,25 +355,18 @@ data:
             {
               "$$hashKey": "object:264",
               "format": "s",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "$$hashKey": "object:265",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": false
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -385,7 +374,9 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -398,7 +389,7 @@ data:
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 10
+            "y": 32
           },
           "hiddenSeries": false,
           "id": 10,
@@ -421,7 +412,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -431,20 +422,24 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(payload_tracker_upload_time_elapsed_sum[1m]) / rate(payload_tracker_upload_time_elapsed_count[1m]))",
               "legendFormat": "Total",
               "refId": "A"
             },
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(payload_tracker_upload_time_by_service_elapsed_sum[1m]) / rate(payload_tracker_upload_time_by_service_elapsed_count[1m])) by (service_name, source_name)",
               "legendFormat": "{{service_name}} (source: {{source_name}})",
               "refId": "B"
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Platform Upload Times",
           "tooltip": {
             "shared": true,
@@ -453,33 +448,24 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "s",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": false
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -487,7 +473,9 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "links": []
@@ -500,7 +488,7 @@ data:
             "h": 11,
             "w": 6,
             "x": 0,
-            "y": 22
+            "y": 44
           },
           "hiddenSeries": false,
           "id": 12,
@@ -522,7 +510,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 5,
           "points": false,
           "renderer": "flot",
@@ -532,6 +520,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "up{service=\"payload-tracker-api\"}",
               "interval": "",
@@ -540,9 +531,7 @@ data:
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Payload Tracker API Up",
           "tooltip": {
             "shared": true,
@@ -551,9 +540,7 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
@@ -561,25 +548,18 @@ data:
             {
               "$$hashKey": "object:103",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "$$hashKey": "object:104",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -587,14 +567,16 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 11,
             "w": 9,
             "x": 6,
-            "y": 22
+            "y": 44
           },
           "hiddenSeries": false,
           "id": 32,
@@ -616,7 +598,7 @@ data:
             "alertThreshold": false
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -626,6 +608,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(kafka_server_brokertopicmetrics_messagesin_total{topic=\"platform.payload-status\"}[1m])) by (topic)",
               "interval": "",
               "legendFormat": "{{topic}}",
@@ -633,9 +618,7 @@ data:
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "platform.payload-status Kafka Messages",
           "tooltip": {
             "shared": true,
@@ -644,33 +627,24 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -678,14 +652,168 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 11,
+            "w": 9,
+            "x": 15,
+            "y": 44
+          },
+          "hiddenSeries": false,
+          "id": 34,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": false,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "9.0.3",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "datasource": {
+                "uid": "$datasource"
+              },
+              "expr": "kafka_consumergroup_group_topic_sum_lag{topic=\"platform.payload-status\"}",
+              "format": "time_series",
+              "interval": "",
+              "legendFormat": "{{topic}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeRegions": [],
+          "title": "Kafka Topic Lag",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false
+          }
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 98
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 11,
+            "w": 6,
+            "x": 0,
+            "y": 55
+          },
+          "id": 45,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "uid": "$datasource"
+              },
+              "exemplar": true,
+              "expr": "sum(increase(payload_tracker_invalid_requests[1m]))",
+              "interval": "",
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Invalid Request Count",
+          "type": "stat"
+        },
+        {
+          "aliasColors": {},
+          "bars": true,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 11,
             "w": 9,
             "x": 6,
-            "y": 22
+            "y": 55
           },
           "hiddenSeries": false,
           "id": 32,
@@ -707,7 +835,7 @@ data:
             "alertThreshold": false
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -717,6 +845,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "sum(rate(kafka_server_brokertopicmetrics_messagesin_total{topic=\"platform.payload-status\"}[1m])) by (topic)",
               "interval": "",
               "legendFormat": "{{topic}}",
@@ -724,9 +855,7 @@ data:
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "platform.payload-status Kafka Messages",
           "tooltip": {
             "shared": true,
@@ -735,33 +864,24 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -769,14 +889,16 @@ data:
           "bars": true,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 11,
             "w": 9,
             "x": 15,
-            "y": 22
+            "y": 55
           },
           "hiddenSeries": false,
           "id": 34,
@@ -796,7 +918,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -806,6 +928,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "expr": "kafka_consumergroup_group_topic_sum_lag{topic=\"platform.payload-status\"}",
               "format": "time_series",
               "interval": "",
@@ -814,9 +939,7 @@ data:
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "Kafka Topic Lag",
           "tooltip": {
             "shared": true,
@@ -825,123 +948,24 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
           "yaxes": [
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
-          }
-        },
-        {
-          "aliasColors": {},
-          "bars": true,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "$datasource",
-          "fill": 1,
-          "fillGradient": 0,
-          "gridPos": {
-            "h": 11,
-            "w": 9,
-            "x": 15,
-            "y": 22
-          },
-          "hiddenSeries": false,
-          "id": 34,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": false,
-          "linewidth": 1,
-          "nullPointMode": "null",
-          "options": {
-            "alertThreshold": true
-          },
-          "percentage": false,
-          "pluginVersion": "8.2.7",
-          "pointradius": 2,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "expr": "kafka_consumergroup_group_topic_sum_lag{topic=\"platform.payload-status\"}",
-              "format": "time_series",
-              "interval": "",
-              "legendFormat": "{{topic}}",
-              "refId": "A"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeRegions": [],
-          "timeShift": null,
-          "title": "Kafka Topic Lag",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ],
-          "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
@@ -949,14 +973,16 @@ data:
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
             "h": 16,
             "w": 10,
             "x": 0,
-            "y": 33
+            "y": 66
           },
           "hiddenSeries": false,
           "id": 16,
@@ -978,7 +1004,7 @@ data:
             "alertThreshold": true
           },
           "percentage": false,
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "pointradius": 2,
           "points": false,
           "renderer": "flot",
@@ -988,6 +1014,9 @@ data:
           "steppedLine": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(increase(payload_tracker_responses[1m])) by (code)",
               "interval": "",
@@ -996,9 +1025,7 @@ data:
             }
           ],
           "thresholds": [],
-          "timeFrom": null,
           "timeRegions": [],
-          "timeShift": null,
           "title": "API Responses",
           "tooltip": {
             "shared": true,
@@ -1007,9 +1034,7 @@ data:
           },
           "type": "graph",
           "xaxis": {
-            "buckets": null,
             "mode": "time",
-            "name": null,
             "show": true,
             "values": []
           },
@@ -1017,29 +1042,24 @@ data:
             {
               "$$hashKey": "object:426",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             },
             {
               "$$hashKey": "object:427",
               "format": "short",
-              "label": null,
               "logBase": 1,
-              "max": null,
-              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false,
-            "alignLevel": null
+            "align": false
           }
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "description": "Uses time range interval to find average",
           "fieldConfig": {
             "defaults": {
@@ -1081,7 +1101,7 @@ data:
             "h": 16,
             "w": 6,
             "x": 10,
-            "y": 33
+            "y": 66
           },
           "id": 18,
           "options": {
@@ -1099,9 +1119,12 @@ data:
             "text": {},
             "textMode": "auto"
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(sum_over_time(payload_tracker_responses[$__interval])) by (code)",
               "interval": "",
@@ -1109,13 +1132,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "API Reponse Counts",
           "type": "stat"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -1142,7 +1165,7 @@ data:
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 33
+            "y": 66
           },
           "id": 22,
           "options": {
@@ -1158,9 +1181,12 @@ data:
             "showThresholdMarkers": true,
             "text": {}
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "avg(avg_over_time(up{service=\"payload-tracker-api\"}[24h]))",
               "interval": "",
@@ -1168,13 +1194,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "API Up (98%)",
           "type": "gauge"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -1201,7 +1227,7 @@ data:
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 33
+            "y": 66
           },
           "id": 41,
           "options": {
@@ -1217,9 +1243,12 @@ data:
             "showThresholdMarkers": true,
             "text": {}
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "avg(avg_over_time(up{service=\"payload-tracker-consumer\"}[24h]))",
               "interval": "",
@@ -1227,13 +1256,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "Consumer Up (98%)",
           "type": "gauge"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1258,7 +1287,7 @@ data:
             "h": 4,
             "w": 4,
             "x": 16,
-            "y": 37
+            "y": 70
           },
           "id": 36,
           "options": {
@@ -1276,9 +1305,12 @@ data:
             "text": {},
             "textMode": "auto"
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(increase(kube_pod_container_status_restarts_total{container=\"payload-tracker-api\"}[$__range]))",
               "format": "time_series",
@@ -1288,13 +1320,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "API Restarts",
           "type": "stat"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "description": "",
           "fieldConfig": {
             "defaults": {
@@ -1319,7 +1351,7 @@ data:
             "h": 4,
             "w": 4,
             "x": 20,
-            "y": 37
+            "y": 70
           },
           "id": 43,
           "options": {
@@ -1337,9 +1369,12 @@ data:
             "text": {},
             "textMode": "auto"
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(increase(kube_pod_container_status_restarts_total{container=\"payload-tracker-consumer\"}[$__range]))",
               "format": "time_series",
@@ -1349,13 +1384,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "Consumer Restarts",
           "type": "stat"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -1382,7 +1417,7 @@ data:
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 41
+            "y": 74
           },
           "id": 20,
           "options": {
@@ -1398,9 +1433,12 @@ data:
             "showThresholdMarkers": true,
             "text": {}
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(increase(payload_tracker_consumed_messages[$__range])) / sum(increase(payload_tracker_consume_errors[$__range])) * 100",
               "format": "time_series",
@@ -1410,13 +1448,13 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "Consumption Errors (5%)",
           "type": "gauge"
         },
         {
-          "datasource": "$datasource",
+          "datasource": {
+            "uid": "$datasource"
+          },
           "fieldConfig": {
             "defaults": {
               "mappings": [],
@@ -1443,7 +1481,7 @@ data:
             "h": 4,
             "w": 8,
             "x": 16,
-            "y": 45
+            "y": 78
           },
           "id": 24,
           "options": {
@@ -1459,9 +1497,12 @@ data:
             "showThresholdMarkers": true,
             "text": {}
           },
-          "pluginVersion": "8.2.7",
+          "pluginVersion": "9.0.3",
           "targets": [
             {
+              "datasource": {
+                "uid": "$datasource"
+              },
               "exemplar": true,
               "expr": "sum(sum_over_time(payload_tracker_responses{code!~\"5.*\"}[$__interval])) / sum(sum_over_time(payload_tracker_responses[$__interval]))",
               "interval": "",
@@ -1469,16 +1510,11 @@ data:
               "refId": "A"
             }
           ],
-          "timeFrom": null,
-          "timeShift": null,
           "title": "Percentage of non-5xx (95%)",
           "type": "gauge"
         },
         {
-          "cards": {
-            "cardPadding": null,
-            "cardRound": null
-          },
+          "cards": {},
           "color": {
             "cardColor": "#b4ff00",
             "colorScale": "sqrt",
@@ -1487,13 +1523,15 @@ data:
             "mode": "opacity"
           },
           "dataFormat": "tsbuckets",
-          "datasource": "${datasource}",
+          "datasource": {
+            "uid": "${datasource}"
+          },
           "description": "",
           "gridPos": {
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 49
+            "y": 82
           },
           "heatmap": {},
           "hideZeroBuckets": true,
@@ -1505,6 +1543,9 @@ data:
           "reverseYBuckets": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "${datasource}"
+              },
               "exemplar": true,
               "expr": "sum(payload_tracker_db_seconds_bucket) by (le)",
               "format": "heatmap",
@@ -1523,27 +1564,16 @@ data:
           "xAxis": {
             "show": true
           },
-          "xBucketNumber": null,
-          "xBucketSize": null,
           "yAxis": {
             "decimals": 0,
             "format": "dtdurations",
             "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true,
-            "splitFactor": null,
-            "width": null
+            "show": true
           },
-          "yBucketBound": "auto",
-          "yBucketNumber": null,
-          "yBucketSize": null
+          "yBucketBound": "auto"
         },
         {
-          "cards": {
-            "cardPadding": null,
-            "cardRound": null
-          },
+          "cards": {},
           "color": {
             "cardColor": "#b4ff00",
             "colorScale": "sqrt",
@@ -1552,13 +1582,15 @@ data:
             "mode": "opacity"
           },
           "dataFormat": "tsbuckets",
-          "datasource": "${datasource}",
+          "datasource": {
+            "uid": "${datasource}"
+          },
           "description": "",
           "gridPos": {
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 58
+            "y": 91
           },
           "heatmap": {},
           "hideZeroBuckets": true,
@@ -1570,6 +1602,9 @@ data:
           "reverseYBuckets": false,
           "targets": [
             {
+              "datasource": {
+                "uid": "${datasource}"
+              },
               "exemplar": true,
               "expr": "sum(payload_tracker_message_process_seconds_bucket) by (le)",
               "format": "heatmap",
@@ -1588,37 +1623,27 @@ data:
           "xAxis": {
             "show": true
           },
-          "xBucketNumber": null,
-          "xBucketSize": null,
           "yAxis": {
             "decimals": 0,
             "format": "dtdurations",
             "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true,
-            "splitFactor": null,
-            "width": null
+            "show": true
           },
-          "yBucketBound": "auto",
-          "yBucketNumber": null,
-          "yBucketSize": null
+          "yBucketBound": "auto"
         }
       ],
       "refresh": "1m",
-      "schemaVersion": 32,
+      "schemaVersion": 36,
       "style": "dark",
       "tags": [],
       "templating": {
         "list": [
           {
             "current": {
-              "selected": false,
-              "text": "crcs02ue1-prometheus",
-              "value": "crcs02ue1-prometheus"
+              "selected": true,
+              "text": "crcp01ue1-prometheus",
+              "value": "crcp01ue1-prometheus"
             },
-            "description": null,
-            "error": null,
             "hide": 0,
             "includeAll": false,
             "label": "Datasource",
@@ -1666,7 +1691,8 @@ data:
       "timezone": "",
       "title": "Payload Tracker",
       "uid": "eGSUe-SZk",
-      "version": 1
+      "version": 1,
+      "weekStart": ""
     }
 kind: ConfigMap
 metadata:
