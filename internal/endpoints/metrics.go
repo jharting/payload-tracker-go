@@ -17,7 +17,7 @@ var (
 
 	apiInvalidRequestIDs = pa.NewCounterVec(p.CounterOpts{
 		Name: "payload_tracker_api_invalid_request_IDs",
-		Help: "Number of invalid request IDs revieved by the payload tracker archive link endpoint.",
+		Help: "Number of invalid request IDs recieved by the payload tracker archive link endpoint.",
 	}, []string{})
 
 	consumerInvalidRequestIDs = pa.NewCounterVec(p.CounterOpts{
