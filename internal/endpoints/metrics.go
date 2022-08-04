@@ -15,9 +15,14 @@ var (
 		Help: "Number of requests to the payload tracker.",
 	}, []string{})
 
-	invalidRequests = pa.NewCounterVec(p.CounterOpts{
-		Name: "payload_tracker_invalid_requests",
-		Help: "Number of invalid requests to the payload tracker.",
+	apiInvalidRequestIDs = pa.NewCounterVec(p.CounterOpts{
+		Name: "payload_tracker_api_invalid_request_IDs",
+		Help: "Number of invalid request IDs recieved by the payload tracker archive link endpoint.",
+	}, []string{})
+
+	consumerInvalidRequestIDs = pa.NewCounterVec(p.CounterOpts{
+		Name: "payload_tracker_consumer_invalid_request_IDs",
+		Help: "Number of invalid request IDs recieved by the payload tracker consumer.",
 	}, []string{})
 
 	dbElapsed = pa.NewHistogramVec(p.HistogramOpts{
@@ -75,8 +80,12 @@ func IncMessageProcessErrors() {
 	messageProcessError.With(p.Labels{}).Inc()
 }
 
-func IncInvalidRequests() {
-	invalidRequests.With(p.Labels{}).Inc()
+func IncInvalidConsumerRequestIDs() {
+	consumerInvalidRequestIDs.With(p.Labels{}).Inc()
+}
+
+func IncInvalidAPIRequestIDs() {
+	apiInvalidRequestIDs.With(p.Labels{}).Inc()
 }
 
 func observeDBTime(elapsed time.Duration) {
