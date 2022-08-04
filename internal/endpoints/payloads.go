@@ -136,7 +136,7 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !isValidUUID(reqID) {
-		IncInvalidAPIRequests()
+		IncInvalidAPIRequestIDs()
 		writeResponse(w, http.StatusBadRequest, getErrorBody(fmt.Sprintf("%s is not a valid UUID", reqID), http.StatusBadRequest))
 		return
 	}

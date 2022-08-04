@@ -789,7 +789,7 @@ data:
                 "uid": "$datasource"
               },
               "exemplar": true,
-              "expr": "sum(increase(payload_tracker_api_invalid_requests[$__range]))",
+              "expr": "sum(increase(payload_tracker_api_invalid_request_IDs[$__range]))",
               "interval": "",
               "legendFormat": "{{pod}}",
               "refId": "A"
@@ -1026,7 +1026,7 @@ data:
                 "uid": "$datasource"
               },
               "exemplar": true,
-              "expr": "sum(increase(payload_tracker_consumer_invalid_requests[$__range]))",
+              "expr": "sum(increase(payload_tracker_consumer_invalid_request_IDs[$__range]))",
               "interval": "",
               "legendFormat": "{{pod}}",
               "refId": "A"
