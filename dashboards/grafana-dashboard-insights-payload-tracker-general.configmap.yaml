@@ -27,8 +27,7 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 20895,
-      "iteration": 1659468203507,
+      "iteration": 1659636049665,
       "links": [
         {
           "icon": "external link",
@@ -763,7 +762,7 @@ data:
             "overrides": []
           },
           "gridPos": {
-            "h": 11,
+            "h": 5,
             "w": 6,
             "x": 0,
             "y": 55
@@ -790,13 +789,13 @@ data:
                 "uid": "$datasource"
               },
               "exemplar": true,
-              "expr": "sum(increase(payload_tracker_invalid_requests[1m]))",
+              "expr": "sum(increase(payload_tracker_api_invalid_requests[$__range]))",
               "interval": "",
               "legendFormat": "{{pod}}",
               "refId": "A"
             }
           ],
-          "title": "Invalid Request Count",
+          "title": "Invalid API Request Count",
           "type": "stat"
         },
         {
@@ -967,6 +966,74 @@ data:
           "yaxis": {
             "align": false
           }
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "$datasource"
+          },
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "max": 1,
+              "min": 0,
+              "thresholds": {
+                "mode": "percentage",
+                "steps": [
+                  {
+                    "color": "red",
+                    "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 98
+                  }
+                ]
+              },
+              "unit": "percentunit"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 6,
+            "x": 0,
+            "y": 60
+          },
+          "id": 46,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "9.0.3",
+          "targets": [
+            {
+              "datasource": {
+                "uid": "$datasource"
+              },
+              "exemplar": true,
+              "expr": "sum(increase(payload_tracker_consumer_invalid_requests[$__range]))",
+              "interval": "",
+              "legendFormat": "{{pod}}",
+              "refId": "A"
+            }
+          ],
+          "title": "Invalid Consumer Request Count",
+          "type": "stat"
         },
         {
           "aliasColors": {},
@@ -1640,7 +1707,7 @@ data:
         "list": [
           {
             "current": {
-              "selected": true,
+              "selected": false,
               "text": "crcp01ue1-prometheus",
               "value": "crcp01ue1-prometheus"
             },
@@ -1691,7 +1758,7 @@ data:
       "timezone": "",
       "title": "Payload Tracker",
       "uid": "eGSUe-SZk",
-      "version": 1,
+      "version": 2,
       "weekStart": ""
     }
 kind: ConfigMap
