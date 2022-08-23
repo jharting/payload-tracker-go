@@ -59,6 +59,7 @@ type CloudwatchCfg struct {
 
 type RequestCfg struct {
 	ValidateRequestIDLength int
+	MockRequestLink		 bool
 }
 
 // Get sets each config option with its defaults
@@ -88,6 +89,7 @@ func Get() *TrackerConfig {
 
 	// requestID config
 	options.SetDefault("validate.request.id.length", 32)
+	options.SetDefault("mock.request.link", false)
 
 	// storage broker config
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
@@ -172,6 +174,7 @@ func Get() *TrackerConfig {
 		},
 		RequestConfig: RequestCfg{
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
+			MockRequestLink:         options.GetBool("mock.request.link"),
 		},
 	}
 

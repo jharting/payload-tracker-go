@@ -128,11 +128,13 @@ func RequestIdPayloads(w http.ResponseWriter, r *http.Request) {
 func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
 	reqID := chi.URLParam(r, "request_id")
-
-	statusCode, err := checkForRole(r, config.Get().StorageBrokerURLRole)
-	if err != nil {
-		writeResponse(w, statusCode, getErrorBody(fmt.Sprintf("%v", err), statusCode))
-		return
+    
+	if !config.Get().RequestConfig.MockRequestLink {
+		statusCode, err := checkForRole(r, config.Get().StorageBrokerURLRole)
+		if err != nil {
+			writeResponse(w, statusCode, getErrorBody(fmt.Sprintf("%v", err), statusCode))
+			return
+		}
 	}
 
 	if !isValidUUID(reqID) {

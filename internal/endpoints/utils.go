@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"os"
 
 	"github.com/google/uuid"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
@@ -164,6 +165,16 @@ func writeResponse(w http.ResponseWriter, status int, message string) {
 // Send a request for an ArchiveLink to storage-broker
 func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveLink, error) {
 	cfg := config.Get()
+	if cfg.RequestConfig.MockRequestLink {
+		f, err := os.Create("/tmp/" + reqID)
+		f.Close()
+		if err != nil {
+			return nil, err
+		}
+		return &structs.PayloadArchiveLink{
+			Url: "file:///tmp/" + reqID,
+		}, nil
+	}
 	client := http.Client{
 		Timeout: time.Duration(cfg.StorageBrokerRequestTimeout) * time.Millisecond,
 	}
