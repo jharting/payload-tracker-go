@@ -25,6 +25,19 @@ var (
 	verbosity string = "0"
 )
 
+func LinkHandler(cfg config.TrackerConfig) http.HandlerFunc {
+	switch cfg.RequestConfig.RequestorImpl {
+	case "storage-broker":
+		return PayloadArchiveLink
+	case "mock":
+		return MockArchiveLink
+	default:
+		l.Log.Errorf("Requestor implementation %s not supported", cfg.RequestConfig.RequestorImpl)
+		return nil
+	}
+}
+	
+
 // Payloads returns responses for the /payloads endpoint
 func Payloads(w http.ResponseWriter, r *http.Request) {
 
@@ -161,5 +174,16 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	l.Log.Infof("Link generated for payload %s from identity %s: %s", reqID, r.Header.Get("x-rh-identity"), string(dataJson))
+	writeResponse(w, http.StatusOK, string(dataJson))
+}
+
+func MockArchiveLink(w http.ResponseWriter, r *http.Request) {
+	reqID := chi.URLParam(r, "request_id")
+
+	response := &structs.PayloadArchiveLink{
+					Url: "https://storage-broker.example.com/archive/" + reqID,
+				}
+	dataJson, _ := json.Marshal(response)
+
 	writeResponse(w, http.StatusOK, string(dataJson))
 }

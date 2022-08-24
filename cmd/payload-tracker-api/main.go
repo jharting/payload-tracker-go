@@ -31,6 +31,10 @@ func main() {
 		*cfg,
 	)
 
+	linkHandler := endpoints.LinkHandler(
+		*cfg,
+	)
+
 	r := chi.NewRouter()
 	mr := chi.NewRouter()
 	sub := chi.NewRouter()
@@ -51,7 +55,7 @@ func main() {
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/", lubdub)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads", endpoints.Payloads)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}", endpoints.RequestIdPayloads)
-	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/archiveLink", endpoints.PayloadArchiveLink)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/archiveLink", linkHandler)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/roles/archiveLink", endpoints.RolesArchiveLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/statuses", endpoints.Statuses)
 
