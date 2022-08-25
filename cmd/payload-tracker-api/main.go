@@ -2,8 +2,10 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/httprate"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
@@ -38,6 +40,8 @@ func main() {
 	r := chi.NewRouter()
 	mr := chi.NewRouter()
 	sub := chi.NewRouter()
+
+	r.Use(httprate.LimitByIP(cfg.RequestConfig.MaxRequestsPerMinute, 1*time.Minute))
 
 	// Mount the root of the api router on /api/v1 unless ENVIRONMENT is DEV
 	if cfg.Environment == "DEV" {
