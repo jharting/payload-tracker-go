@@ -59,6 +59,7 @@ type CloudwatchCfg struct {
 
 type RequestCfg struct {
 	ValidateRequestIDLength int
+	RequestorImpl			string
 	MaxRequestsPerMinute    int
 }
 
@@ -89,6 +90,7 @@ func Get() *TrackerConfig {
 
 	// request config
 	options.SetDefault("validate.request.id.length", 32)
+	options.SetDefault("requestor.impl", "storage-broker")
 	options.SetDefault("max.requests.per.minute", 3000)
 
 	// storage broker config
@@ -174,6 +176,7 @@ func Get() *TrackerConfig {
 		},
 		RequestConfig: RequestCfg{
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
+			RequestorImpl:            options.GetString("requestor.impl"),
 			MaxRequestsPerMinute:    options.GetInt("max.requests.per.minute"),
 		},
 	}

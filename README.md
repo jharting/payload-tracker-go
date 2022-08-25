@@ -77,8 +77,11 @@ Compile the source code for API and Consumer into a go binary:
 $> make build-all
 ```
 Launch the application
+
+The mock requestor implementation allows you to get payload URLS from the local
+machine
 ```
-$> ./pt-api
+$> REQUESTOR_IMPL=mock ./pt-api
 $> ./pt-consumer
 ```
 The API should now be available on TCP port 8080
@@ -96,7 +99,7 @@ $> make build-all
 ```
 Launch the application in DEV mode
 ```
-$> ENVIRONMENT=DEV ./pt-api
+$> ENVIRONMENT=DEV REQUESTOR_IMPL=mock ./pt-api
 $> ./pt-consumer
 ```
 The API should now be available on port 8080
