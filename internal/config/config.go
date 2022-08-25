@@ -59,6 +59,7 @@ type CloudwatchCfg struct {
 
 type RequestCfg struct {
 	ValidateRequestIDLength int
+	MaxRequestsPerMinute    int
 }
 
 // Get sets each config option with its defaults
@@ -86,8 +87,9 @@ func Get() *TrackerConfig {
 	options.SetDefault("kafka.message.send.max.retries", 15)
 	options.SetDefault("kafka.retry.backoff.ms", 100)
 
-	// requestID config
+	// request config
 	options.SetDefault("validate.request.id.length", 32)
+	options.SetDefault("max.requests.per.minute", 3000)
 
 	// storage broker config
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
@@ -172,6 +174,7 @@ func Get() *TrackerConfig {
 		},
 		RequestConfig: RequestCfg{
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
+			MaxRequestsPerMinute:    options.GetInt("max.requests.per.minute"),
 		},
 	}
 
@@ -184,7 +187,7 @@ func Get() *TrackerConfig {
 			trackerCfg.KafkaConfig.SASLMechanism = *broker.Sasl.SaslMechanism
 			trackerCfg.KafkaConfig.Protocol = *broker.Sasl.SecurityProtocol
 		}
-		
+
 		// write the Kafka CA path using the app-common-go package
 		if broker.Cacert != nil {
 			caPath, err := clowder.LoadedConfig.KafkaCa(broker)
@@ -195,7 +198,6 @@ func Get() *TrackerConfig {
 
 			trackerCfg.KafkaConfig.KafkaCA = caPath
 		}
-
 
 		// write the RDS CA using the app-common-go package
 		if clowder.LoadedConfig.Database.RdsCa != nil {
