@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
@@ -190,4 +191,11 @@ func requestArchiveLink(r *http.Request, reqID string) (*structs.PayloadArchiveL
 func isValidUUID(id string) bool {
 	_, err := uuid.Parse(id)
 	return err == nil
+}
+
+func ArchiveHandler(w http.ResponseWriter, r *http.Request) {
+	reqId := chi.URLParam(r, "id")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("You got an archive for " + reqId))
+	return
 }

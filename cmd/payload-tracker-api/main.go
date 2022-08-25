@@ -45,6 +45,11 @@ func main() {
 	} else {
 		r.Mount("/api/v1/", sub)
 	}
+
+	if cfg.RequestConfig.RequestorImpl == "mock" {
+		sub.Get("/archive/{id}", endpoints.ArchiveHandler)
+	}
+
 	r.Get("/", lubdub)
 	r.Get("/health", healthHandler)
 

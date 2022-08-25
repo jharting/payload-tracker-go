@@ -36,7 +36,6 @@ func LinkHandler(cfg config.TrackerConfig) http.HandlerFunc {
 		return nil
 	}
 }
-	
 
 // Payloads returns responses for the /payloads endpoint
 func Payloads(w http.ResponseWriter, r *http.Request) {
@@ -179,10 +178,11 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
 func MockArchiveLink(w http.ResponseWriter, r *http.Request) {
 	reqID := chi.URLParam(r, "request_id")
+	url := fmt.Sprintf("http://%s:%s/api/v1/archive/%s", config.Get().Hostname, config.Get().PublicPort, reqID)
 
 	response := &structs.PayloadArchiveLink{
-					Url: "https://storage-broker.example.com/archive/" + reqID,
-				}
+		Url: url,
+	}
 	dataJson, _ := json.Marshal(response)
 
 	writeResponse(w, http.StatusOK, string(dataJson))
