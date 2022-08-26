@@ -56,7 +56,6 @@ func updateMinMax(unixTime int64, store [2]int64) [2]int64 {
 	return store
 }
 
-
 func chainTimeConditions(dbColumn string, apiQuery structs.Query, dbQuery *gorm.DB) *gorm.DB {
 	timeFields := map[string]string{
 		"lt":  apiQuery.CreatedAtLT,
@@ -172,7 +171,7 @@ func CalculateDurations(payloadData []structs.SinglePayloadData) map[string]stri
 	mapTimeString := make(map[string]string)
 	mapDurations := make(map[string]int64)
 	mapDurations["total_time_in_services"] = 0
-	
+
 	dateMinMaxArray := [2]int64{payloadData[0].Date.UnixNano(), payloadData[0].Date.UnixNano()}
 
 	for _, v := range payloadData {

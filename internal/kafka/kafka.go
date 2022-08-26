@@ -10,8 +10,8 @@ import (
 	"gorm.io/gorm"
 
 	config "github.com/redhatinsights/payload-tracker-go/internal/config"
-	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
+	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 )
 
 // NewConsumer Creates brand new consumer instance based on topic
@@ -76,7 +76,7 @@ func NewConsumerEventLoop(
 	run := true
 
 	for run {
-		select 	{
+		select {
 		case sig := <-sigchan:
 			l.Log.Infof("Caught Signal %v: terminating\n", sig)
 			run = false
