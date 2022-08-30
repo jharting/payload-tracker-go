@@ -14,16 +14,16 @@ var (
 
 // PayloadStatusMessage it the definition of the Payload Message Status kafka message
 type PayloadStatusMessage struct {
-	Service     string       `json:"service"`
-	Source      string       `json:"source,omitempty"`
-	Account     string       `json:"account,omitempty"`
-	OrgID		string		 `json:"org_id,omitempty"`
-	RequestID   string       `json:"request_id"`
-	InventoryID string       `json:"inventory_id,omitempty"`
-	SystemID    string       `json:"system_id,omitempty"`
-	Status      string       `json:"status"`
-	StatusMSG   string       `json:"status_msg,omitempty"`
-	PayloadID   uint         
+	Service     string `json:"service"`
+	Source      string `json:"source,omitempty"`
+	Account     string `json:"account,omitempty"`
+	OrgID       string `json:"org_id,omitempty"`
+	RequestID   string `json:"request_id"`
+	InventoryID string `json:"inventory_id,omitempty"`
+	SystemID    string `json:"system_id,omitempty"`
+	Status      string `json:"status"`
+	StatusMSG   string `json:"status_msg,omitempty"`
+	PayloadID   uint
 	Date        FormatedTime `json:"date"`
 }
 

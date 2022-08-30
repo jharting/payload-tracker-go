@@ -13,24 +13,23 @@ func getUUID() string {
 	return uuid.New().String()
 }
 
-
 var _ = Describe("Queries", func() {
 	db := test.WithDatabase()
 
 	It("Retrieves request id payload", func() {
 		requestId := getUUID()
 		payload := models.Payloads{
-			RequestId: requestId,
-			Account: "1234",
+			RequestId:   requestId,
+			Account:     "1234",
 			InventoryId: getUUID(),
-			SystemId: getUUID(),
+			SystemId:    getUUID(),
 		}
 		Expect(db().Create(&payload).Error).ToNot(HaveOccurred())
 
 		payload, err := GetPayloadByRequestId(db(), requestId)
 
 		Expect(err).ToNot(HaveOccurred())
-		
+
 		Expect(payload.RequestId).To(Equal(requestId))
 		Expect(payload.Account).To(Equal("1234"))
 	})

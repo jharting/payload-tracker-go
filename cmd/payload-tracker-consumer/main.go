@@ -13,13 +13,11 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/logging"
 )
 
-
 func lubdub(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("lubdub"))
 }
-
 
 func main() {
 	logging.InitLogger()
@@ -31,7 +29,6 @@ func main() {
 	db.DbConnect(cfg)
 
 	logging.Log.Info("Starting a new kafka consumer...")
-
 
 	// Webserver is created only for metrics collection
 	r := chi.NewRouter()

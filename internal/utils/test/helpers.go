@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-
 func formattedQuery(params map[string]interface{}) string {
 	formatted := ""
 	for k, v := range params {
@@ -13,7 +12,6 @@ func formattedQuery(params map[string]interface{}) string {
 	}
 	return formatted[1:]
 }
-
 
 func MakeTestRequest(uri string, queryParams map[string]interface{}) (*http.Request, error) {
 	fullURI := uri
@@ -28,4 +26,3 @@ func MakeTestRequest(uri string, queryParams map[string]interface{}) (*http.Requ
 
 	return req, nil
 }
-
