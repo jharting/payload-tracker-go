@@ -22,6 +22,7 @@ type TrackerConfig struct {
 	CloudwatchConfig            CloudwatchCfg
 	DatabaseConfig              DatabaseCfg
 	RequestConfig               RequestCfg
+	KibanaConfig                KibanaCfg
 }
 
 type KafkaCfg struct {
@@ -63,6 +64,12 @@ type RequestCfg struct {
 	MaxRequestsPerMinute    int
 }
 
+type KibanaCfg struct {
+	DashboardURL string
+	Index        string
+	ServiceField string
+}
+
 // Get sets each config option with its defaults
 func Get() *TrackerConfig {
 	options := viper.New()
@@ -71,6 +78,8 @@ func Get() *TrackerConfig {
 	if err != nil {
 		hostname = "unknown"
 	}
+
+	options.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	// Environment
 	options.SetDefault("Environment", "PROD")
@@ -97,6 +106,10 @@ func Get() *TrackerConfig {
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
 	options.SetDefault("storageBrokerURLRole", "platform-archive-download")
 	options.SetDefault("storageBrokerRequestTimeout", 35000)
+	// kibana config
+	options.SetDefault("kibana.url", "https://kibana.apps.crcs02ue1.urby.p1.openshiftapps.com/app/kibana#/discover")
+	options.SetDefault("kibana.index", "43c5fed0-d5ce-11ea-b58c-a7c95afd7a5d") // the index grabbed from the kibana url
+	options.SetDefault("kibana.service.field", "app")
 
 	if clowder.IsClowderEnabled() {
 		cfg := clowder.LoadedConfig
@@ -119,6 +132,7 @@ func Get() *TrackerConfig {
 		options.SetDefault("cwRegion", cfg.Logging.Cloudwatch.Region)
 		options.SetDefault("cwAccessKey", cfg.Logging.Cloudwatch.AccessKeyId)
 		options.SetDefault("cwSecretKey", cfg.Logging.Cloudwatch.SecretAccessKey)
+
 	} else {
 		options.SetDefault("kafka.bootstrap.servers", "localhost:29092")
 		options.SetDefault("topic.payload.status", "platform.payload-status")
@@ -178,6 +192,11 @@ func Get() *TrackerConfig {
 			ValidateRequestIDLength: options.GetInt("validate.request.id.length"),
 			RequestorImpl:           options.GetString("requestor.impl"),
 			MaxRequestsPerMinute:    options.GetInt("max.requests.per.minute"),
+		},
+		KibanaConfig: KibanaCfg{
+			DashboardURL: options.GetString("kibana.url"),
+			Index:        options.GetString("kibana.index"),
+			ServiceField: options.GetString("kibana.service.field"),
 		},
 	}
 

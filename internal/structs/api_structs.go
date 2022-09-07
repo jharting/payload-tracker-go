@@ -49,6 +49,10 @@ type PayloadArchiveLink struct {
 	Url string `json:"url"`
 }
 
+type PayloadKibanaLink struct {
+	Url string `json:"url"`
+}
+
 type ArchiveLinkRole struct {
 	Allowed bool `json:"allowed"`
 }

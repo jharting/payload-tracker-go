@@ -68,6 +68,12 @@ objects:
             value: ${LOGLEVEL}
           - name: STORAGEBROKERURL
             value: ${STORAGE_BROKER_URL}
+          - name: KIBANA_DASHBOARD_URL
+            value: ${KIBANA_DASHBOARD_URL}
+          - name: KIBANA_INDEX
+            value: ${KIBANA_INDEX}
+          - name: KIBANA_SERVICE_FIELD
+            value: ${KIBANA_SERVICE_FIELD}
     - name: consumer
       minReplicas: ${{CONSUMER_REPLICAS}}
       podSpec:  
@@ -170,3 +176,9 @@ parameters:
   value: 'true'
 - name: STORAGE_BROKER_URL
   value: "http://storage-broker-processor:8000/archive/url"
+- name: KIBANA_DASHBOARD_URL
+  value: https://kibana.apps.crcs02ue1.urby.p1.openshiftapps.com/app/kibana#/discover
+- name: KIBANA_INDEX
+  value: 4b37e920-1ade-11ec-b3d0-a39435352faa
+- name: KIBANA_SERVICE_FIELD
+  value: app
