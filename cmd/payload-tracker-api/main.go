@@ -65,6 +65,7 @@ func main() {
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads", endpoints.Payloads)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}", endpoints.RequestIdPayloads)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/archiveLink", linkHandler)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/kibanaLink", endpoints.PayloadKibanaLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/roles/archiveLink", endpoints.RolesArchiveLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/statuses", endpoints.Statuses)
 

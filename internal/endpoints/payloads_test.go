@@ -15,6 +15,7 @@ import (
 	. "github.com/onsi/gomega"
 	"gorm.io/gorm"
 
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/endpoints"
 	"github.com/redhatinsights/payload-tracker-go/internal/models"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
@@ -509,4 +510,85 @@ var _ = Describe("PayloadArchiveLink", func() {
 		})
 	})
 
+})
+
+var _ = Describe("PayloadKibanaLink", func() {
+	var (
+		handler http.Handler
+		rr      *httptest.ResponseRecorder
+
+		requestId string
+		cfg       *config.TrackerConfig
+		query     map[string]interface{}
+	)
+
+	BeforeEach(func() {
+		rr = httptest.NewRecorder()
+		handler = http.HandlerFunc(endpoints.PayloadKibanaLink)
+
+		requestId = getUUID()
+		cfg = config.Get()
+		query = make(map[string]interface{})
+	})
+
+	Context("When the request_id is not a valid UUID", func() {
+		It("Should return 400", func() {
+			req, err := test.MakeTestRequest("/api/v1/payloads/1234/kibanaLink", query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", validIdentityHeader)
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusBadRequest))
+		})
+	})
+
+	Context("With a valid request_id", func() {
+		It("Should return a Kibana dashboard URL", func() {
+			fmt.Println("Request URL:", fmt.Sprintf("/api/v1/payloads/%s/kibanaLink", requestId))
+			req, err := test.MakeTestRequest(fmt.Sprintf("/api/v1/payloads/%s/kibanaLink", requestId), query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", validIdentityHeader)
+
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("request_id", requestId)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusOK))
+			Expect(rr.Body).ToNot(BeNil())
+
+			var respData structs.PayloadKibanaLink
+			readBody, _ := ioutil.ReadAll(rr.Body)
+			json.Unmarshal(readBody, &respData)
+
+			Expect(respData.Url).To(Not(BeNil()))
+			Expect(respData.Url).To(ContainSubstring(cfg.KibanaConfig.DashboardURL))
+			Expect(respData.Url).To(ContainSubstring(cfg.KibanaConfig.Index))
+			Expect(respData.Url).To(ContainSubstring(requestId))
+		})
+
+		It("Should filter by service", func() {
+			query["service"] = "testService"
+			req, err := test.MakeTestRequest(fmt.Sprintf("/api/v1/payloads/%s/kibanaLink", requestId), query)
+			Expect(err).To(BeNil())
+			req.Header.Set("x-rh-identity", validIdentityHeader)
+
+			rctx := chi.NewRouteContext()
+			rctx.URLParams.Add("request_id", requestId)
+			req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+
+			handler.ServeHTTP(rr, req)
+			Expect(rr.Code).To(Equal(http.StatusOK))
+			Expect(rr.Body).ToNot(BeNil())
+
+			var respData structs.PayloadKibanaLink
+			readBody, _ := ioutil.ReadAll(rr.Body)
+			json.Unmarshal(readBody, &respData)
+
+			Expect(respData.Url).To(Not(BeNil()))
+			Expect(respData.Url).To(ContainSubstring(cfg.KibanaConfig.DashboardURL))
+			Expect(respData.Url).To(ContainSubstring(cfg.KibanaConfig.Index))
+			Expect(respData.Url).To(ContainSubstring(requestId))
+			Expect(respData.Url).To(ContainSubstring("testService"))
+		})
+	})
 })

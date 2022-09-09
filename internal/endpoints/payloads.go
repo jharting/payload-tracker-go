@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
+	"github.com/redhatinsights/payload-tracker-go/internal/logging"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/queries"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
@@ -184,6 +185,44 @@ func MockArchiveLink(w http.ResponseWriter, r *http.Request) {
 		Url: url,
 	}
 	dataJson, _ := json.Marshal(response)
+
+	writeResponse(w, http.StatusOK, string(dataJson))
+}
+
+func PayloadKibanaLink(w http.ResponseWriter, r *http.Request) {
+
+	reqID := chi.URLParam(r, "request_id")
+
+	if !isValidUUID(reqID) {
+		IncInvalidAPIRequestIDs()
+		writeResponse(w, http.StatusBadRequest, getErrorBody(fmt.Sprintf("%s is not a valid UUID", reqID), http.StatusBadRequest))
+		return
+	}
+
+	service := r.URL.Query().Get("service")
+
+	cfg := config.Get()
+	serviceField := cfg.KibanaConfig.ServiceField
+	kibanaUrl := cfg.KibanaConfig.DashboardURL
+	kibanaIndex := cfg.KibanaConfig.Index
+
+	kibanaQuery := "request_id:" + reqID
+	if service != "" {
+		kibanaQuery += fmt.Sprintf(" AND %s:%s", serviceField, service)
+	}
+
+	kibanaLink := fmt.Sprintf("%s?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-24h,to:now))&_a=(columns:!(_source),filters:!(),index:'%s',interval:auto,query:(language:lucene,query:'%s'),sort:!('@timestamp',desc))", kibanaUrl, kibanaIndex, kibanaQuery)
+	logging.Log.Debugf("Generated kibana link: %s", kibanaLink)
+
+	payloadKibanaLink := structs.PayloadKibanaLink{
+		Url: kibanaLink,
+	}
+
+	dataJson, err := json.Marshal(payloadKibanaLink)
+	if err != nil {
+		writeResponse(w, http.StatusInternalServerError, getErrorBody(fmt.Sprintf("%v", err), http.StatusInternalServerError))
+		return
+	}
 
 	writeResponse(w, http.StatusOK, string(dataJson))
 }
