@@ -179,7 +179,7 @@ func PayloadArchiveLink(w http.ResponseWriter, r *http.Request) {
 
 func MockArchiveLink(w http.ResponseWriter, r *http.Request) {
 	reqID := chi.URLParam(r, "request_id")
-	url := fmt.Sprintf("http://%s:%s/api/v1/archive/%s", config.Get().Hostname, config.Get().PublicPort, reqID)
+	url := fmt.Sprintf("http://%s:%s/app/payload-tracker/api/v1/archive/%s", config.Get().Hostname, config.Get().PublicPort, reqID)
 
 	response := &structs.PayloadArchiveLink{
 		Url: url,
