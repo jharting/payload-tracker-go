@@ -43,7 +43,7 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 
 	// Validate RequestID
 	valuePayloadStatus := reflect.ValueOf(payloadStatus)
-	requestField := valuePayloadStatus.Elem().FieldByName("request_id")
+	requestField := valuePayloadStatus.Elem().FieldByName("RequestID")
 	if cfg.RequestConfig.ValidateRequestIDLength != 0 {
 		if len(payloadStatus.RequestID) != cfg.RequestConfig.ValidateRequestIDLength || !requestField.IsValid() {
 			endpoints.IncInvalidConsumerRequestIDs()
