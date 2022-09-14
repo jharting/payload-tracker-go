@@ -3,6 +3,7 @@ package kafka
 import (
 	"context"
 	"encoding/json"
+	"reflect"
 	"strings"
 	"time"
 
@@ -41,8 +42,10 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 	}
 
 	// Validate RequestID
+	valuePayloadStatus := reflect.ValueOf(payloadStatus)
+	requestField := valuePayloadStatus.Elem().FieldByName("request_id")
 	if cfg.RequestConfig.ValidateRequestIDLength != 0 {
-		if len(payloadStatus.RequestID) != cfg.RequestConfig.ValidateRequestIDLength {
+		if len(payloadStatus.RequestID) != cfg.RequestConfig.ValidateRequestIDLength || !requestField.IsValid() {
 			endpoints.IncInvalidConsumerRequestIDs()
 			return
 		}

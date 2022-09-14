@@ -94,4 +94,21 @@ var _ = Describe("Kafka message handler", func() {
 			Expect(len(dbResult)).To(Equal(0))
 		})
 	})
+
+	Describe("On request id defined as nil", func() {
+		It("Does not create db entries", func() {
+			payloadMsgVal := message.PayloadStatusMessage{
+				Service: "test",
+				Status:  "success",
+			}
+
+			payloadStatusMessage := newKafkaMessage(payloadMsgVal)
+
+			msgHandler.onMessage(context.Background(), payloadStatusMessage, config.Get())
+
+			dbResult := queries.RetrieveRequestIdPayloads(db(), payloadMsgVal.RequestID, "created_at", "asc", "0")
+
+			Expect(len(dbResult)).To(Equal(0))
+		})
+	})
 })
