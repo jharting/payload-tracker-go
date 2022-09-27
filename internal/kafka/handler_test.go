@@ -80,27 +80,26 @@ var _ = Describe("Kafka message handler", func() {
 		})
 	})
 
-	Describe("On longer request id length", func() {
+	Describe("On invalid request ID", func() {
+		It("Fails on a request ID of invalid length", func() {
+			requestID := uuid.New().String() // Default max request id length in 32 (equal to UUID without any dashes). This produces an UUID with dashes. e.g. > 32
+
+			validationResult := validateRequestID(32, requestID)
+
+			Expect(validationResult).To(Equal(false))
+		})
+
+		It("Fails on undeclared request ID", func() {
+			requestID := ""
+
+			validationResult := validateRequestID(32, requestID)
+
+			Expect(validationResult).To(Equal(false))
+		})
+
 		It("Does not create db entries", func() {
 			payloadMsgVal := getSimplePayloadStatusMessage()
 			payloadMsgVal.RequestID = uuid.New().String() // Default max request id length in 32 (equal to UUID without any dashes). This produces an UUID with dashes. e.g. > 32
-
-			payloadStatusMessage := newKafkaMessage(payloadMsgVal)
-
-			msgHandler.onMessage(context.Background(), payloadStatusMessage, config.Get())
-
-			dbResult := queries.RetrieveRequestIdPayloads(db(), payloadMsgVal.RequestID, "created_at", "asc", "0")
-
-			Expect(len(dbResult)).To(Equal(0))
-		})
-	})
-
-	Describe("On request id defined as nil", func() {
-		It("Does not create db entries", func() {
-			payloadMsgVal := message.PayloadStatusMessage{
-				Service: "test",
-				Status:  "success",
-			}
 
 			payloadStatusMessage := newKafkaMessage(payloadMsgVal)
 
