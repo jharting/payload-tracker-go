@@ -80,6 +80,16 @@ var _ = Describe("Kafka message handler", func() {
 		})
 	})
 
+	Describe("On valid request ID", func() {
+		It("Succeeds and returns true", func() {
+			requestID := "e4b3d38f199f4abdb1cfbcf6e3b81f56"
+
+			validationResult := validateRequestID(32, requestID)
+
+			Expect(validationResult).To(Equal(true))
+		})
+	})
+
 	Describe("On invalid request ID", func() {
 		It("Fails on a request ID of invalid length", func() {
 			requestID := uuid.New().String() // Default max request id length in 32 (equal to UUID without any dashes). This produces an UUID with dashes. e.g. > 32
