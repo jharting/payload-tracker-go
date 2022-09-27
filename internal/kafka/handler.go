@@ -40,12 +40,8 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 		return
 	}
 
-	// Validate RequestID
-	if cfg.RequestConfig.ValidateRequestIDLength != 0 {
-		if len(payloadStatus.RequestID) != cfg.RequestConfig.ValidateRequestIDLength {
-			endpoints.IncInvalidConsumerRequestIDs()
-			return
-		}
+	if !validateRequestID(cfg.RequestConfig.ValidateRequestIDLength, payloadStatus.RequestID) {
+		return
 	}
 
 	// Sanitize the payload
@@ -130,6 +126,17 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 			}
 		}
 	}
+}
+
+func validateRequestID(requestIDLength int, requestID string) bool {
+	if requestIDLength != 0 {
+		if len(requestID) != requestIDLength {
+			endpoints.IncInvalidConsumerRequestIDs()
+			return false
+		}
+	}
+
+	return true
 }
 
 func sanitizePayload(msg *message.PayloadStatusMessage) {
