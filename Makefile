@@ -27,8 +27,11 @@ run-seed: pt-seeder
 run-migration: pt-migration
 	./pt-migration
 
-run-vaccum:
+run-vacuum:
 	CLOWDER_DATABASE_PASSWORD=crc CLOWDER_DATABASE_HOSTNAME=127.0.0.1 CLOWDER_DATABASE_USERNAME=crc CLOWDER_DATABASE_NAME=crc ./tools/cron-job.sh
+
+run-partition-fixer:
+	CLOWDER_DATABASE_PASSWORD=crc CLOWDER_DATABASE_HOSTNAME=127.0.0.1 CLOWDER_DATABASE_USERNAME=crc CLOWDER_DATABASE_NAME=crc ./tools/partition-fixer.sh
 
 clean:
 	go clean
