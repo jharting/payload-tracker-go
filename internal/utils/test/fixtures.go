@@ -28,7 +28,7 @@ func WithDatabase() func() *gorm.DB {
 
 		dsn := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable", user, password, dbname, host, port)
 
-		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{SkipDefaultTransaction: true})
+		db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		Expect(err).ToNot(HaveOccurred())
 	})
 
