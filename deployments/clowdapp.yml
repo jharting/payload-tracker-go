@@ -108,6 +108,20 @@ objects:
           requests:
             cpu: 200m
             memory: 256Mi
+    - name: partition-fixer-job
+      suspend: ${{PARTITION_FIXER_SUSPEND}}
+      podSpec:
+        image: quay.io/cloudservices/payload-tracker-go:${IMAGE_TAG}
+        restartPolicy: Never
+        command:
+          - ./tools/partition-fixer.sh
+        resources:
+          limits:
+            cpu: ${CPU_LIMIT}
+            memory: ${MEMORY_LIMIT}
+          requests:
+            cpu: 200m
+            memory: 256Mi
 
 
 parameters:
@@ -173,6 +187,8 @@ parameters:
   value: payload-tracker-api
   required: true
 - name: CLEANER_SUSPEND
+  value: 'true'
+- name: PARTITION_FIXER_SUSPEND
   value: 'true'
 - name: STORAGE_BROKER_URL
   value: "http://storage-broker-processor:8000/archive/url"

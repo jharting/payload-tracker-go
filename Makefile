@@ -27,6 +27,9 @@ run-seed: pt-seeder
 run-migration: pt-migration
 	./pt-migration
 
+run-vaccum:
+	CLOWDER_DATABASE_PASSWORD=crc CLOWDER_DATABASE_HOSTNAME=127.0.0.1 CLOWDER_DATABASE_USERNAME=crc CLOWDER_DATABASE_NAME=crc ./tools/cron-job.sh
+
 clean:
 	go clean
 	rm -f pt-api
