@@ -156,7 +156,12 @@ paths:
   /payloads/{request_id}/archiveLink:
     get:
       description: Get the download URL for a payload's archive
-      parameters: []
+      parameters:
+        - name: request_id
+          in: path
+          description: A unique value identifying this payload.
+          required: true
+          type: string
       responses:
         '200':
           description: ''
@@ -182,45 +187,45 @@ paths:
           $ref: '#/responses/Forbidden'
         '404':
           $ref: '#/responses/NotFound'
-    /payloads/{request_id}/kibanaLink:
-      get:
-        description: Get the URL for a payload's Kibana dashboard
-        parameters: 
-          - name: request_id
-            in: path
-            description: A unique value identifying this payload.
-            required: true
-            type: string
-          - name: service
-            in: query
-            description: Service to get archive link for
-            required: false
-            type: string
-        responses:
-          '200':
-            description: ''
-            schema:
-              type: object
-              required:
-                - data
-              properties:
-                data:
-                  type: object
-                  required:
-                    - url
-                  properties:
-                    url:
-                      type: string
-                      description: URL to the payload's Kibana dashboard
-                      format: url
-          '400':
-            $ref: '#/responses/BadRequest'
-          '403':
-            $ref: '#/responses/Forbidden'
-          '404':
-            $ref: '#/responses/NotFound'
-          '500':
-            $ref: '#/responses/InternalServerError'
+  /payloads/{request_id}/kibanaLink:
+    get:
+      description: Get the URL for a payload's Kibana dashboard
+      parameters:
+        - name: request_id
+          in: path
+          description: A unique value identifying this payload.
+          required: true
+          type: string
+        - name: service
+          in: query
+          description: Service to get archive link for
+          required: false
+          type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - url
+                properties:
+                  url:
+                    type: string
+                    description: URL to the payload's Kibana dashboard
+                    format: url
+        '400':
+          $ref: '#/responses/BadRequest'
+        '403':
+          $ref: '#/responses/Forbidden'
+        '404':
+          $ref: '#/responses/NotFound'
+        '500':
+          $ref: '#/responses/InternalServerError'
 
   /roles/archiveLink:
     get:
