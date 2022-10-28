@@ -405,6 +405,10 @@ responses:
     description: 'The tests run were successful'
     schema:
       $ref: '#/definitions/Success'
+  InternalServerError:
+    description: An error occured within the service or in the services it replies upon
+    schema:
+      $ref: '#/definitions/Error'
 definitions:
   Error:
     type: object
