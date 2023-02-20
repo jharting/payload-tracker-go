@@ -2,6 +2,8 @@ package endpoints
 
 import (
 	"context"
+	"crypto/x509"
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -12,6 +14,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/redhatinsights/payload-tracker-go/internal/config"
 	"github.com/redhatinsights/payload-tracker-go/internal/db"
 	l "github.com/redhatinsights/payload-tracker-go/internal/logging"
 	"github.com/redhatinsights/payload-tracker-go/internal/structs"
@@ -169,14 +172,12 @@ func writeResponse(w http.ResponseWriter, status int, message string) {
 }
 
 // Send a request for an ArchiveLink to storage-broker
-func RequestArchiveLink(baseUrl string, timeout int) func(ctx context.Context, reqID string) (*structs.PayloadArchiveLink, error) {
+func RequestArchiveLink(cfg config.TrackerConfig) func(ctx context.Context, reqID string) (*structs.PayloadArchiveLink, error) {
 
 	return func(ctx context.Context, reqID string) (*structs.PayloadArchiveLink, error) {
-		client := http.Client{
-			Timeout: time.Duration(timeout) * time.Millisecond,
-		}
+		client := configHttpClient(cfg)
 
-		response, err := client.Get(baseUrl + "?request_id=" + reqID)
+		response, err := client.Get(cfg.StorageBrokerURL + "?request_id=" + reqID)
 		if err != nil {
 			return nil, err
 		}
@@ -209,3 +210,37 @@ func ArchiveHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("You got an archive for " + reqId))
 	return
 }
+
+
+func configHttpClient(cfg config.TrackerConfig) *http.Client {
+	if cfg.TlsCAPath != "" {
+		rootCAs, _ := x509.SystemCertPool()
+		if rootCAs == nil {
+			rootCAs = x509.NewCertPool()
+		}
+
+		certs, err := ioutil.ReadFile(cfg.TlsCAPath)
+		if err != nil {
+			l.Log.Error("FAiled to append CA to RootCAs")
+		}
+
+		if ok := rootCAs.AppendCertsFromPEM(certs); !ok {
+			l.Log.Info("No certs appended, using system certs only")
+		}
+
+		httpConfig := &tls.Config{
+			InsecureSkipVerify: false,
+			RootCAs:            rootCAs,
+		}
+		httpTransport := &http.Transport{TLSClientConfig: httpConfig}
+		client := &http.Client{
+			Transport: httpTransport,
+			Timeout: time.Millisecond * time.Duration(cfg.StorageBrokerRequestTimeout),
+		}
+
+		return client
+	} else {
+		return &http.Client{Timeout: time.Millisecond * time.Duration(cfg.StorageBrokerRequestTimeout)}
+	}
+}
+

@@ -18,6 +18,7 @@ type TrackerConfig struct {
 	StorageBrokerURL            string
 	StorageBrokerURLRole        string
 	StorageBrokerRequestTimeout int
+	TlsCAPath                   string
 	KafkaConfig                 KafkaCfg
 	CloudwatchConfig            CloudwatchCfg
 	DatabaseConfig              DatabaseCfg
@@ -111,11 +112,12 @@ func Get() *TrackerConfig {
 	options.SetDefault("storageBrokerURL", "http://storage-broker-processor:8000/archive/url")
 	options.SetDefault("storageBrokerURLRole", "platform-archive-download")
 	options.SetDefault("storageBrokerRequestTimeout", 35000)
+	options.SetDefault("TlsCAPath", "")
+
 	// kibana config
 	options.SetDefault("kibana.url", "https://kibana.apps.crcs02ue1.urby.p1.openshiftapps.com/app/kibana#/discover")
 	options.SetDefault("kibana.index", "43c5fed0-d5ce-11ea-b58c-a7c95afd7a5d") // the index grabbed from the kibana url
 	options.SetDefault("kibana.service.field", "app")
-
 	// debug config
 	options.SetDefault("debug.log.status.json", false)
 
@@ -128,6 +130,7 @@ func Get() *TrackerConfig {
 		// ports
 		options.SetDefault("publicPort", cfg.PublicPort)
 		options.SetDefault("metricsPort", cfg.MetricsPort)
+		options.SetDefault("TlsCAPath", cfg.TlsCAPath)
 		// database
 		options.SetDefault("db.user", cfg.Database.Username)
 		options.SetDefault("db.password", cfg.Database.Password)
@@ -172,6 +175,7 @@ func Get() *TrackerConfig {
 		StorageBrokerURL:            options.GetString("storageBrokerURL"),
 		StorageBrokerURLRole:        options.GetString("storageBrokerURLRole"),
 		StorageBrokerRequestTimeout: options.GetInt("storageBrokerRequestTimeout"),
+		TlsCAPath: 		     options.GetString("TlsCAPath"),
 		KafkaConfig: KafkaCfg{
 			KafkaTimeout:               options.GetInt("kafka.timeout"),
 			KafkaGroupID:               options.GetString("kafka.group.id"),

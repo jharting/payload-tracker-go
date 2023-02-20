@@ -25,7 +25,7 @@ var (
 func CreatePayloadArchiveLinkHandler(cfg config.TrackerConfig) http.HandlerFunc {
 	switch cfg.RequestConfig.RequestorImpl {
 	case "storage-broker":
-		return PayloadArchiveLink(RequestArchiveLink(cfg.StorageBrokerURL, cfg.StorageBrokerRequestTimeout))
+		return PayloadArchiveLink(RequestArchiveLink(cfg))
 	case "mock":
 		return MockArchiveLink
 	default:
