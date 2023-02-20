@@ -452,7 +452,12 @@ var _ = Describe("PayloadArchiveLink", func() {
 			w.Write([]byte("{\"url\": \"www.example.com\"}"))
 		}))
 
-		handler = http.HandlerFunc(endpoints.PayloadArchiveLink(endpoints.RequestArchiveLink(mockStorageBrokerServer.URL, 10)))
+		cfg := config.TrackerConfig{
+			StorageBrokerURL: mockStorageBrokerServer.URL,
+			StorageBrokerRequestTimeout: 10,
+		}
+
+		handler = http.HandlerFunc(endpoints.PayloadArchiveLink(endpoints.RequestArchiveLink(cfg)))
 
 		requestId = getUUID()
 		query = make(map[string]interface{})
