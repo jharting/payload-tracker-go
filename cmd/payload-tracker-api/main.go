@@ -68,6 +68,7 @@ func main() {
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/payloads/{request_id}/kibanaLink", endpoints.PayloadKibanaLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/roles/archiveLink", endpoints.RolesArchiveLink)
 	sub.With(endpoints.ResponseMetricsMiddleware).Get("/statuses", endpoints.Statuses)
+	sub.With(endpoints.ResponseMetricsMiddleware).Get("/dummy", endpoints.Dummy)
 
 	srv := http.Server{
 		Addr:    ":" + cfg.PublicPort,
