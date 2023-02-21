@@ -74,6 +74,8 @@ objects:
             value: ${KIBANA_INDEX}
           - name: KIBANA_SERVICE_FIELD
             value: ${KIBANA_SERVICE_FIELD}
+          - name: SSL_CERT_DIR
+            value: ${SSL_CERT_DIR}
     - name: consumer
       minReplicas: ${{CONSUMER_REPLICAS}}
       podSpec:  
@@ -206,3 +208,6 @@ parameters:
   value: app
 - name: DEBUG_LOG_STATUS_JSON
   value: 'false'
+- name: SSL_CERT_DIR
+  value: '/etc/ssl/certs:/etc/pki/tls/certs:/system/etc/security/cacerts:/cdapp/certs'
+
