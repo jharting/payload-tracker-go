@@ -27,6 +27,8 @@ func Dummy(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Print("could not read body")
 	}
-	fmt.Printf("body response: %s", resBody)
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(resBody))
 
 }
