@@ -538,7 +538,7 @@ data:
             {
               "id": "calculateField",
               "options": {
-                "alias": "Total Number of Messages Processed ",
+                "alias": "Total Number of Messages Processed",
                 "binary": {
                   "left": "Total 10.128.5.5:9000",
                   "reducer": "sum",
