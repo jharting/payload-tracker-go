@@ -533,7 +533,7 @@ data:
               "refId": "D"
             }
           ],
-          "title": "Messages Processed ",
+          "title": "Messages Processed",
           "transformations": [
             {
               "id": "calculateField",
