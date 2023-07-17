@@ -575,7 +575,7 @@ data:
               "options": {
                 "alias": "Successful Messages",
                 "binary": {
-                  "left": "Total Number of Messages Processed ",
+                  "left": "Total Number of Messages Processed",
                   "operator": "-",
                   "reducer": "sum",
                   "right": "Failed Messages"
