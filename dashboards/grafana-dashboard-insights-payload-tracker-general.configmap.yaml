@@ -435,7 +435,7 @@ data:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "successful/failed messages processed metric ",
+          "description": "successful/failed messages processed metric",
           "fieldConfig": {
             "defaults": {
               "color": {
