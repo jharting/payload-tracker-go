@@ -435,7 +435,7 @@ data:
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "description": "successful/failed messages processed metric",
+          "description": "Successful/failed messages processed metric",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -467,14 +467,30 @@ data:
             "overrides": [
               {
                 "matcher": {
-                  "id": "byType",
-                  "options": "number"
+                  "id": "byName",
+                  "options": "Failed Messages"
                 },
                 "properties": [
                   {
                     "id": "color",
                     "value": {
-                      "mode": "continuous-RdYlGr"
+                      "fixedColor": "semi-dark-red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Successful Messages"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "green",
+                      "mode": "fixed"
                     }
                   }
                 ]
@@ -512,11 +528,11 @@ data:
               },
               "editorMode": "builder",
               "exemplar": false,
-              "expr": "payload_tracker_messages_processed",
+              "expr": "payload_tracker_messages_processed{container=\"payload-tracker-consumer\"}",
               "format": "time_series",
               "hide": false,
               "instant": false,
-              "legendFormat": "Total {{instance}}",
+              "legendFormat": "Total {{container}}",
               "range": true,
               "refId": "A"
             },
@@ -526,9 +542,9 @@ data:
                 "uid": "${datasource}"
               },
               "editorMode": "builder",
-              "expr": "payload_tracker_message_process_errors",
+              "expr": "payload_tracker_message_process_errors{container=\"payload-tracker-consumer\"}",
               "hide": false,
-              "legendFormat": "Failed: {{instance}}",
+              "legendFormat": "Failed: {{container}}",
               "range": true,
               "refId": "D"
             }
@@ -547,9 +563,7 @@ data:
                 "mode": "reduceRow",
                 "reduce": {
                   "include": [
-                    "Total 10.128.5.5:9000",
-                    "Total 10.129.36.95:9000",
-                    "Total 10.130.22.176:9000"
+                    "Total payload-tracker-consumer"
                   ],
                   "reducer": "sum"
                 }
@@ -562,9 +576,7 @@ data:
                 "mode": "reduceRow",
                 "reduce": {
                   "include": [
-                    "Failed: 10.128.5.5:9000",
-                    "Failed: 10.129.36.95:9000",
-                    "Failed: 10.130.22.176:9000"
+                    "Failed: payload-tracker-consumer"
                   ],
                   "reducer": "sum"
                 }
@@ -593,10 +605,13 @@ data:
                   "Failed: 10.128.5.5:9000": true,
                   "Failed: 10.129.36.95:9000": true,
                   "Failed: 10.130.22.176:9000": true,
+                  "Failed: payload-tracker-consumer": true,
                   "Total 10.128.5.5:9000": true,
                   "Total 10.129.36.95:9000": true,
                   "Total 10.130.22.176:9000": true,
-                  "Total Number of Messages Processed ": true
+                  "Total Number of Messages Processed": true,
+                  "Total Number of Messages Processed ": true,
+                  "Total payload-tracker-consumer": true
                 },
                 "indexByName": {},
                 "renameByName": {}
@@ -1418,7 +1433,7 @@ data:
       "timezone": "",
       "title": "Payload Tracker",
       "uid": "eGSUe-SZk",
-      "version": 3,
+      "version": 6,
       "weekStart": ""
     }
 kind: ConfigMap
