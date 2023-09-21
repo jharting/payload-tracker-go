@@ -16,7 +16,6 @@ require (
 	github.com/redhatinsights/platform-go-middlewares v0.9.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.8.1
-	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 	gorm.io/driver/postgres v1.3.4
 	gorm.io/gorm v1.23.4
 )
