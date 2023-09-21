@@ -117,6 +117,7 @@ func (this *handler) onMessage(ctx context.Context, msg *kafka.Message, cfg *con
 
 	// Insert payload into DB
 	endpoints.ObserveMessageProcessTime(time.Since(start))
+	endpoints.IncMessagesProcessed()
 	result := queries.InsertPayloadStatus(this.db, sanitizedPayloadStatus)
 	if result.Error != nil {
 		endpoints.IncMessageProcessErrors()

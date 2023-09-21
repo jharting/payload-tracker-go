@@ -30,6 +30,11 @@ var (
 		Help: "Number of seconds spent waiting on a db response",
 	}, []string{})
 
+	messagesProcessed = pa.NewCounterVec(p.CounterOpts{
+		Name: "payload_tracker_messages_processed",
+		Help: "Count of total messages processed",
+	}, []string{})
+
 	messageProcessElapsed = pa.NewHistogramVec(p.HistogramOpts{
 		Name: "payload_tracker_message_process_seconds",
 		Help: "Number of seconds spent processing messages",
@@ -73,6 +78,11 @@ func IncConsumedMessages() {
 // IncConsumeFailure increments the failure count by 1
 func IncConsumeErrors() {
 	consumeError.With(p.Labels{}).Inc()
+}
+
+// IncMessageProcessed  increments the messages processed count by 1
+func IncMessagesProcessed() {
+	messagesProcessed.With(p.Labels{}).Inc()
 }
 
 // IncMessageProcessErrors increments the error count by 1
