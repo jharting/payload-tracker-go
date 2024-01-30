@@ -56,8 +56,9 @@ var _ = Describe("Queries", func() {
 			SystemId:    systemId,
 		}
 
-		result, _ := UpsertPayloadByRequestId(db(), requestId, payload)
+		result, id := UpsertPayloadByRequestId(db(), requestId, payload)
 		Expect(result.Error).ToNot(HaveOccurred())
+		Expect(id).ToNot(Equal(uint(0)))
 
 		payload, err := GetPayloadByRequestId(db(), requestId)
 		Expect(err).ToNot(HaveOccurred())
@@ -86,8 +87,9 @@ var _ = Describe("Queries", func() {
 			SystemId:    getUUID(),
 		}
 
-		result, _ := UpsertPayloadByRequestId(db(), requestId, payload)
+		result, id := UpsertPayloadByRequestId(db(), requestId, payload)
 		Expect(result.Error).ToNot(HaveOccurred())
+		Expect(id).ToNot(Equal(uint(0)))
 
 		payload, err := GetPayloadByRequestId(db(), requestId)
 		Expect(err).ToNot(HaveOccurred())
@@ -117,8 +119,9 @@ var _ = Describe("Queries", func() {
 			OrgId:     "5678",
 		}
 
-		result, _ := UpsertPayloadByRequestId(db(), requestId, payload)
+		result, id := UpsertPayloadByRequestId(db(), requestId, payload)
 		Expect(result.Error).ToNot(HaveOccurred())
+		Expect(id).ToNot(Equal(uint(0)))
 
 		payload, err := GetPayloadByRequestId(db(), requestId)
 		Expect(err).ToNot(HaveOccurred())
@@ -146,8 +149,9 @@ var _ = Describe("Queries", func() {
 			RequestId: requestId,
 		}
 
-		result, _ := UpsertPayloadByRequestId(db(), requestId, payload)
+		result, id := UpsertPayloadByRequestId(db(), requestId, payload)
 		Expect(result.Error).ToNot(HaveOccurred())
+		Expect(id).ToNot(Equal(uint(0)))
 
 		payload, err := GetPayloadByRequestId(db(), requestId)
 		Expect(err).ToNot(HaveOccurred())
