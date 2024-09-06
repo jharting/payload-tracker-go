@@ -10,7 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
-	lc "github.com/redhatinsights/platform-go-middlewares/logging/cloudwatch"
+	lc "github.com/redhatinsights/platform-go-middlewares/v2/logging/cloudwatch"
 	"github.com/sirupsen/logrus"
 )
 
@@ -116,10 +116,11 @@ func InitLogger() *logrus.Logger {
 	if key != "" {
 		cred := credentials.NewStaticCredentials(key, secret, "")
 		awsconf := aws.NewConfig().WithRegion(region).WithCredentials(cred)
-		hook, err := lc.NewBatchingHook(group, stream, awsconf, 10*time.Second)
+		batchWriter, err := lc.NewBatchWriterWithDuration(group, stream, awsconf, 10*time.Second)
 		if err != nil {
 			Log.Info(err)
 		}
+		hook := lc.NewLogrusHook(batchWriter)
 		Log.Hooks.Add(hook)
 	}
 
