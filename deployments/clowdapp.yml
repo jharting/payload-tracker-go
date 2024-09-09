@@ -20,7 +20,7 @@ objects:
       name: payloadtracker
     kafkaTopics:
     - replicas: 3
-      partitions: 8
+      partitions: 20
       topicName: platform.payload-status
     deployments:
     - name: api
