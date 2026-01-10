@@ -3,7 +3,7 @@ module github.com/redhatinsights/payload-tracker-go
 go 1.20
 
 require (
-	github.com/aws/aws-sdk-go v1.50.0
+	github.com/aws/aws-sdk-go v1.55.8
 	github.com/confluentinc/confluent-kafka-go v1.7.0
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-chi/httprate v0.6.0
