@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"gorm.io/gorm"
 
 	"github.com/redhatinsights/payload-tracker-go/internal/config"
@@ -16,7 +16,6 @@ import (
 	"github.com/redhatinsights/payload-tracker-go/internal/models/message"
 	"github.com/redhatinsights/payload-tracker-go/internal/queries"
 )
-
 
 type handler struct {
 	db *gorm.DB
