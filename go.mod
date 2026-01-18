@@ -7,7 +7,7 @@ require (
 	github.com/confluentinc/confluent-kafka-go v1.7.0
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-chi/httprate v0.6.0
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.6.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.31.1
 	github.com/prometheus/client_golang v1.11.1
